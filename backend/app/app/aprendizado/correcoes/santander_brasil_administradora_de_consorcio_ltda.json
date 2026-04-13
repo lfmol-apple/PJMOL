@@ -1,0 +1,27 @@
+{
+  "estado": [
+    {
+      "campo": "estado",
+      "valor_original": "SP",
+      "valor_corrigido": "MG",
+      "padrao": {
+        "tipo_correcao": "texto",
+        "original": "SP",
+        "corrigido": "MG",
+        "substituicoes": [
+          {
+            "de": "SP",
+            "para": "MG"
+          }
+        ]
+      },
+      "contexto": {
+        "grupo": "000744",
+        "cota": "0516",
+        "administradora": "SANTANDER BRASIL ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2025-10-30T22:03:28.635378-03:00",
+      "aplicado_automaticamente": 0
+    }
+  ]
+}

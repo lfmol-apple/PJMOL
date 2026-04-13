@@ -1,0 +1,54 @@
+{
+  "administradora_cnpj": [
+    {
+      "campo": "administradora_cnpj",
+      "valor_original": "DESCONHECIDA",
+      "valor_corrigido": "PROCURADORIA GERAL DE JUSTICA DE MINAS GERAIS",
+      "padrao": {
+        "tipo_correcao": "texto",
+        "original": "DESCONHECIDA",
+        "corrigido": "PROCURADORIA GERAL DE JUSTICA DE MINAS GERAIS",
+        "substituicoes": [
+          {
+            "de": "DESCONHECIDA",
+            "para": "PROCURADORIA GERAL DE JUSTICA DE MINAS GERAIS"
+          }
+        ]
+      },
+      "contexto": {
+        "cnpj": "20971057000145",
+        "cep": "30170008",
+        "fonte": "brasilapi_automatico",
+        "tipo_aprendizado": "administradora_nova"
+      },
+      "timestamp": "2025-11-01T22:20:32.233332-03:00",
+      "aplicado_automaticamente": 0
+    }
+  ],
+  "administradora_cep": [
+    {
+      "campo": "administradora_cep",
+      "valor_original": "DESCONHECIDO",
+      "valor_corrigido": "30170008",
+      "padrao": {
+        "tipo_correcao": "texto",
+        "original": "DESCONHECIDO",
+        "corrigido": "30170008",
+        "substituicoes": [
+          {
+            "de": "DESCONHECIDO",
+            "para": "30170008"
+          }
+        ]
+      },
+      "contexto": {
+        "cnpj": "20971057000145",
+        "cep": "30170008",
+        "fonte": "brasilapi_automatico",
+        "tipo_aprendizado": "administradora_nova"
+      },
+      "timestamp": "2025-11-01T22:20:32.233655-03:00",
+      "aplicado_automaticamente": 0
+    }
+  ]
+}

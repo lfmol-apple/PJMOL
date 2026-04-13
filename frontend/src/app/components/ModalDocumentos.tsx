@@ -736,6 +736,9 @@ function montarEndereco(base: AnyObj): string | undefined {
           const novoId = await criarExtratoNoBanco(base);
           idParaUso = novoId;
           setExtratoId(novoId);
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(new CustomEvent("pjmol-extrato-created", { detail: { extratoId: novoId } }));
+          }
           
           // ⬇️ NOVO: Marcar como "salvo" no status_documento
           // Usando nosso endpoint específico mark-salvo
@@ -765,6 +768,9 @@ function montarEndereco(base: AnyObj): string | undefined {
       } else {
         try {
           await atualizarExtratoNoBanco(idParaUso, base);
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(new CustomEvent("pjmol-extrato-updated", { detail: { extratoId: idParaUso } }));
+          }
           
           // ⬇️ NOVO: Marcar como "salvo" no status_documento  
           // Usando nosso endpoint específico mark-salvo
@@ -857,6 +863,9 @@ function montarEndereco(base: AnyObj): string | undefined {
           const novoId = await criarExtratoNoBanco(enriched);
           idParaUso = novoId;
           setExtratoId(novoId);
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(new CustomEvent("pjmol-extrato-created", { detail: { extratoId: novoId } }));
+          }
         } catch (err: any) {
           toast.dismiss();
           if (err?.response?.status === 409) {

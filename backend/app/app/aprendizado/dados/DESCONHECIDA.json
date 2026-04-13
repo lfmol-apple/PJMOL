@@ -1,0 +1,39 @@
+{
+  "total_processados": 52,
+  "com_sucesso": 50,
+  "falha": 2,
+  "usou_ia": 0,
+  "ultimos_5": [
+    {
+      "sucesso": true,
+      "usou_ia": false,
+      "data_encerramento_via": "vinda_do_campo",
+      "timestamp": "2025-11-01T23:02:48.573062-03:00"
+    },
+    {
+      "sucesso": true,
+      "usou_ia": false,
+      "data_encerramento_via": "vinda_do_campo",
+      "timestamp": "2025-11-02T10:54:17.641791-03:00"
+    },
+    {
+      "sucesso": false,
+      "usou_ia": false,
+      "data_encerramento_via": "calculada_pela_primeira_assembleia",
+      "timestamp": "2025-11-02T11:12:21.244913-03:00"
+    },
+    {
+      "sucesso": false,
+      "usou_ia": false,
+      "data_encerramento_via": "calculada_pela_primeira_assembleia",
+      "timestamp": "2025-11-02T16:42:35.058000-03:00"
+    },
+    {
+      "sucesso": true,
+      "usou_ia": false,
+      "data_encerramento_via": "vinda_do_campo",
+      "timestamp": "2025-11-04T08:20:40.617208-03:00"
+    }
+  ],
+  "campos_aprendidos": {}
+}

@@ -2732,8 +2732,7 @@ const handleSalvar = async ({ silent = false }: { silent?: boolean } = {}) => {
         console.warn("[Docs] Extrato não identificado; seguindo sem persistência.");
       }
 
-      const API_BASE = ((process.env.NEXT_PUBLIC_API_BASE || process.env.NEXT_PUBLIC_API || "http://127.0.0.1:8000") as string).replace(/\/+$/,""
-      );
+      const API_BASE = ((process.env.NEXT_PUBLIC_API_BASE || process.env.NEXT_PUBLIC_API || "http://127.0.0.1:8000") as string).replace(/\/+$/,"");
       const url = `${API_BASE}/extratos/${encodeURIComponent(String(extratoId))}`;
 
       // payload com estados ATUAIS

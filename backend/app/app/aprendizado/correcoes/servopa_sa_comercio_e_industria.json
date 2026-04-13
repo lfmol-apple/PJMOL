@@ -1,0 +1,14 @@
+{
+  "estado": [
+    {
+      "original": "PR",
+      "corrigido": "SP",
+      "contexto": {
+        "grupo": "1556",
+        "cota": "1521-1",
+        "administradora": "SERVOPA SA COMERCIO E INDUSTRIA"
+      },
+      "timestamp": "2026-04-06T17:48:41.457258"
+    }
+  ]
+}

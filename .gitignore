@@ -1,68 +1,103 @@
-# macOS
-.DS_Store
+# ============================================================
+# .gitignore — PJMOL
+# Regra: código entra. Dados, credenciais e builds NÃO entram.
+# ============================================================
 
-# Python
+# ─── macOS ───────────────────────────────────────────────────
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+
+# ─── Credenciais e tokens (CRÍTICO) ──────────────────────────
+.env
+.env.*
+credentials.json
+global-course*.json
+token_drive_oauth.pickle
+*.pickle
+*_service_account*.json
+
+# ─── Bancos de dados (CRÍTICO) ───────────────────────────────
+*.db
+*.db.*
+*.db-*
+*.bd
+*.sqlite
+*.sqlite3
+extratos.db
+database
+
+# ─── Dados reais — NÃO versionar (CRÍTICO) ───────────────────
+backend/app/documentos_gerados/
+backend/app/storage/
+backend/app/storage_backup*/
+backend/app/modelos/
+backend/app/modelos_backup*/
+backend/app/indices/
+backend/app/temp_uploads/
+backend/app/imagens/
+backend/app/audio/
+backend/app/feedbacks/
+
+# ─── Scripts com credenciais hardcoded ───────────────────────
+backend/atualizar_token.py
+
+# ─── Dumps de dados ──────────────────────────────────────────
+*.sql
+*.tar.gz
+*.zip
+
+# ─── Logs ────────────────────────────────────────────────────
+*.log
+backend/*.log
+backend/app/*.log
+uvicorn.log
+backend.log
+
+# ─── Arquivos de depuração ───────────────────────────────────
+debug_*.txt
+debug_*.txt.*
+teste_final.txt
+
+# ─── Backups de arquivos de código ───────────────────────────
+*.backup*
+*.bak*
+*.bak
+*.old
+*.new
+*.swp
+*.safe
+*.CORRIGIDO*
+
+# ─── Python ──────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
-*.sqlite3
-*.db
 .venv/
 venv/
-.env
-.env.*
 .pytest_cache/
 .mypy_cache/
+*.egg-info/
 
-# Node / frontend
+# ─── Node / Frontend ─────────────────────────────────────────
 node_modules/
 .next/
 dist/
 build/
+tsconfig.tsbuildinfo
+.npmrc
 
-# IDE
+# ─── IDE ─────────────────────────────────────────────────────
 .vscode/
 .idea/
+*.code-workspace
 
-# Logs
-*.log
-
-# Backups / dumps / arquivos pesados
-*.tar.gz
-*.sql
-*.bak
+# ─── Diretórios de backup da VPS ─────────────────────────────
 backups/
+pjmol_backups/
+pjmol_snapshots/
 *_backup*/
-
-# Uploads temporários
-tmp/
-temp/
-
-# Dados sensíveis
-credentials.json
-*.json
-*.pickle
-
-# Documentos gerados (CRÍTICO)
-backend/app/documentos_gerados/
-
-# Modelos e arquivos binários grandes (avaliar depois)
-backend/modelos/
-
-# Banco de dados
-database.db
-
-# Backups python
-*.backup*
-*.bak
-
-# Logs adicionais
-*.log
-
-# Arquivos de token
-*token*
-
-# bancos locais (CRÍTICO)
-*.db
-*.bd
+*_backup_*/
+backup_*/

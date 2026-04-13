@@ -1,0 +1,50 @@
+{
+  "cidade": [
+    {
+      "campo": "cidade",
+      "valor_original": "BETIM",
+      "valor_corrigido": "Betim",
+      "padrao": {
+        "tipo_correcao": "texto",
+        "original": "BETIM",
+        "corrigido": "Betim",
+        "substituicoes": [
+          {
+            "de": "BETIM",
+            "para": "Betim"
+          }
+        ]
+      },
+      "contexto": {
+        "grupo": "005027",
+        "cota": "1483-2",
+        "administradora": "BAMAQ ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2025-10-30T21:25:12.172594-03:00",
+      "aplicado_automaticamente": 0
+    },
+    {
+      "campo": "cidade",
+      "valor_original": "BETIM",
+      "valor_corrigido": "Betim",
+      "padrao": {
+        "tipo_correcao": "texto",
+        "original": "BETIM",
+        "corrigido": "Betim",
+        "substituicoes": [
+          {
+            "de": "BETIM",
+            "para": "Betim"
+          }
+        ]
+      },
+      "contexto": {
+        "grupo": "005027",
+        "cota": "1483-2",
+        "administradora": "BAMAQ ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2025-10-30T22:34:50.930400-03:00",
+      "aplicado_automaticamente": 0
+    }
+  ]
+}

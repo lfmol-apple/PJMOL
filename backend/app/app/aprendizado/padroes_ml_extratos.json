@@ -1,0 +1,524 @@
+{
+  "padroes_aprendidos": {
+    "EMBRACON": {
+      "nome": {
+        "regex_patterns": [
+          "(?i)nome\\s*[:;]?\\s*([^\\n]+)"
+        ],
+        "exemplos_correcoes": [
+          {
+            "valor_original": "",
+            "valor_corrigido": "JOÃO DA SILVA TESTE ML",
+            "timestamp": "2025-10-29T15:57:34.747844"
+          }
+        ],
+        "confianca": 0.1
+      }
+    },
+    "ITAU": {
+      "nome": {
+        "regex_patterns": [
+          "(?i)consorciado\\s*[:;]?\\s*([^\\n]+)"
+        ],
+        "exemplos_correcoes": [
+          {
+            "valor_original": "",
+            "valor_corrigido": "MARIA DOS SANTOS",
+            "timestamp": "2025-10-29T16:08:13.403837"
+          }
+        ],
+        "confianca": 0.1
+      },
+      "grupo": {
+        "regex_patterns": [
+          "(?i)grupo\\s*[:;]?\\s*n?[º°]?\\s*(\\d+)"
+        ],
+        "exemplos_correcoes": [
+          {
+            "valor_original": "",
+            "valor_corrigido": "789",
+            "timestamp": "2025-10-29T16:08:13.404273"
+          }
+        ],
+        "confianca": 0.1
+      },
+      "cota": {
+        "regex_patterns": [
+          "(?i)cota\\s*[:;]?\\s*n?[º°]?\\s*(\\d+)"
+        ],
+        "exemplos_correcoes": [
+          {
+            "valor_original": "",
+            "valor_corrigido": "101",
+            "timestamp": "2025-10-29T16:08:13.404568"
+          }
+        ],
+        "confianca": 0.1
+      }
+    },
+    "BRADESCO": {
+      "valor_bem": {
+        "regex_patterns": [],
+        "exemplos_correcoes": [
+          {
+            "valor_original": "",
+            "valor_corrigido": "75000.00",
+            "timestamp": "2025-10-29T16:08:24.989077"
+          }
+        ],
+        "confianca": 0.1
+      }
+    }
+  },
+  "padroes_layout": {
+    "BB ADMINISTRADORA DE CONSÓRCIO S.A.": {
+      "palavras_chave_identificacao": [
+        "FLAVIO",
+        "RECBTO",
+        "CUNHA",
+        "CNPJ",
+        "PARCELA",
+        "LIMA",
+        "BEZERRA",
+        "DIFERENCA",
+        "CPF"
+      ],
+      "densidade_texto": 0,
+      "comprimento_medio_linha": 47.14492753623188,
+      "presenca_tabelas": false,
+      "num_linhas_medio": 138
+    },
+    "BR CONSÓRCIOS ADMINISTRADORA DE CONSÓRCIOS LTDA": {
+      "palavras_chave_identificacao": [
+        "CONTADOR",
+        "MOL",
+        "ADM",
+        "CNPJ",
+        "LEONARDO",
+        "FREITAS",
+        "RAMALHETE",
+        "LTDA",
+        "CPF",
+        "RUA"
+      ],
+      "densidade_texto": 0,
+      "comprimento_medio_linha": 75.99019607843137,
+      "presenca_tabelas": false,
+      "num_linhas_medio": 102
+    },
+    "HS ADMINISTRADORA DE CONSÓRCIOS LTDA": {
+      "palavras_chave_identificacao": [
+        "ADM",
+        "CATALAO",
+        "CNPJ",
+        "SAO",
+        "NORMAL",
+        "LTDA",
+        "CPF",
+        "PERNAMBUCO",
+        "RUA",
+        "FRANCISCO"
+      ],
+      "densidade_texto": 0,
+      "comprimento_medio_linha": 38.323170731707314,
+      "presenca_tabelas": false,
+      "num_linhas_medio": 164
+    }
+  },
+  "padroes_posicionamento": {
+    "BB ADMINISTRADORA DE CONSÓRCIO S.A.": {
+      "grupo": {
+        "linhas_encontradas": [
+          0,
+          7,
+          50,
+          102
+        ],
+        "posicoes_x": [
+          11,
+          6,
+          11,
+          11
+        ],
+        "linha_media": 39.75,
+        "posicao_x_media": 9.75
+      },
+      "cota": {
+        "linhas_encontradas": [
+          1,
+          51,
+          103
+        ],
+        "posicoes_x": [
+          0,
+          0,
+          0
+        ],
+        "linha_media": 51.666666666666664,
+        "posicao_x_media": 0.0
+      },
+      "cpf_cnpj": {
+        "linhas_encontradas": [],
+        "posicoes_x": [],
+        "linha_media": 0,
+        "posicao_x_media": 0
+      },
+      "valor_total_pago_extrato": {
+        "linhas_encontradas": [],
+        "posicoes_x": [],
+        "linha_media": 0,
+        "posicao_x_media": 0
+      },
+      "administradora": {
+        "linhas_encontradas": [],
+        "posicoes_x": [],
+        "linha_media": 0,
+        "posicao_x_media": 0
+      },
+      "data_primeira_assembleia": {
+        "linhas_encontradas": [
+          12,
+          105
+        ],
+        "posicoes_x": [
+          0,
+          18
+        ],
+        "linha_media": 58.5,
+        "posicao_x_media": 9.0
+      },
+      "data_encerramento": {
+        "linhas_encontradas": [],
+        "posicoes_x": [],
+        "linha_media": 0,
+        "posicao_x_media": 0
+      },
+      "cnpj_administradora": {
+        "linhas_encontradas": [],
+        "posicoes_x": [],
+        "linha_media": 0,
+        "posicao_x_media": 0
+      },
+      "valor_bem": {
+        "linhas_encontradas": [],
+        "posicoes_x": [],
+        "linha_media": 0,
+        "posicao_x_media": 0
+      },
+      "numero_contrato": {
+        "linhas_encontradas": [
+          9
+        ],
+        "posicoes_x": [
+          9
+        ],
+        "linha_media": 9.0,
+        "posicao_x_media": 9.0
+      }
+    },
+    "BR CONSÓRCIOS ADMINISTRADORA DE CONSÓRCIOS LTDA": {
+      "grupo": {
+        "linhas_encontradas": [
+          3
+        ],
+        "posicoes_x": [
+          6
+        ],
+        "linha_media": 3.0,
+        "posicao_x_media": 6.0
+      },
+      "cota": {
+        "linhas_encontradas": [
+          3
+        ],
+        "posicoes_x": [
+          18
+        ],
+        "linha_media": 3.0,
+        "posicao_x_media": 18.0
+      },
+      "numero_contrato": {
+        "linhas_encontradas": [
+          3
+        ],
+        "posicoes_x": [
+          60
+        ],
+        "linha_media": 3.0,
+        "posicao_x_media": 60.0
+      },
+      "cpf_cnpj": {
+        "linhas_encontradas": [
+          7
+        ],
+        "posicoes_x": [
+          10
+        ],
+        "linha_media": 7.0,
+        "posicao_x_media": 10.0
+      },
+      "data_encerramento": {
+        "linhas_encontradas": [
+          23
+        ],
+        "posicoes_x": [
+          44
+        ],
+        "linha_media": 23.0,
+        "posicao_x_media": 44.0
+      },
+      "cep": {
+        "linhas_encontradas": [
+          9
+        ],
+        "posicoes_x": [
+          57
+        ],
+        "linha_media": 9.0,
+        "posicao_x_media": 57.0
+      },
+      "rua": {
+        "linhas_encontradas": [
+          8
+        ],
+        "posicoes_x": [
+          9
+        ],
+        "linha_media": 8.0,
+        "posicao_x_media": 9.0
+      },
+      "bairro": {
+        "linhas_encontradas": [
+          10
+        ],
+        "posicoes_x": [
+          8
+        ],
+        "linha_media": 10.0,
+        "posicao_x_media": 8.0
+      },
+      "cidade": {
+        "linhas_encontradas": [
+          10
+        ],
+        "posicoes_x": [
+          22
+        ],
+        "linha_media": 10.0,
+        "posicao_x_media": 22.0
+      },
+      "estado": {
+        "linhas_encontradas": [
+          7,
+          10
+        ],
+        "posicoes_x": [
+          33,
+          41
+        ],
+        "linha_media": 8.5,
+        "posicao_x_media": 37.0
+      },
+      "valor_total_pago_extrato": {
+        "linhas_encontradas": [],
+        "posicoes_x": [],
+        "linha_media": 0,
+        "posicao_x_media": 0
+      },
+      "administradora": {
+        "linhas_encontradas": [],
+        "posicoes_x": [],
+        "linha_media": 0,
+        "posicao_x_media": 0
+      },
+      "data_primeira_assembleia": {
+        "linhas_encontradas": [
+          14,
+          34
+        ],
+        "posicoes_x": [
+          15,
+          31
+        ],
+        "linha_media": 24.0,
+        "posicao_x_media": 23.0
+      },
+      "cnpj_administradora": {
+        "linhas_encontradas": [],
+        "posicoes_x": [],
+        "linha_media": 0,
+        "posicao_x_media": 0
+      },
+      "valor_bem": {
+        "linhas_encontradas": [],
+        "posicoes_x": [],
+        "linha_media": 0,
+        "posicao_x_media": 0
+      },
+      "endereco": {
+        "linhas_encontradas": [],
+        "posicoes_x": [],
+        "linha_media": 0,
+        "posicao_x_media": 0
+      }
+    },
+    "HS ADMINISTRADORA DE CONSÓRCIOS LTDA": {
+      "grupo": {
+        "linhas_encontradas": [
+          4
+        ],
+        "posicoes_x": [
+          7
+        ],
+        "linha_media": 4.0,
+        "posicao_x_media": 7.0
+      },
+      "cota": {
+        "linhas_encontradas": [
+          4
+        ],
+        "posicoes_x": [
+          20
+        ],
+        "linha_media": 4.0,
+        "posicao_x_media": 20.0
+      },
+      "numero_contrato": {
+        "linhas_encontradas": [
+          4,
+          33
+        ],
+        "posicoes_x": [
+          38,
+          28
+        ],
+        "linha_media": 18.5,
+        "posicao_x_media": 33.0
+      },
+      "cpf_cnpj": {
+        "linhas_encontradas": [
+          33
+        ],
+        "posicoes_x": [
+          39
+        ],
+        "linha_media": 33.0,
+        "posicao_x_media": 39.0
+      },
+      "cep": {
+        "linhas_encontradas": [
+          9
+        ],
+        "posicoes_x": [
+          32
+        ],
+        "linha_media": 9.0,
+        "posicao_x_media": 32.0
+      },
+      "rua": {
+        "linhas_encontradas": [
+          7
+        ],
+        "posicoes_x": [
+          29
+        ],
+        "linha_media": 7.0,
+        "posicao_x_media": 29.0
+      },
+      "bairro": {
+        "linhas_encontradas": [],
+        "posicoes_x": [],
+        "linha_media": 0,
+        "posicao_x_media": 0
+      },
+      "cidade": {
+        "linhas_encontradas": [],
+        "posicoes_x": [],
+        "linha_media": 0,
+        "posicao_x_media": 0
+      },
+      "estado": {
+        "linhas_encontradas": [
+          9
+        ],
+        "posicoes_x": [
+          24
+        ],
+        "linha_media": 9.0,
+        "posicao_x_media": 24.0
+      },
+      "administradora": {
+        "linhas_encontradas": [],
+        "posicoes_x": [],
+        "linha_media": 0,
+        "posicao_x_media": 0
+      },
+      "cnpj_administradora": {
+        "linhas_encontradas": [],
+        "posicoes_x": [],
+        "linha_media": 0,
+        "posicao_x_media": 0
+      },
+      "valor_bem": {
+        "linhas_encontradas": [
+          54,
+          57,
+          60,
+          63,
+          66,
+          69,
+          72,
+          75,
+          78,
+          81,
+          84
+        ],
+        "posicoes_x": [
+          36,
+          36,
+          36,
+          36,
+          36,
+          36,
+          36,
+          36,
+          36,
+          36,
+          36
+        ],
+        "linha_media": 69.0,
+        "posicao_x_media": 36.0
+      },
+      "endereco": {
+        "linhas_encontradas": [],
+        "posicoes_x": [],
+        "linha_media": 0,
+        "posicao_x_media": 0
+      }
+    }
+  },
+  "padroes_formatacao": {
+    "BB ADMINISTRADORA DE CONSÓRCIO S.A.": {
+      "separador_decimal": ",",
+      "separador_milhar": ".",
+      "prefixo_moeda": "R$",
+      "formato_data": "DD/MM/YYYY"
+    },
+    "BR CONSÓRCIOS ADMINISTRADORA DE CONSÓRCIOS LTDA": {
+      "separador_decimal": ".",
+      "separador_milhar": ",",
+      "prefixo_moeda": "R$",
+      "formato_data": "DD/MM/YYYY"
+    },
+    "HS ADMINISTRADORA DE CONSÓRCIOS LTDA": {
+      "separador_decimal": ",",
+      "separador_milhar": ".",
+      "prefixo_moeda": "R$",
+      "formato_data": "DD/MM/YYYY"
+    }
+  },
+  "padroes_nomenclatura": {},
+  "padroes_validacao": {},
+  "padroes_calculos": {},
+  "padroes_tabelas": {}
+}

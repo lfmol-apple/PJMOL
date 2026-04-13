@@ -1,0 +1,27 @@
+{
+  "estado": [
+    {
+      "campo": "estado",
+      "valor_original": "SP",
+      "valor_corrigido": "MG",
+      "padrao": {
+        "tipo_correcao": "texto",
+        "original": "SP",
+        "corrigido": "MG",
+        "substituicoes": [
+          {
+            "de": "SP",
+            "para": "MG"
+          }
+        ]
+      },
+      "contexto": {
+        "grupo": "020460",
+        "cota": "0112",
+        "administradora": "ITAU ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2025-10-30T21:45:34.233954-03:00",
+      "aplicado_automaticamente": 0
+    }
+  ]
+}

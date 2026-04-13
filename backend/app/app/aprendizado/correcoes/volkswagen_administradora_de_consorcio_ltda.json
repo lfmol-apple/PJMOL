@@ -1,0 +1,104 @@
+{
+  "cidade": [
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "001153",
+        "cota": "2792-00",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-03-30T17:04:16.224753"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "001153",
+        "cota": "2792-00",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-03-30T17:04:16.298191"
+    },
+    {
+      "original": "ITANHAÉM",
+      "corrigido": "Itanhaém",
+      "contexto": {
+        "grupo": "001147",
+        "cota": "0600-02",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-03-30T19:37:23.022504"
+    },
+    {
+      "original": "BELO HORIZONTE",
+      "corrigido": "Belo Horizonte",
+      "contexto": {
+        "grupo": "001152",
+        "cota": "4228-00",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-03-31T19:46:34.460643"
+    },
+    {
+      "original": "CONTAGEM",
+      "corrigido": "Contagem",
+      "contexto": {
+        "grupo": "001134",
+        "cota": "0089-02",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-03-31T20:32:46.070776"
+    },
+    {
+      "original": "CONTAGEM",
+      "corrigido": "Contagem",
+      "contexto": {
+        "grupo": "001134",
+        "cota": "0089-02",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-03-31T20:32:49.829190"
+    },
+    {
+      "original": "RIO DE JANEIRO",
+      "corrigido": "Rio de Janeiro",
+      "contexto": {
+        "grupo": "001147",
+        "cota": "0473-00",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-04-01T14:35:07.806621"
+    },
+    {
+      "original": "ITABIRITO",
+      "corrigido": "Itabirito",
+      "contexto": {
+        "grupo": "001139",
+        "cota": "0341-00",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-04-08T18:43:22.612997"
+    },
+    {
+      "original": "CONTAGEM",
+      "corrigido": "Contagem",
+      "contexto": {
+        "grupo": "001159",
+        "cota": "4643-01",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-04-09T14:22:49.602491"
+    },
+    {
+      "original": "CAMBARÁ",
+      "corrigido": "Cambará",
+      "contexto": {
+        "grupo": "001160",
+        "cota": "1643-00",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-04-09T14:55:10.731845"
+    }
+  ]
+}

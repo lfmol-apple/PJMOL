@@ -1,0 +1,48 @@
+{
+  "numero_contrato": [
+    {
+      "campo": "numero_contrato",
+      "valor_original": "123456",
+      "valor_corrigido": "123456-78",
+      "padrao": {
+        "tipo_correcao": "texto",
+        "original": "123456",
+        "corrigido": "123456-78",
+        "substituicoes": [
+          {
+            "de": "123456",
+            "para": "123456-78"
+          }
+        ]
+      },
+      "contexto": {
+        "grupo": "001",
+        "cota": "023"
+      },
+      "timestamp": "2025-10-29T13:20:53.806755-03:00",
+      "aplicado_automaticamente": 0
+    },
+    {
+      "campo": "numero_contrato",
+      "valor_original": "123456",
+      "valor_corrigido": "123456-78",
+      "padrao": {
+        "tipo_correcao": "texto",
+        "original": "123456",
+        "corrigido": "123456-78",
+        "substituicoes": [
+          {
+            "de": "123456",
+            "para": "123456-78"
+          }
+        ]
+      },
+      "contexto": {
+        "grupo": "001",
+        "cota": "023"
+      },
+      "timestamp": "2025-10-29T13:21:40.687181-03:00",
+      "aplicado_automaticamente": 0
+    }
+  ]
+}

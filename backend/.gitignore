@@ -1,0 +1,47 @@
+# Backend-level ignores (complementam o .gitignore raiz)
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Dados sensíveis
+.env
+.env.*
+credentials.json
+*.pickle
+
+# Banco de dados
+*.db
+*.db.*
+*.bd
+*.sqlite*
+
+# Dados reais — NÃO versionar
+app/documentos_gerados/
+app/storage/
+app/storage_backup*/
+app/modelos/
+app/indices/
+app/temp_uploads/
+app/imagens/
+app/audio/
+app/feedbacks/
+dados_atuais/
+
+# Temporários e uploads
+temp_uploads/
+saida/
+app/saida/
+
+# Dumps de dados reais
+*.sql
+*.tar.gz
+
+# Logs
+*.log
+uvicorn.log
+
+# Backups de código
+*.backup*
+*.bak*
+*.safe
+*.CORRIGIDO*

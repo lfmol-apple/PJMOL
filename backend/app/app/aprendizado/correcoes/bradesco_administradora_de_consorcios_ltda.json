@@ -1,0 +1,96 @@
+{
+  "administradora": [
+    {
+      "campo": "administradora",
+      "valor_original": "BRADESCO ADMINISTRADORA DE CONSORCIOS LTDA. 20/05/2025 10:53:58",
+      "valor_corrigido": "BRADESCO ADMINISTRADORA DE CONSORCIOS LTDA",
+      "padrao": {
+        "tipo_correcao": "texto",
+        "original": "BRADESCO ADMINISTRADORA DE CONSORCIOS LTDA. 20/05/2025 10:53:58",
+        "corrigido": "BRADESCO ADMINISTRADORA DE CONSORCIOS LTDA",
+        "substituicoes": [
+          {
+            "de": "BRADESCO ADMINISTRADORA DE CONSORCIOS LTDA. 20/05/2025 10:53:58",
+            "para": "BRADESCO ADMINISTRADORA DE CONSORCIOS LTDA"
+          }
+        ]
+      },
+      "contexto": {
+        "grupo": "010678",
+        "cota": "0644-01",
+        "administradora": "BRADESCO ADMINISTRADORA DE CONSORCIOS LTDA."
+      },
+      "timestamp": "2025-10-30T11:23:18.451785-03:00",
+      "aplicado_automaticamente": 0
+    },
+    {
+      "campo": "administradora",
+      "valor_original": "BRADESCO ADMINISTRADORA DE CONSORCIOS LTDA",
+      "valor_corrigido": "BRADESCO ADMINISTRADORA DE CONSORCIOS LTDA.",
+      "padrao": {
+        "tipo_correcao": "texto",
+        "original": "BRADESCO ADMINISTRADORA DE CONSORCIOS LTDA",
+        "corrigido": "BRADESCO ADMINISTRADORA DE CONSORCIOS LTDA.",
+        "substituicoes": [
+          {
+            "de": "BRADESCO ADMINISTRADORA DE CONSORCIOS LTDA",
+            "para": "BRADESCO ADMINISTRADORA DE CONSORCIOS LTDA."
+          }
+        ]
+      },
+      "contexto": {
+        "grupo": "010678",
+        "cota": "0644-01",
+        "administradora": "BRADESCO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2025-10-30T11:23:20.249322-03:00",
+      "aplicado_automaticamente": 0
+    },
+    {
+      "campo": "administradora",
+      "valor_original": "BRADESCO ADMINISTRADORA DE CONSORCIOS LTDA. 20/05/2025 10:53:58",
+      "valor_corrigido": "BRADESCO ADMINISTRADORA DE CONSORCIOS LTDA.",
+      "padrao": {
+        "tipo_correcao": "texto",
+        "original": "BRADESCO ADMINISTRADORA DE CONSORCIOS LTDA. 20/05/2025 10:53:58",
+        "corrigido": "BRADESCO ADMINISTRADORA DE CONSORCIOS LTDA.",
+        "substituicoes": [
+          {
+            "de": "BRADESCO ADMINISTRADORA DE CONSORCIOS LTDA. 20/05/2025 10:53:58",
+            "para": "BRADESCO ADMINISTRADORA DE CONSORCIOS LTDA."
+          }
+        ]
+      },
+      "contexto": {
+        "grupo": "010678",
+        "cota": "0644-01",
+        "administradora": "BRADESCO ADMINISTRADORA DE CONSORCIOS LTDA. "
+      },
+      "timestamp": "2025-10-30T11:24:59.792054-03:00",
+      "aplicado_automaticamente": 0
+    },
+    {
+      "campo": "administradora",
+      "valor_original": "BRADESCO ADMINISTRADORA DE CONSORCIOS LTDA.",
+      "valor_corrigido": "BRADESCO ADMINISTRADORA DE CONSORCIOS LTDA",
+      "padrao": {
+        "tipo_correcao": "texto",
+        "original": "BRADESCO ADMINISTRADORA DE CONSORCIOS LTDA.",
+        "corrigido": "BRADESCO ADMINISTRADORA DE CONSORCIOS LTDA",
+        "substituicoes": [
+          {
+            "de": "BRADESCO ADMINISTRADORA DE CONSORCIOS LTDA.",
+            "para": "BRADESCO ADMINISTRADORA DE CONSORCIOS LTDA"
+          }
+        ]
+      },
+      "contexto": {
+        "grupo": "010678",
+        "cota": "0644-01",
+        "administradora": "BRADESCO ADMINISTRADORA DE CONSORCIOS LTDA."
+      },
+      "timestamp": "2025-10-30T11:25:49.899859-03:00",
+      "aplicado_automaticamente": 0
+    }
+  ]
+}

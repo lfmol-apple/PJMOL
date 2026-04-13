@@ -1,0 +1,54 @@
+{
+  "administradora_cnpj": [
+    {
+      "campo": "administradora_cnpj",
+      "valor_original": "DESCONHECIDA",
+      "valor_corrigido": "FUTURA ADMINISTRADORA DE CONSORCIOS LTDA",
+      "padrao": {
+        "tipo_correcao": "texto",
+        "original": "DESCONHECIDA",
+        "corrigido": "FUTURA ADMINISTRADORA DE CONSORCIOS LTDA",
+        "substituicoes": [
+          {
+            "de": "DESCONHECIDA",
+            "para": "FUTURA ADMINISTRADORA DE CONSORCIOS LTDA"
+          }
+        ]
+      },
+      "contexto": {
+        "cnpj": "11222333000181",
+        "cep": "04567890",
+        "fonte": "brasilapi_automatico",
+        "tipo_aprendizado": "administradora_nova"
+      },
+      "timestamp": "2025-10-29T15:04:50.528855-03:00",
+      "aplicado_automaticamente": 0
+    }
+  ],
+  "administradora_cep": [
+    {
+      "campo": "administradora_cep",
+      "valor_original": "DESCONHECIDO",
+      "valor_corrigido": "04567890",
+      "padrao": {
+        "tipo_correcao": "texto",
+        "original": "DESCONHECIDO",
+        "corrigido": "04567890",
+        "substituicoes": [
+          {
+            "de": "DESCONHECIDO",
+            "para": "04567890"
+          }
+        ]
+      },
+      "contexto": {
+        "cnpj": "11222333000181",
+        "cep": "04567890",
+        "fonte": "brasilapi_automatico",
+        "tipo_aprendizado": "administradora_nova"
+      },
+      "timestamp": "2025-10-29T15:04:50.529050-03:00",
+      "aplicado_automaticamente": 0
+    }
+  ]
+}
