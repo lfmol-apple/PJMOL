@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, event
 from sqlalchemy.orm import sessionmaker, declarative_base
 import os
 
@@ -20,6 +20,13 @@ print(f"[DB] Usando banco em: {DATABASE_URL}")
 engine = create_engine(
     DATABASE_URL, connect_args={"check_same_thread": False}
 )
+
+# Ativa WAL (Write-Ahead Logging) para melhor concorrência e proteção contra corrupção em crash
+if DATABASE_URL.startswith("sqlite"):
+    @event.listens_for(engine, "connect")
+    def _set_sqlite_wal(dbapi_conn, _):
+        dbapi_conn.execute("PRAGMA journal_mode=WAL")
+        dbapi_conn.execute("PRAGMA synchronous=NORMAL")
 
 # Cria uma sessão local vinculada ao engine
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

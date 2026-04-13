@@ -85,18 +85,108 @@ except Exception:
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
 
-# cria as tabelas após importar os modelos
-Base.metadata.create_all(bind=engine)
+def _initialize_database() -> None:
+    # cria as tabelas após importar os modelos
+    Base.metadata.create_all(bind=engine)
 
-CAMINHO_JSON = os.path.join(BASE_DIR, "app", "dados", "administradoras.json")
-with open(CAMINHO_JSON, "r", encoding="utf-8") as f:
-    CNPJS_ADMINISTRADORAS = json.load(f)
 
-app = FastAPI(
-    title="API com Autenticação JWT",
-    description="Exemplo de API com rotas públicas e protegidas",
-    version="1.0.0",
-)
+def _load_administradoras() -> dict:
+    caminho_json = os.path.join(BASE_DIR, "app", "dados", "administradoras.json")
+    with open(caminho_json, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def _create_app() -> FastAPI:
+    return FastAPI(
+        title="API com Autenticação JWT",
+        description="Exemplo de API com rotas públicas e protegidas",
+        version="1.0.0",
+    )
+
+
+def _configure_cors(fastapi_app: FastAPI) -> None:
+    default_origins = ["http://localhost:3000", "http://127.0.0.1:3000"]
+    env_origins = os.getenv("CORS_ALLOW_ORIGINS")
+    if env_origins:
+        extra_origins = [origin.strip() for origin in env_origins.split(",") if origin.strip()]
+        default_origins.extend(extra_origins)
+
+    fastapi_app.add_middleware(
+        CORSMiddleware,
+        allow_origins=default_origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
+
+def _mount_public_files(fastapi_app: FastAPI) -> None:
+    global STORAGE_ROOT, PUBLIC_BASE_URL
+    # ✅ CAMINHO ABSOLUTO CONFIÁVEL
+    from app.utils.paths import get_storage_dir
+    STORAGE_ROOT = os.getenv("STORAGE_ROOT", get_storage_dir())
+
+    # (opcional) base pública para construir URLs completas quando preciso
+    PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL")  # ex.: https://seu-dominio.com
+
+    # Expor os arquivos do STORAGE_ROOT em /files
+    fastapi_app.mount("/files", StaticFiles(directory=STORAGE_ROOT), name="files")
+
+
+def _register_auxiliary_routers(fastapi_app: FastAPI) -> None:
+    fastapi_app.include_router(comunicados_route.router)
+    fastapi_app.include_router(alerta_forcado.router)
+    fastapi_app.include_router(sessoes_route.router)
+    fastapi_app.include_router(push_notifications_route.router)
+
+
+def _register_main_routers(fastapi_app: FastAPI) -> None:
+    # Evita duplicar routes: usamos apenas um include por módulo
+    fastapi_app.include_router(comarca_router)        # /api/comarca
+    fastapi_app.include_router(ml_router)             # /api/ml
+    fastapi_app.include_router(aprendizado_correcao_router)   # /aprendizado
+
+    #  NOVO: API para Templates ML por Administradora - PROD: Removido temporariamente
+    # from api.ml_templates import router as ml_templates_router
+    # fastapi_app.include_router(ml_templates_router)  # /ml-templates
+
+    fastapi_app.include_router(usuarios_router)       # /usuarios
+    fastapi_app.include_router(advogado.router)       # /advogado
+    fastapi_app.include_router(documentos.router)     # /documentos (geração DOCX/PDF e /gerar-documentos)
+    fastapi_app.include_router(login.router)          # públicas
+    fastapi_app.include_router(privada.router)        # protegidas
+    fastapi_app.include_router(assinaturas.router)    # /assinaturas (enviar p/ ZapSign)
+    fastapi_app.include_router(extratos.router)       # /extratos (CRUD + _dryrun + upload-extrato)
+    install_scheduler(fastapi_app)
+    fastapi_app.include_router(webhook_zapsign.router)
+    fastapi_app.include_router(uploads_clean.router)
+    fastapi_app.include_router(relatorios_producao.router)
+    fastapi_app.include_router(advogado_public_router)
+    fastapi_app.include_router(extratos_storage_router)
+    fastapi_app.include_router(extratos_download.router)
+    fastapi_app.include_router(comunicados_route.router)  # /comunicados
+    fastapi_app.include_router(alerta_forcado.router)      # /alerta-forcado
+
+
+def _mount_document_static(fastapi_app: FastAPI) -> None:
+    global DOCS_DIR, STATIC_DIR
+    # ✅ CAMINHOS ABSOLUTOS CONFIÁVEIS
+    from app.utils.paths import get_documentos_dir, get_static_dir
+    DOCS_DIR = get_documentos_dir()
+    fastapi_app.mount("/documentos", StaticFiles(directory=DOCS_DIR), name="documentos")
+
+    # opcional: estáticos gerais (útil para assinado via webhook, se for servir local)
+    STATIC_DIR = get_static_dir()
+    fastapi_app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+
+
+def _install_optional_dependencies() -> None:
+    instalar_dependencias()
+
+
+_initialize_database()
+CNPJS_ADMINISTRADORAS = _load_administradoras()
+app = _create_app()
 
 # ======================================================================
 # Exception Handler para ValidationError do Pydantic
@@ -122,6 +212,47 @@ async def validation_exception_handler(request, exc):
             "message": "Erro de validação dos dados enviados. Verifique os campos obrigatórios e seus tipos."
         }
     )
+
+# ======================================================================
+# Validação de ambiente na inicialização
+# ======================================================================
+
+def _validar_ambiente() -> None:
+    """Verifica variáveis de ambiente críticas e emite avisos no startup."""
+    avisos = []
+
+    secret = os.getenv("SECRET_KEY", "")
+    if not secret or secret == "sua-chave-secreta":
+        avisos.append(
+            "⚠️  [SEGURANÇA] SECRET_KEY não configurada ou usando valor padrão inseguro. "
+            "Configure SECRET_KEY no .env antes de usar em produção."
+        )
+
+    storage = os.getenv("STORAGE_ROOT", "")
+    if storage and not os.path.isdir(storage):
+        avisos.append(
+            f"⚠️  [STORAGE] STORAGE_ROOT='{storage}' não existe. "
+            "O sistema criará o diretório, mas verifique se o caminho está correto."
+        )
+
+    env_name = os.getenv("ENVIRONMENT", "development")
+    if env_name == "production":
+        cors_str = os.getenv("CORS_ALLOW_ORIGINS", "")
+        if "localhost" in cors_str or "127.0.0.1" in cors_str:
+            avisos.append(
+                "⚠️  [CORS] ENVIRONMENT=production mas CORS_ALLOW_ORIGINS contém localhost. "
+                "Verifique a configuração antes de expor em produção."
+            )
+
+    for msg in avisos:
+        print(msg)
+
+    if avisos:
+        print(f"[ENV] {len(avisos)} aviso(s) de configuração. Verifique o .env.")
+    else:
+        print(f"[ENV] ✅ Configuração de ambiente validada (ENVIRONMENT={env_name}).")
+
+_validar_ambiente()
 
 # ======================================================================
 # Auto-correção de timezone na inicialização
@@ -234,37 +365,14 @@ async def daily_recalc_middleware(request: Request, call_next):
 # CORS e estáticos
 # ======================================================================
 
-_default_origins = ["http://localhost:3000", "http://127.0.0.1:3000"]
-_env_origins = os.getenv("CORS_ALLOW_ORIGINS")
-if _env_origins:
-    _extra_origins = [origin.strip() for origin in _env_origins.split(",") if origin.strip()]
-    _default_origins.extend(_extra_origins)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=_default_origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+_configure_cors(app)
 
 # 🔵 INÍCIO — storage local de arquivos públicos (/files)
-# ✅ CAMINHO ABSOLUTO CONFIÁVEL
-from app.utils.paths import get_storage_dir
-STORAGE_ROOT = os.getenv("STORAGE_ROOT", get_storage_dir())
-
-# (opcional) base pública para construir URLs completas quando preciso
-PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL")  # ex.: https://seu-dominio.com
-
-# Expor os arquivos do STORAGE_ROOT em /files
-app.mount("/files", StaticFiles(directory=STORAGE_ROOT), name="files")
+_mount_public_files(app)
 # 🔵 FIM — storage local de arquivos públicos (/files)
 
 # Routers auxiliares
-app.include_router(comunicados_route.router)
-app.include_router(alerta_forcado.router)
-app.include_router(sessoes_route.router)
-app.include_router(push_notifications_route.router)
+_register_auxiliary_routers(app)
 
 # ======================================================================
 # Auth básica (para rota de exemplo)
@@ -289,31 +397,7 @@ def rota_protegida(dep=Depends(verificar_autenticacao)):
 # Routes
 # ======================================================================
 
-# Evita duplicar routes: usamos apenas um include por módulo
-app.include_router(comarca_router)        # /api/comarca
-app.include_router(ml_router)             # /api/ml
-app.include_router(aprendizado_correcao_router)   # /aprendizado
-
-#  NOVO: API para Templates ML por Administradora - PROD: Removido temporariamente
-# from api.ml_templates import router as ml_templates_router
-# app.include_router(ml_templates_router)  # /ml-templates
-
-app.include_router(usuarios_router)       # /usuarios
-app.include_router(advogado.router)       # /advogado
-app.include_router(documentos.router)     # /documentos (geração DOCX/PDF e /gerar-documentos)
-app.include_router(login.router)          # públicas
-app.include_router(privada.router)        # protegidas
-app.include_router(assinaturas.router)    # /assinaturas (enviar p/ ZapSign)
-app.include_router(extratos.router)       # /extratos (CRUD + _dryrun + upload-extrato)
-install_scheduler(app)
-app.include_router(webhook_zapsign.router)
-app.include_router(uploads_clean.router)
-app.include_router(relatorios_producao.router)
-app.include_router(advogado_public_router)
-app.include_router(extratos_storage_router)
-app.include_router(extratos_download.router)
-app.include_router(comunicados_route.router)  # /comunicados
-app.include_router(alerta_forcado.router)      # /alerta-forcado
+_register_main_routers(app)
 
 # ======================================================================
 # 🤖 ML ENDPOINTS SIMPLIFICADOS PARA PRODUÇÃO
@@ -341,20 +425,13 @@ async def ml_status_producao():
         "mensagem": "Sistema em modo de produção seguro"
     }
 
-# ✅ CAMINHOS ABSOLUTOS CONFIÁVEIS
-from app.utils.paths import get_documentos_dir, get_static_dir
-DOCS_DIR = get_documentos_dir()
-app.mount("/documentos", StaticFiles(directory=DOCS_DIR), name="documentos")
-
-# opcional: estáticos gerais (útil para assinado via webhook, se for servir local)
-STATIC_DIR = get_static_dir()
-app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+_mount_document_static(app)
 
 # ======================================================================
 # Dependências opcionais (instala se faltar)
 # ======================================================================
 
-instalar_dependencias()
+_install_optional_dependencies()
 
 # ======================================================================
 # Util: melhorar imagem (OCR)

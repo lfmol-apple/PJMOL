@@ -1,9 +1,11 @@
+import os
 from jose import jwt, JWTError
 from datetime import timedelta
 from app.core.time import now_sp  # ✅ usar fuso America/Sao_Paulo
 
-# Pode mover essas constantes para seu arquivo de configurações
-SECRET_KEY = "sua-chave-secreta"  # substitua por uma chave segura
+# Lê do ambiente — obrigatório configurar SECRET_KEY no .env
+# Fallback "sua-chave-secreta" é INSEGURO; o sistema avisa no startup se não configurado
+SECRET_KEY = os.getenv("SECRET_KEY", "sua-chave-secreta")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 

@@ -49,6 +49,10 @@ credentials.json
 # Documentos gerados (CRÍTICO)
 backend/app/documentos_gerados/
 
+# Storage de arquivos de clientes (CRÍTICO — 300MB+, dados pessoais/documentos)
+backend/app/storage/
+backend/app/storage_backup*/
+
 # Modelos e arquivos binários grandes (avaliar depois)
 backend/modelos/
 
@@ -70,6 +74,11 @@ database.db
 # bancos locais (CRÍTICO)
 *.db
 *.bd
+# SQLite WAL e SHM (artefatos de runtime do banco)
+*.db-wal
+*.db-shm
+*.bd-wal
+*.bd-shm
 
 # documentação operacional solta na raiz
 APRENDIZADO_AUTOMATICO.md
@@ -129,3 +138,10 @@ backend/debug_porto_nome.py
 backend/indices/
 backend/maintenance_storage.py
 backend/test_all_functions.py
+
+# Diretório duplicado com configs de produção (NÃO é código-fonte)
+backend/app/app/
+
+# Arquivos historicos arquivados intencionalmente para revisao tecnica
+!docs/archive/
+!docs/archive/**
