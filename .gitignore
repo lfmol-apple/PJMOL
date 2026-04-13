@@ -1,0 +1,68 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.sqlite3
+*.db
+.venv/
+venv/
+.env
+.env.*
+.pytest_cache/
+.mypy_cache/
+
+# Node / frontend
+node_modules/
+.next/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Backups / dumps / arquivos pesados
+*.tar.gz
+*.sql
+*.bak
+backups/
+*_backup*/
+
+# Uploads temporários
+tmp/
+temp/
+
+# Dados sensíveis
+credentials.json
+*.json
+*.pickle
+
+# Documentos gerados (CRÍTICO)
+backend/app/documentos_gerados/
+
+# Modelos e arquivos binários grandes (avaliar depois)
+backend/modelos/
+
+# Banco de dados
+database.db
+
+# Backups python
+*.backup*
+*.bak
+
+# Logs adicionais
+*.log
+
+# Arquivos de token
+*token*
+
+# bancos locais (CRÍTICO)
+*.db
+*.bd

@@ -1,0 +1,38 @@
+/* Animações para mensagens de aprendizado */
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes progress-bar {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s ease-out;
+}
+
+.animate-progress-bar {
+  animation: progress-bar 5s linear;
+}
+
+/* Estilos para mensagens de aprendizado */
+.aprendizado-mensagem {
+  transition: all 0.3s ease;
+}
+
+.aprendizado-mensagem:hover {
+  transform: translateX(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
