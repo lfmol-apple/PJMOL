@@ -7,7 +7,7 @@ import SessionLoginNotifier from "@/components/SessionLoginNotifier";
 import { getSessionPayload, logoutCurrentSession, postSessionPresence } from "@/app/lib/sessionPresence";
 
 // IDs que devem fazer login novamente 1x por dia
-const FORCE_LOGIN_IDS = new Set([6, 7, 10, 11]); // Breno, Marcel, Luana, Marco Antônio
+const FORCE_LOGIN_IDS = new Set([6, 7, 10]); // Breno, Marcel, Luana
 
 const API_BASE = (process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000").replace(/\/$/, "");
 
