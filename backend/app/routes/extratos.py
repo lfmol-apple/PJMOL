@@ -16,6 +16,7 @@ from app.models.extrato import Extrato
 from app.models.usuario import Usuario  # 🔵
 from app.models.relacionados import ParcelaExtrato, CustaExtrato, AnexoExtrato
 from app.services.push_notifications import notify_monitors_about_new_process
+from app.utils.extrato_helpers import extrato_ativo, get_extrato_or_404
 
 try:  # preferir helpers oficiais do módulo de uploads, mas manter fallback
     from app.routes.uploads import (  # type: ignore
@@ -954,8 +955,7 @@ def list_extratos(
 ):
     # ⚡ OTIMIZAÇÃO: Query direta sem decorações extras que causam N+1 queries
     q = db.query(Extrato).options(selectinload(Extrato.usuario))
-    # Exclui extratos soft-deleted da listagem padrão
-    q = q.filter(Extrato.deleted_at.is_(None))
+    q = extrato_ativo(q)  # exclui soft-deleted
     if perfil == "gerente" and usuario_id_opt:
         q = q.filter(Extrato.usuario_id == usuario_id_opt)
     q = q.order_by(Extrato.id.desc()).limit(limit).offset(offset)
@@ -1249,17 +1249,14 @@ def delete_extrato(
     import logging
     logger = logging.getLogger(__name__)
 
-    # Query base — não permitir deletar o que já foi soft-deleted
-    q = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None))
-
-    # Se não é admin, precisa filtrar pelo usuário
-    if perfil != "admin" and usuario_id_opt:
-        q = q.filter(Extrato.usuario_id == usuario_id_opt)
-    elif perfil != "admin" and not usuario_id_opt:
+    # Verificar permissão antes de buscar
+    if perfil != "admin" and not usuario_id_opt:
         raise HTTPException(status_code=403, detail="Apenas admins podem deletar sem especificar usuário")
 
-    ex = q.first()
-    if not ex:
+    ex = get_extrato_or_404(db, extrato_id)
+
+    # Se não é admin, validar propriedade
+    if perfil != "admin" and usuario_id_opt and ex.usuario_id != usuario_id_opt:
         raise HTTPException(status_code=404, detail="Extrato não encontrado.")
 
     # Soft-delete: marca timestamp de exclusão lógica — NÃO remove do banco nem do storage

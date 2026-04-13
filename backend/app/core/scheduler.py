@@ -13,6 +13,7 @@ from apscheduler.triggers.cron import CronTrigger
 
 from database import SessionLocal
 from app.models.extrato import Extrato
+from app.utils.extrato_helpers import extrato_ativo
 from app.routes import extratos as extratos_routes  # usa _recalcular_extrato_vals
 from app.services.production_report import send_current_month_production_report
 from app.services import job_state
@@ -32,7 +33,7 @@ def recalcular_todos_extratos() -> int:
     db = SessionLocal()
     total = 0
     try:
-        extratos = db.query(Extrato).filter(Extrato.deleted_at.is_(None)).all()
+        extratos = extrato_ativo(db.query(Extrato)).all()
         total = len(extratos)
         for ex in extratos:
             try:
