@@ -501,7 +501,7 @@ def set_numero_processo_interno(
       - extras.numero_processo_last_set_at (sempre atualiza)
     Grava em audit_logs: action='process.number.set'
     """
-    ex = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+    ex = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
     if not ex:
         raise HTTPException(status_code=404, detail="Extrato não encontrado")
 

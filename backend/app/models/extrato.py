@@ -166,6 +166,9 @@ class Extrato(Base):
     criado_em = Column(DateTime(timezone=True), default=now_sp, nullable=False)
     atualizado_em = Column(DateTime(timezone=True), default=now_sp, onupdate=now_sp, nullable=False)
 
+    # Soft-delete: quando preenchido, o extrato está logicamente excluído
+    deleted_at = Column(DateTime(timezone=True), nullable=True, default=None)
+
     # Campos legados que existem na tabela
     created_at = Column(Text, nullable=True)
     updated_at = Column(Text, nullable=True)

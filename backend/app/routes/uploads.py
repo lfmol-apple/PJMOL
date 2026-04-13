@@ -65,7 +65,7 @@ async def remove_file(
     db: Session = Depends(get_db),
 ):
     # Obter o extrato
-    extrato = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+    extrato = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
     if not extrato:
         raise HTTPException(status_code=404, detail="Extrato não encontrado")
 
@@ -325,7 +325,7 @@ async def unmark_signed_external(
 
     _db = next(get_db())
     try:
-        ex = _db.query(Extrato).filter(Extrato.id == extrato_id).first()
+        ex = _db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
         if not ex:
             raise HTTPException(status_code=404, detail="Extrato não encontrado")
 
@@ -436,7 +436,7 @@ def _update_extrato_urls(extrato_id: int, tipo: str, public_url: str):
     db = None
     try:
         db = next(get_db())
-        extrato = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+        extrato = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
         if not extrato:
             return
 
@@ -521,7 +521,7 @@ def _make_client_alias(extrato_id: int, filename: str, abs_saved_path: str) -> O
     db = None
     try:
         db = next(get_db())
-        extrato = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+        extrato = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
         if not extrato:
             return None
 
@@ -607,7 +607,7 @@ def _db_status(extrato_id: int) -> Optional[dict]:
     db = None
     try:
         db = next(get_db())
-        ex = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+        ex = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
         if not ex:
             return None
 
@@ -735,7 +735,7 @@ def _clear_extrato_refs(extrato_id: int, tipo: str, public_url: str):
     db = None
     try:
         db = next(get_db())
-        ex = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+        ex = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
         if not ex:
             return
 
@@ -902,7 +902,7 @@ async def freeze_anexos_timer(
 
     db = next(get_db())
     try:
-        ex = db.query(Extrato).filter(Extrato.id == eid).first()
+        ex = db.query(Extrato).filter(Extrato.id == eid, Extrato.deleted_at.is_(None)).first()
         if not ex:
             raise HTTPException(status_code=404, detail="Extrato não encontrado.")
 
@@ -959,7 +959,7 @@ async def notify_advogado(
     if get_db is not None and Extrato is not None:
         db_lookup = next(get_db())
         try:
-            extrato = db_lookup.query(Extrato).filter(Extrato.id == extrato_id).first()
+            extrato = db_lookup.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
             if extrato and getattr(extrato, "advogado_id", None) and Advogado is not None:
                 adv = db_lookup.query(Advogado).filter(Advogado.id == extrato.advogado_id).first()
         finally:
@@ -1021,8 +1021,7 @@ async def notify_advogado(
     if get_db is not None and Extrato is not None:
         _db_session = next(get_db())
         try:
-            ex = _db_session.query(Extrato).filter(Extrato.id == extrato_id).first()
-            if ex:
+            ex = _db_session.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
                 now_iso_sp = datetime.now(SAO_TZ).isoformat()  # ✅ SP
 
                 # 1) coerção
@@ -1115,7 +1114,7 @@ async def mark_signed_external(
         raise HTTPException(status_code=500, detail="Dependências de DB não disponíveis")
     _db = next(get_db())
     try:
-        ex = _db.query(Extrato).filter(Extrato.id == extrato_id).first()
+        ex = _db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
         if not ex:
             raise HTTPException(status_code=404, detail="Extrato não encontrado")
 

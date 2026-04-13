@@ -220,7 +220,7 @@ def preencher_documento(modelo_path: str, dados: dict, nome_saida: str) -> str:
                 from database import SessionLocal
                 from app.models.extrato import Extrato
                 db = SessionLocal()
-                extrato = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+                extrato = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
                 if extrato and extrato.tipo_documento:
                     dados['tipo_documento'] = extrato.tipo_documento
                     print(f"✅ tipo_documento buscado do banco: {extrato.tipo_documento}")

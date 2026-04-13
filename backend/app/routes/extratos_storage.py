@@ -39,7 +39,7 @@ def _guess_cliente_nome(db: Session, extrato_id: int, fallback: Optional[str]=No
         return fallback
     if Extrato is None:
         return None
-    ext = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+    ext = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
     if not ext:
         return None
     # tenta campos usuais

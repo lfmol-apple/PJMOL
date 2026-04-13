@@ -28,11 +28,11 @@ MONTHLY_PRODUCTION_REPORT_JOB_NAME = "relatorio_producao_mensal"
 
 
 def recalcular_todos_extratos() -> int:
-    """Recalcula todos os extratos cadastrados e registra status do job."""
+    """Recalcula todos os extratos ativos (não soft-deleted) e registra status do job."""
     db = SessionLocal()
     total = 0
     try:
-        extratos = db.query(Extrato).all()
+        extratos = db.query(Extrato).filter(Extrato.deleted_at.is_(None)).all()
         total = len(extratos)
         for ex in extratos:
             try:

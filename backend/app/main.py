@@ -292,12 +292,21 @@ async def startup_timezone_correction():
     except Exception:
         pass  # coluna já existe
 
+    # 🔧 Migração: soft-delete — adiciona coluna deleted_at em extratos se não existir
+    try:
+        with engine.connect() as _conn:
+            _conn.execute(text("ALTER TABLE extratos ADD COLUMN deleted_at DATETIME"))
+            _conn.commit()
+        logger.info("✅ Migração: coluna deleted_at adicionada à tabela extratos.")
+    except Exception:
+        pass  # coluna já existe
+
     # 🎯 Auto-atualização de fases (substitui sistema de timers)
     try:
         logger.info("🎯 Atualizando fases de todos os extratos...")
         db = SessionLocal()
         try:
-            extratos = db.query(Extrato).all()
+            extratos = db.query(Extrato).filter(Extrato.deleted_at.is_(None)).all()
             
             for ex in extratos:
                 _atualizar_fase(ex, db)
@@ -532,7 +541,7 @@ def extrair_dados(caminho_pdf: str):
             grupo = (dados.get('grupo') or "").strip()
             cota  = (dados.get('cota') or "").strip()
             if grupo and cota:
-                if db.query(Extrato).filter_by(grupo=grupo, cota=cota).first():
+                if db.query(Extrato).filter(Extrato.grupo == grupo, Extrato.cota == cota, Extrato.deleted_at.is_(None)).first():
                     raise HTTPException(status_code=400, detail="Extrato já cadastrado")
         finally:
             db.close()

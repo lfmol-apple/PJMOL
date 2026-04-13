@@ -136,7 +136,8 @@ def sync_all_extrato_timers(db_session):
     
     # Buscar extratos que têm enviado_em
     extratos = db_session.query(Extrato).filter(
-        Extrato.enviado_em.isnot(None)
+        Extrato.enviado_em.isnot(None),
+        Extrato.deleted_at.is_(None)
     ).all()
     
     updated_count = 0

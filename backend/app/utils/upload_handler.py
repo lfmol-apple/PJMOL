@@ -65,7 +65,7 @@ async def process_upload(
         
         # 6. Atualizar informações no banco se necessário
         if db and Extrato:
-            extrato = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+            extrato = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
             if extrato:
                 extras = extrato.extras or {}
                 if not isinstance(extras, dict):

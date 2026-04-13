@@ -116,7 +116,7 @@ def abrir_por_token(extrato_id: int, token: str, db: Session = Depends(get_db)):
 
     adv = _get_advogado_by_token(db, data)
 
-    ex = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+    ex = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
     if not ex:
         raise HTTPException(status_code=404, detail="Extrato não encontrado.")
 
@@ -161,7 +161,7 @@ def set_numero_processo(
 
     adv = _get_advogado_by_token(db, data)
 
-    ex = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+    ex = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
     if not ex:
         raise HTTPException(status_code=404, detail="Extrato não encontrado.")
 

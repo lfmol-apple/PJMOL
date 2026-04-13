@@ -308,7 +308,7 @@ def status(extrato_id: Optional[int] = Query(None), db: Session = Depends(get_db
     """Retorna informações sobre anexos. Se extrato_id for fornecido, retorna do registro; caso contrário, vazio."""
     if extrato_id is None:
         return {"ok": True, "itens": []}
-    extrato = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+    extrato = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
     if not extrato:
         raise HTTPException(status_code=404, detail="Extrato não encontrado")
     # Atualiza timers antes de retornar status
@@ -405,7 +405,7 @@ def freeze_timer(
     freeze: bool = Query(True),
     db: Session = Depends(get_db),
 ):
-    extrato = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+    extrato = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
     if not extrato:
         raise HTTPException(status_code=404, detail="Extrato não encontrado")
     extras = extrato.extras or {}
@@ -422,7 +422,7 @@ def clear_problematic_urls(
     db: Session = Depends(get_db),
 ):
     """Remove URLs problemáticas que não conseguem ser removidas pelo método normal"""
-    extrato = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+    extrato = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
     if not extrato:
         raise HTTPException(status_code=404, detail="Extrato não encontrado")
 
@@ -458,7 +458,7 @@ def remove_file(
     url: str = Query(...),
     db: Session = Depends(get_db),
 ):
-    extrato = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+    extrato = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
     if not extrato:
         raise HTTPException(status_code=404, detail="Extrato não encontrado")
 
@@ -570,7 +570,7 @@ def notify_advogado(
         raise HTTPException(status_code=500, detail=f"Import error: {e}")
     
     # Busca extrato
-    extrato = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+    extrato = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
     if not extrato:
         raise HTTPException(status_code=404, detail="Extrato não encontrado")
     
@@ -739,7 +739,7 @@ async def upload(
     if tipo not in TIPO_TO_FIELD:
         raise HTTPException(status_code=400, detail=f"Tipo inválido: {tipo}")
 
-    extrato = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+    extrato = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
     if not extrato:
         raise HTTPException(status_code=404, detail="Extrato não encontrado")
 
@@ -827,7 +827,7 @@ async def upload(
 def mark_signed_external(extrato_id: int, db: Session = Depends(get_db)):
     try:
         # Buscar o extrato
-        extrato = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+        extrato = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
         if not extrato:
             raise HTTPException(status_code=404, detail="Extrato não encontrado")
         
@@ -918,8 +918,8 @@ def initialize_all_missing_timers(db: Session = Depends(get_db)):
         import json
         from sqlalchemy import text
         
-        # Buscar todos os extratos
-        extratos = db.query(Extrato).all()
+        # Buscar todos os extratos ativos (não soft-deleted)
+        extratos = db.query(Extrato).filter(Extrato.deleted_at.is_(None)).all()
         
         processed = []
         skipped = []
@@ -1014,7 +1014,7 @@ def reset_timer_to_signature_only(extrato_id: int, db: Session = Depends(get_db)
         from sqlalchemy import text
         
         # Buscar o extrato
-        extrato = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+        extrato = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
         if not extrato:
             raise HTTPException(status_code=404, detail="Extrato não encontrado")
         
@@ -1078,7 +1078,7 @@ def mark_salvo_endpoint(extrato_id: int, db: Session = Depends(get_db)):
     """
     try:
         # Buscar o extrato
-        extrato = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+        extrato = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
         if not extrato:
             raise HTTPException(status_code=404, detail="Extrato não encontrado")
         
@@ -1104,7 +1104,7 @@ def mark_salvo_endpoint(extrato_id: int, db: Session = Depends(get_db)):
 @router.post("/unmark_signed_external/{extrato_id}")
 def unmark_signed_external(extrato_id: int, db: Session = Depends(get_db)):
     try:
-        extrato = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+        extrato = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
         if not extrato:
             raise HTTPException(status_code=404, detail="Extrato não encontrado")
         
@@ -1201,7 +1201,7 @@ def unmark_signed_external(extrato_id: int, db: Session = Depends(get_db)):
 @router.get("/test_status/{extrato_id}")
 def test_status(extrato_id: int, db: Session = Depends(get_db)):
     """Endpoint de teste para debug da resposta de status"""
-    extrato = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+    extrato = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
     if not extrato:
         raise HTTPException(status_code=404, detail="Extrato não encontrado")
     
@@ -1227,7 +1227,7 @@ def get_timers(extrato_id: int, db: Session = Depends(get_db)):
     Retorna informações detalhadas dos timers do processo.
     Útil para a tela gerencial de processos.
     """
-    extrato = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+    extrato = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
     if not extrato:
         raise HTTPException(status_code=404, detail="Extrato não encontrado")
     
@@ -1336,7 +1336,7 @@ def get_timers(extrato_id: int, db: Session = Depends(get_db)):
 def clear_all_timers(db: Session = Depends(get_db)):
     """Remove todos os campos timer_* dos extratos para reimplementação."""
     try:
-        extratos = db.query(Extrato).all()
+        extratos = db.query(Extrato).filter(Extrato.deleted_at.is_(None)).all()
         cleared_count = 0
         
         for extrato in extratos:
@@ -1377,7 +1377,7 @@ def clear_all_timers(db: Session = Depends(get_db)):
 @router.post("/admin/debug-extrato/{extrato_id}")
 def debug_extrato_timer(extrato_id: int, db: Session = Depends(get_db)):
     """Debug de um extrato específico."""
-    extrato = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+    extrato = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
     if not extrato:
         return {"error": "Extrato não encontrado"}
     
@@ -1428,7 +1428,7 @@ def reimplant_all_timers(db: Session = Depends(get_db)):
     Reimplementa todos os timers usando a nova lógica robusta.
     """
     try:
-        extratos = db.query(Extrato).all()
+        extratos = db.query(Extrato).filter(Extrato.deleted_at.is_(None)).all()
         total_processed = 0
         created_count = 0
         details = []
@@ -1499,7 +1499,7 @@ def set_status_documento(
     - "assinado": Quando documento é assinado
     - "assinado_externo": Quando marcado como assinado externo no frontend
     """
-    extrato = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+    extrato = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
     if not extrato:
         raise HTTPException(status_code=404, detail="Extrato não encontrado")
     
@@ -1558,7 +1558,7 @@ def mark_salvo_documento(extrato_id: int, db: Session = Depends(get_db)):
     """
     try:
         # Buscar o extrato (usa mesma lógica de mark_signed_external)
-        extrato = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+        extrato = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
         if not extrato:
             raise HTTPException(status_code=404, detail="Extrato não encontrado")
         
@@ -1598,7 +1598,7 @@ def normalize_all_timers(db: Session = Depends(get_db)):
     Normaliza todos os timers dos extratos que ainda não foram processados.
     """
     try:
-        extratos = db.query(Extrato).all()
+        extratos = db.query(Extrato).filter(Extrato.deleted_at.is_(None)).all()
         total_processed = 0
         updated_count = 0
         details = []

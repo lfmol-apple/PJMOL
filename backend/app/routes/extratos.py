@@ -860,13 +860,14 @@ def create_extrato(
     db: Session = Depends(get_db),
     usuario_id: int = Depends(get_usuario_id_strict),
 ):
-    # Unicidade: usuario_id + grupo + cota
+    # Unicidade: usuario_id + grupo + cota (ignora soft-deleted — permite re-criar)
     exists = (
         db.query(Extrato)
         .filter(
             Extrato.usuario_id == usuario_id,
             Extrato.grupo == payload.grupo,
             Extrato.cota == payload.cota,
+            Extrato.deleted_at.is_(None),
         )
         .first()
     )
@@ -953,6 +954,8 @@ def list_extratos(
 ):
     # ⚡ OTIMIZAÇÃO: Query direta sem decorações extras que causam N+1 queries
     q = db.query(Extrato).options(selectinload(Extrato.usuario))
+    # Exclui extratos soft-deleted da listagem padrão
+    q = q.filter(Extrato.deleted_at.is_(None))
     if perfil == "gerente" and usuario_id_opt:
         q = q.filter(Extrato.usuario_id == usuario_id_opt)
     q = q.order_by(Extrato.id.desc()).limit(limit).offset(offset)
@@ -998,21 +1001,21 @@ def get_extrato(
 ):
     ex: Optional[Extrato] = None
 
-    # Admins/Gerentes podem acessar qualquer extrato
+    # Admins/Gerentes podem acessar qualquer extrato (exceto soft-deleted)
     if perfil in {"admin", "gerente"}:
-        ex = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+        ex = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
 
     # Dono do extrato (quando envia X-Usuario-Id)
     if ex is None and usuario_id_opt is not None:
         ex = (
             db.query(Extrato)
-            .filter(Extrato.id == extrato_id, Extrato.usuario_id == usuario_id_opt)
+            .filter(Extrato.id == extrato_id, Extrato.usuario_id == usuario_id_opt, Extrato.deleted_at.is_(None))
             .first()
         )
 
     # Advogado (quando front sinaliza modo advogado) — mantém compat anterior
     if ex is None and perfil == "advogado":
-        ex = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+        ex = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
 
     if not ex:
         raise HTTPException(status_code=404, detail="Extrato não encontrado.")
@@ -1066,26 +1069,26 @@ def update_extrato(
     # ===== Resolver autorização e carregar o extrato =====
     ex = None
 
-    # 1) Admin/Gerente podem editar qualquer extrato
+    # 1) Admin/Gerente podem editar qualquer extrato (exceto soft-deleted)
     if perfil in ("admin", "gerente"):
-        ex = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+        ex = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
 
     # 2) Dono (quando X-Usuario-Id bate com extrato.usuario_id)
     if ex is None and usuario_id_opt is not None:
         ex = (
             db.query(Extrato)
-            .filter(Extrato.id == extrato_id, Extrato.usuario_id == usuario_id_opt)
+            .filter(Extrato.id == extrato_id, Extrato.usuario_id == usuario_id_opt, Extrato.deleted_at.is_(None))
             .first()
         )
 
     # 3) Advogado (link mágico) — quando front sinaliza perfil=advogado
     if ex is None and perfil == "advogado":
-        ex = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+        ex = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None)).first()
 
     if not ex:
         raise HTTPException(status_code=404, detail="Extrato não encontrado.")
 
-    # Unicidade se grupo/cota mudarem (só valida contra o mesmo usuario do extrato)
+    # Unicidade se grupo/cota mudarem (só valida contra o mesmo usuario do extrato, excluindo deletados)
     if (payload.grupo is not None and payload.grupo != ex.grupo) or (payload.cota is not None and payload.cota != ex.cota):
         dup = (
             db.query(Extrato)
@@ -1094,6 +1097,7 @@ def update_extrato(
                 Extrato.grupo == (payload.grupo if payload.grupo is not None else ex.grupo),
                 Extrato.cota == (payload.cota if payload.cota is not None else ex.cota),
                 Extrato.id != ex.id,
+                Extrato.deleted_at.is_(None),
             )
             .first()
         )
@@ -1234,7 +1238,7 @@ def update_extrato(
 @router.delete(
     "/{extrato_id}",
     status_code=status.HTTP_204_NO_CONTENT,
-    summary="Excluir extrato (cascade filhos) - Admin pode deletar qualquer extrato",
+    summary="Excluir extrato (soft-delete) - marca deleted_at, não remove do banco nem do storage",
 )
 def delete_extrato(
     extrato_id: int,
@@ -1242,50 +1246,32 @@ def delete_extrato(
     perfil: Optional[str] = Depends(get_perfil_header),   # "admin" | "gerente" | None
     usuario_id_opt: Optional[int] = Depends(maybe_usuario_id),
 ):
-    from app.utils.cleanup_storage import cleanup_extrato_storage
     import logging
-    
     logger = logging.getLogger(__name__)
-    
-    # Query base
-    q = db.query(Extrato).filter(Extrato.id == extrato_id)
-    
+
+    # Query base — não permitir deletar o que já foi soft-deleted
+    q = db.query(Extrato).filter(Extrato.id == extrato_id, Extrato.deleted_at.is_(None))
+
     # Se não é admin, precisa filtrar pelo usuário
     if perfil != "admin" and usuario_id_opt:
         q = q.filter(Extrato.usuario_id == usuario_id_opt)
     elif perfil != "admin" and not usuario_id_opt:
         raise HTTPException(status_code=403, detail="Apenas admins podem deletar sem especificar usuário")
-    
+
     ex = q.first()
     if not ex:
         raise HTTPException(status_code=404, detail="Extrato não encontrado.")
-    
-    # Captura dados antes de deletar
-    cpf_cnpj = getattr(ex, "cpf_cnpj", None)
-    nome_cliente = getattr(ex, "nome_cliente", None)
-    
-    # Deleta do banco (cascade automático de relacionamentos)
-    db.delete(ex)
+
+    # Soft-delete: marca timestamp de exclusão lógica — NÃO remove do banco nem do storage
+    from app.core.time import now_sp
+    ex.deleted_at = now_sp()
     db.commit()
-    
-    # Limpa TODOS os arquivos do storage relacionados ao extrato
-    try:
-        cleanup_stats = cleanup_extrato_storage(
-            extrato_id=extrato_id,
-            cpf_cnpj=cpf_cnpj,
-            nome_cliente=nome_cliente
-        )
-        logger.info(
-            f"Storage limpo para extrato {extrato_id}: "
-            f"{len(cleanup_stats['removed_dirs'])} pastas, "
-            f"{cleanup_stats['removed_files']} arquivos removidos"
-        )
-        if cleanup_stats["errors"]:
-            logger.warning(f"Erros durante limpeza: {cleanup_stats['errors']}")
-    except Exception as e:
-        logger.error(f"Erro ao limpar storage do extrato {extrato_id}: {e}")
-        # Não falha a requisição, apenas loga o erro
-    
+
+    logger.info(
+        f"[soft-delete] Extrato id={extrato_id} marcado como deletado em {ex.deleted_at}. "
+        "Storage preservado. Dados não removidos fisicamente."
+    )
+
     return None
 
 

@@ -330,20 +330,21 @@ async def hook_receiver(
     #    - por fim tenta pelo zapsign_procuracao_id (failsafe)
     extrato = (
         db.query(Extrato)
-        .filter(Extrato.zapsign_contrato_id == doc_token)
+        .filter(Extrato.zapsign_contrato_id == doc_token, Extrato.deleted_at.is_(None))
         .first()
     )
     matched_by = "zapsign_contrato_id"
     if not extrato:
         extrato_id_meta = _extract_extrato_id_from_metadata(detail)
         if extrato_id_meta:
-            extrato = db.get(Extrato, extrato_id_meta)
+            _ext = db.get(Extrato, extrato_id_meta)
+            extrato = _ext if (_ext and getattr(_ext, "deleted_at", None) is None) else None
             matched_by = "metadata.extrato_id"
 
     if not extrato:
         extrato = (
             db.query(Extrato)
-            .filter(Extrato.zapsign_procuracao_id == doc_token)
+            .filter(Extrato.zapsign_procuracao_id == doc_token, Extrato.deleted_at.is_(None))
             .first()
         )
         if extrato:
