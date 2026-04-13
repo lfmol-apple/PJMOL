@@ -199,7 +199,8 @@ export function getLoggedUser(): LoggedUser {
     if (cUser) username = cUser;
   }
 
-  const finalPerfil = perfilStorage ?? resolvePerfilByWhitelist({ id, nome, email, username });
+  const whitelistPerfil = resolvePerfilByWhitelist({ id, nome, email, username });
+  const finalPerfil = whitelistPerfil === "admin" ? "admin" : (perfilStorage ?? whitelistPerfil);
   return { id, perfil: finalPerfil, nome: nome ?? null, email: email ?? null, username: username ?? null, raw };
 }
 
