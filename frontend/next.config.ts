@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const normalizeBase = (base: string) => base.replace(/\/$/, "");
 
 const nextConfig: NextConfig = {
+  outputFileTracingRoot: __dirname,
   eslint: {
     // Allows the production build to succeed even if ESLint finds issues
     ignoreDuringBuilds: true,
