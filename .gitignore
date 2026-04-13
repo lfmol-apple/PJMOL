@@ -33,6 +33,7 @@ build/
 *.sql
 *.bak
 backups/
+_local/
 *_backup*/
 
 # Uploads temporários
