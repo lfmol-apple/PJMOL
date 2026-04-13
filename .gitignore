@@ -3,6 +3,11 @@
 # Regra: código entra. Dados, credenciais e builds NÃO entram.
 # ============================================================
 
+# ─── Espelho local da produção (NUNCA versionar) ─────────────
+# Contém banco real, storage real, .env real, credenciais.
+# Jamais remover esta linha.
+_local/
+
 # ─── macOS ───────────────────────────────────────────────────
 .DS_Store
 ._*
