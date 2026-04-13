@@ -18,6 +18,7 @@ venv/
 # Node / frontend
 node_modules/
 .next/
+*.tsbuildinfo
 dist/
 build/
 
@@ -57,6 +58,8 @@ database.db
 # Backups python
 *.backup*
 *.bak
+*.old
+*.new
 
 # Logs adicionais
 *.log
