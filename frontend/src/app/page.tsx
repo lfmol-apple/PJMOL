@@ -428,13 +428,6 @@ function converterParaInputDate(input: any): string {
 }
 
 
-interface Advogado {
-  id: number;
-  nome_completo: string;
-  usuario: string;
-  oab: string;
-}
-
 function PageContent() {
   // === Handler: Baixar anexos/assinaturas/extratos (.zip) ===
 // === Handler: Baixar anexos/assinaturas/extratos (.zip) ===

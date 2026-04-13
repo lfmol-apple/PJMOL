@@ -12,6 +12,10 @@
 # ─── Credenciais e tokens (CRÍTICO) ──────────────────────────
 .env
 .env.*
+# Exceção: arquivos de exemplo sem segredos devem ser versionados
+!.env.example
+!**/.env.example
+!**/.env.local.example
 credentials.json
 global-course*.json
 token_drive_oauth.pickle
