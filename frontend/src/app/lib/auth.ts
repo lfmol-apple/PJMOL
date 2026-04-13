@@ -45,9 +45,9 @@ export type LoggedUser = {
 // ============== PAPÉIS (com seus usuários reais) ==============
 const ROLE_MAP = {
   admin: {
-    ids:     [] as string[], // se souber, coloque os IDs de Leonardo/Henrique
-    users:   ["leonardo","henrique","henrique mol","henrique de freitas mol"], // se houver username salvo
-    emails:  ["leonardofmol@gmail.com","henriquefmol@yahoo.com.br"],
+    ids:     ["5","8","11"] as string[],
+    users:   ["leonardo","henrique","henrique mol","henrique de freitas mol","marco antonio","marco antonio faria junior"], // se houver username salvo
+    emails:  ["leonardofmol@gmail.com","henriquefmol@yahoo.com.br","marcoafariajunior@hotmail.com"],
   },
   gerente: {
     ids:     [] as string[], // se souber, coloque os IDs de Breno/Marcel
