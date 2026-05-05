@@ -29,21 +29,17 @@ Se qualquer condição faltar, exibir **"—"** (nunca zero enganoso).
 ## Fórmula
 
 ```
-Comissão Gerente = Honorários Hoje ÷ 2 ÷ 12
+Comissão Gerente = Honorários Hoje ÷ 12
 ```
-
-- primeiro divide os honorários por 2;
-- depois divide esse valor em 12 avos.
 
 **Exemplo:**
 
 ```
 Honorários Hoje = R$ 12.000,00
 
-R$ 12.000,00 ÷ 2 = R$ 6.000,00
-R$ 6.000,00 ÷ 12 = R$ 500,00
+R$ 12.000,00 ÷ 12 = R$ 1.000,00
 
-Comissão Gerente = R$ 500,00
+Comissão Gerente = R$ 1.000,00
 ```
 
 ---

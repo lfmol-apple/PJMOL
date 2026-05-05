@@ -352,7 +352,7 @@ function calcComissaoGerente(it: any): number | null {
   };
   const honor = parseVal(raw);
   if (!Number.isFinite(honor) || honor <= 0) return null;
-  return honor / 2 / 12;
+  return honor / 12;
 }
 
 function resultadoPillClass(label: string): string {
