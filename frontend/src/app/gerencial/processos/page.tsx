@@ -327,27 +327,6 @@ function getDisplayStatus(row: any): string {
 }
 // 🔵 FIM
 
-function getNumeroProcessoExtras(row: any): Record<string, any> {
-  const rawExtras = row?.extras;
-  if (!rawExtras) return {};
-  return typeof rawExtras === "string"
-    ? (() => { try { return JSON.parse(rawExtras); } catch { return {}; } })()
-    : rawExtras;
-}
-
-function hasProvisionalNumeroProcesso(row: any): boolean {
-  const extras = getNumeroProcessoExtras(row);
-  const marker = extras?.numero_processo_provisorio;
-  return marker === true || marker === 1 || marker === "1";
-}
-
-function getProvisionalNumeroProcessoTextClass(row: any): string {
-  const extras = getNumeroProcessoExtras(row);
-  const origem = String(extras?.numero_processo_provisorio_origem || "").toUpperCase();
-  if (origem.includes("JULIO")) return "text-green-700";
-  return "text-red-700";
-}
-
 const isAvista = (s?: string | null) =>
   ["avista","a vista","à vista","a_vista","a-vista"].includes(String(s||"").toLowerCase());
 
@@ -361,6 +340,21 @@ function getResultadoLabel(it: any): string {
   if (r) return r.charAt(0).toUpperCase() + r.slice(1);
   return "Sem Julgamento";
 }
+function calcComissaoGerente(it: any): number | null {
+  const numeroProc = (it.numero_processo ?? it.numeroProcesso ?? it.processo_numero ?? "").toString().trim();
+  if (!numeroProc || numeroProc === "None") return null;
+  if (getResultadoLabel(it) !== "Acordo") return null;
+  const raw = it.honorarios_hoje_total ?? (Number(it.honorarios_hoje_adv || 0) + Number(it.honorarios_hoje_emp || 0));
+  const parseVal = (v: any): number => {
+    if (typeof v === "number") return v;
+    const s = String(v ?? "").replace(/R\$\s*/g, "").replace(/\./g, "").replace(",", ".");
+    return parseFloat(s);
+  };
+  const honor = parseVal(raw);
+  if (!Number.isFinite(honor) || honor <= 0) return null;
+  return honor / 2 / 12;
+}
+
 function resultadoPillClass(label: string): string {
   if (label === "Acordo" || label === "Sentença à Vista")
     return "bg-indigo-100 text-indigo-700 ring-indigo-600/20";
@@ -708,7 +702,6 @@ function MobileProcessCard({ it, compact=false, onToggleSignedExternal, onDelete
   const pillCls = resultadoPillClass(resLabel);
   const numeroProc = (it.numero_processo ?? it.numeroProcesso ?? it.processo_numero ?? "").toString().trim();
   const haProcesso = numeroProc && numeroProc !== "None" && numeroProc !== "";
-  const numeroProvisorio = hasProvisionalNumeroProcesso(it);
   // const timeline = computeProcessTimeline(it, new Date()); // ❌ REMOVIDO - usa fase_atual agora
   const comarcaUF = displayComarcaUF(it); // 🔵 COMARCA/UF
   const comarcaNome = displayComarcaNome(it);
@@ -795,7 +788,7 @@ function MobileProcessCard({ it, compact=false, onToggleSignedExternal, onDelete
         {/* Número do Processo */}
         <div className={cls("text-slate-600", compact ? "text-sm" : "text-base")}>
           <span className="text-slate-500">Proc.:</span>{" "}
-          <span className={cls("font-semibold", numeroProvisorio ? getProvisionalNumeroProcessoTextClass(it) : "text-slate-900")}>{numeroProc || "—"}</span>
+          <span className="font-semibold text-slate-900">{numeroProc || "—"}</span>
         </div>
 
         {/* Informações em grid */}
@@ -936,7 +929,6 @@ export default function GerencialProcessosPage() {
   const [dateTo, setDateTo] = useState<string>("");
   const [onlyLive, setOnlyLive] = useState<boolean>(false); // mostra apenas processos com timer rodando
   const [overdueSignatureOnly, setOverdueSignatureOnly] = useState<boolean>(false);
-  const [showOverdueSignaturePanel, setShowOverdueSignaturePanel] = useState<boolean>(false);
 
   // Ordenação e Infinite Scroll
   const [sortKey, setSortKey] = useState<string>("id");
@@ -1246,6 +1238,7 @@ export default function GerencialProcessosPage() {
     setDeletingId(id);
     try {
       const headers = buildAuthHeaders();
+      if (proc?.usuario_id) headers["X-Usuario-Id"] = String(proc.usuario_id);
       const res = await fetch(`${API_BASE}/extratos/${id}`, {
         method: "DELETE",
         headers,
@@ -1258,8 +1251,11 @@ export default function GerencialProcessosPage() {
       
       // Atualiza o estado local removendo o item
       setItems(prev => prev.filter(item => Number(item.id) !== id));
-
-      await fetchData({ silent: true });
+      
+      // Recarrega a página após 500ms para garantir sincronização
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
       
     } catch (e: any) {
       console.error("Erro ao excluir processo:", e);
@@ -1353,18 +1349,15 @@ export default function GerencialProcessosPage() {
   const overdueSignatureSummary = useMemo(() => {
     const scoped = filterByScope(items, perfil as any, currentUser as any);
     const now = new Date();
-    const grouped = new Map<string, { gerente: string; quantidade: number; maisAntigoDias: number; valorCausaTotal: number; acordoProvavelTotal: number; processos: Processo[] }>();
+    const grouped = new Map<string, { gerente: string; quantidade: number; maisAntigoDias: number; processos: Processo[] }>();
 
     scoped.forEach((item) => {
       if (!isAwaitingSignatureOverFiveDays(item, now)) return;
       const gerente = displayGerenteName(item) || (pickUidFromRow(item) ? `#${pickUidFromRow(item)}` : "Sem gerente");
       const dias = getDaysSince(getSentAtDate(item), now);
-      const valorCausa = Number(item?.valor_causa || 0);
-      const current = grouped.get(gerente) || { gerente, quantidade: 0, maisAntigoDias: 0, valorCausaTotal: 0, acordoProvavelTotal: 0, processos: [] };
+      const current = grouped.get(gerente) || { gerente, quantidade: 0, maisAntigoDias: 0, processos: [] };
       current.quantidade += 1;
       current.maisAntigoDias = Math.max(current.maisAntigoDias, dias);
-      current.valorCausaTotal += valorCausa;
-      current.acordoProvavelTotal += valorCausa * 0.7;
       current.processos.push(item);
       grouped.set(gerente, current);
     });
@@ -1384,18 +1377,7 @@ export default function GerencialProcessosPage() {
     const scoped = filterByScope(items, perfil as any, currentUser as any);
     return scoped.reduce((acc, item) => acc + (getDisplayStatus(item) === "Enviado" ? 1 : 0), 0);
   }, [items, perfil, currentUser]);
-  const overdueSignaturePercentage = useMemo(() => {
-    if (!awaitingSignatureTotal) return 0;
-    return Math.round((overdueSignatureTotal / awaitingSignatureTotal) * 100);
-  }, [overdueSignatureTotal, awaitingSignatureTotal]);
   const isAdminView = perfil === "admin";
-
-  const overdueSignatureSummaryWithShare = useMemo(() => {
-    return overdueSignatureSummary.map((entry) => ({
-      ...entry,
-      percentualEnviados: awaitingSignatureTotal ? Math.round((entry.quantidade / awaitingSignatureTotal) * 100) : 0,
-    }));
-  }, [overdueSignatureSummary, awaitingSignatureTotal]);
 
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
@@ -1568,38 +1550,9 @@ export default function GerencialProcessosPage() {
   }, [filtered]);
 
   const exportCSV = () => {
-    const stripAccents = (value: any) => String(value ?? "")
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "");
-    const normalizeText = (value: any) => stripAccents(value).replace(/\r?\n|\r/g, " ").trim();
-    const toNumber = (value: any) => {
-      const n = Number(value);
-      return Number.isFinite(n) ? n : 0;
-    };
-    const formatInteger = (value: any) => {
-      const n = Number(value);
-      if (!Number.isFinite(n)) return "";
-      return String(Math.trunc(n));
-    };
-    const formatDecimal = (value: any, fractionDigits = 2) => {
-      const n = Number(value);
-      if (!Number.isFinite(n)) return "";
-      return n.toLocaleString("pt-BR", {
-        minimumFractionDigits: fractionDigits,
-        maximumFractionDigits: fractionDigits,
-        useGrouping: false,
-      });
-    };
-    const escapeCSV = (value: any) => `"${normalizeText(String(value ?? "")).replace(/"/g, '""')}"`;
-    const serializeCell = (value: any, kind: "text" | "integer" | "decimal" = "text") => {
-      if (kind === "integer") return formatInteger(value);
-      if (kind === "decimal") return formatDecimal(value);
-      return escapeCSV(value);
-    };
-
     const header = [
-      "ID","Cliente","Status","Resultado","Grupo","Cota","Administradora","Numero do Processo","Valor da Causa","Aguardando",
-      "Valor Hoje","Valor Futuro","Honorarios Hoje","Honorarios Futuro","Liquido Hoje","Liquido Futuro","Advogado","Gerente","Criado em",
+      "ID","Cliente","Status","Resultado","Grupo","Cota","Administradora","Número do Processo","Valor da Causa","Aguardando",
+      "Valor Hoje","Valor Futuro","Honorários Hoje","Honorários Futuro","Líquido Hoje","Líquido Futuro","Advogado","Gerente","Criado em",
     ];
     const rows = filtered.map((it) => {
       const timestamps = getProcessTimestamps(it);
@@ -1613,43 +1566,22 @@ export default function GerencialProcessosPage() {
       } else if (timestamps.startEnvio) {
         aguardandoLabel = "Aguardando Assinatura";
       }
-      const honorariosHoje = toNumber(it.honorarios_hoje_total ?? (Number(it.honorarios_hoje_adv || 0) + Number(it.honorarios_hoje_emp || 0)));
-      const honorariosFuturo = toNumber(it.honorarios_futuro_total ?? (Number(it.honorarios_futuro_adv || 0) + Number(it.honorarios_futuro_emp || 0)));
-      const valorHoje = toNumber(valorHojeDisplay(it));
-      const valorFuturo = toNumber(it.valor_futuro ?? it.valor_corrigido_futuro);
-      const liquidoHoje = toNumber(it.liquido_hoje ?? (valorHoje - honorariosHoje));
-      const liquidoFuturo = toNumber(it.liquido_futuro ?? (valorFuturo - honorariosFuturo));
-
       return [
-        it.id,
-        normalizeText(it.nome_cliente || ""),
-        normalizeText(getDisplayStatus(it) || ""),
-        normalizeText(getResultadoLabel(it)),
-        it.grupo ?? "",
-        it.cota ?? "",
-        normalizeText(it.administradora || ""),
-        normalizeText((it.numero_processo ?? "") || ""),
-        it.valor_causa,
-        normalizeText(aguardandoLabel),
-        valorHoje,
-        valorFuturo,
-        honorariosHoje,
-        honorariosFuturo,
-        liquidoHoje,
-        liquidoFuturo,
-        normalizeText(it.advogado_nome || it.advogado_usuario || ""),
-        normalizeText(displayGerenteName(it) || String(it.gerente_id ?? "")),
-        normalizeText(fmtDateTime(it.criado_em || it.data_exportacao || "")),
+        it.id, it.nome_cliente || "", getDisplayStatus(it) || "", getResultadoLabel(it), it.grupo ?? "", it.cota ?? "", it.administradora || "",
+        (it.numero_processo ?? "") || "",
+        String(it.valor_causa ?? ""),
+        aguardandoLabel,
+        String(valorHojeDisplay(it) ?? ""),
+        String((it.valor_futuro ?? it.valor_corrigido_futuro) ?? ""),
+        String(((it.honorarios_hoje_total ?? (Number(it.honorarios_hoje_adv||0)+Number(it.honorarios_hoje_emp||0))) || 0)),
+        String(((it.honorarios_futuro_total ?? (Number(it.honorarios_futuro_adv||0)+Number(it.honorarios_futuro_emp||0))) || 0)),
+        String((it.liquido_hoje ?? (Number(valorHojeDisplay(it)||0) - (((it.honorarios_hoje_total ?? (Number(it.honorarios_hoje_adv||0)+Number(it.honorarios_hoje_emp||0))) || 0))))),
+        String((it.liquido_futuro ?? (Number((it.valor_futuro ?? it.valor_corrigido_futuro)||0) - (((it.honorarios_futuro_total ?? (Number(it.honorarios_futuro_adv||0)+Number(it.honorarios_futuro_emp||0))) || 0))))),
+        it.advogado_nome || it.advogado_usuario || "", displayGerenteName(it) || String(it.gerente_id ?? ""), it.criado_em || it.data_exportacao || "",
       ];
     });
-    const columnKinds: Array<"text" | "integer" | "decimal"> = [
-      "integer", "text", "text", "text", "integer", "integer", "text", "text", "decimal", "text",
-      "decimal", "decimal", "decimal", "decimal", "decimal", "decimal", "text", "text", "text",
-    ];
-    const csv = [header.map(escapeCSV), ...rows.map(row => row.map((value, index) => serializeCell(value, columnKinds[index]))) ]
-      .map(r => r.join(";"))
-      .join("\n");
-    const blob = new Blob(["\uFEFF", csv], {type: "text/csv;charset=utf-8;"}); const url = URL.createObjectURL(blob);
+    const csv = [header, ...rows].map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(";")).join("\n");
+    const blob = new Blob([csv], {type: "text/csv;charset=utf-8;"}); const url = URL.createObjectURL(blob);
     const a = document.createElement("a"); a.href = url; a.download = `processos_${new Date().toISOString().slice(0,10)}.csv`; a.click(); URL.revokeObjectURL(url);
     
     // Recarrega a página após 1 segundo para atualizar os dados
@@ -1694,6 +1626,11 @@ export default function GerencialProcessosPage() {
               {perfil === "admin" && (
                 <Link href="/dashboard-relatorio/producao" className="inline-flex items-center gap-1 rounded-lg border border-emerald-300 bg-emerald-50 px-2 py-1.5 text-xs font-medium text-emerald-800 shadow-sm hover:bg-emerald-100" title="Relatório de produção">
                   <BarChart3 className="h-3.5 w-3.5" /> <span className="hidden md:inline">Relatório Produção</span>
+                </Link>
+              )}
+              {perfil === "admin" && (
+                <Link href="/admin" className="inline-flex items-center gap-1 rounded-lg border border-blue-300 bg-blue-50 px-2 py-1.5 text-xs font-medium text-blue-800 shadow-sm hover:bg-blue-100" title="Painel administrativo">
+                  <span className="text-sm leading-none">Admin</span>
                 </Link>
               )}
               <Link href="/" className="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-xs font-medium text-slate-700 shadow-sm hover:bg-slate-50" title="Página principal">
@@ -1881,131 +1818,83 @@ export default function GerencialProcessosPage() {
             </button>
           )}
         </div>
-        <section className="mb-4 rounded-xl border border-amber-200 bg-amber-50/70 p-3 shadow-sm">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex min-w-0 items-center gap-2">
-              <div className="rounded-full bg-amber-100 p-1.5 text-amber-700">
-                <AlertCircle className="h-4 w-4" />
+        <section className="mb-4 rounded-2xl border border-amber-200 bg-linear-to-br from-amber-50 via-orange-50 to-white p-4 shadow-sm">
+          <div className="mb-3 flex items-start gap-3">
+            <div className="rounded-full bg-amber-100 p-2 text-amber-700">
+              <AlertCircle className="h-5 w-5" />
+            </div>
+            <div>
+              <div className="text-base font-extrabold uppercase tracking-wide text-amber-950">
+                Aguardando assinatura há mais de {OVERDUE_SIGNATURE_DAYS} dias
               </div>
-              <div className="min-w-0">
-                <div className="truncate text-sm font-bold text-amber-950">
-                  Aguardando assinatura há mais de {OVERDUE_SIGNATURE_DAYS} dias
-                </div>
-                <div className="text-xs text-amber-900">
-                  {overdueSignatureTotal} processo(s) • {overdueSignaturePercentage}% dos enviados
-                </div>
+              <div className="mt-1 text-sm text-amber-900">
+                {isAdminView
+                  ? "Visão geral por gerente. Clique no nome para abrir os processos daquele gerente."
+                  : "Seus próprios processos. Clique no quadro para listar quais são."}
               </div>
             </div>
-            <button
-              type="button"
-              onClick={() => setShowOverdueSignaturePanel(true)}
-              className="inline-flex items-center gap-2 rounded-lg border border-amber-300 bg-white px-3 py-1.5 text-sm font-semibold text-amber-900 shadow-sm hover:bg-amber-100"
-            >
-              Ver tela auxiliar
-            </button>
           </div>
-        </section>
 
-        {showOverdueSignaturePanel && (
-          <div className="fixed inset-0 z-[120] flex items-center justify-center p-3 sm:p-6">
-            <button
-              type="button"
-              aria-label="Fechar tela auxiliar de aguardando assinatura"
-              onClick={() => setShowOverdueSignaturePanel(false)}
-              className="absolute inset-0 bg-black/45"
-            />
-            <section className="relative z-[121] w-full max-w-4xl overflow-hidden rounded-2xl border border-amber-200 bg-white shadow-2xl">
-              <div className="flex items-center justify-between border-b border-amber-200 bg-amber-50 px-4 py-3">
-                <div>
-                  <div className="text-sm font-extrabold uppercase tracking-wide text-amber-950">
-                    Aguardando assinatura há mais de {OVERDUE_SIGNATURE_DAYS} dias
+          {overdueSignatureSummary.length === 0 ? (
+            <div className="rounded-xl border border-amber-200 bg-white px-4 py-4 text-sm font-medium text-slate-600">
+              Nenhum processo enviado há mais de {OVERDUE_SIGNATURE_DAYS} dias aguardando assinatura no momento.
+            </div>
+          ) : isAdminView ? (
+            <div className="rounded-xl border border-amber-200 bg-white shadow-sm">
+              <div className="divide-y divide-amber-100">
+                {overdueSignatureSummary.map((entry, index) => (
+                  <button
+                    key={entry.gerente}
+                    type="button"
+                    onClick={() => applyOverdueSignatureFilter(entry.gerente)}
+                    className={cls(
+                      "flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-amber-50",
+                      overdueSignatureOnly && gerenteFilter === entry.gerente ? "bg-amber-50" : "bg-white"
+                    )}
+                  >
+                    <div className="w-12 shrink-0 text-xs font-bold uppercase tracking-wide text-amber-700">
+                      #{index + 1}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate text-sm font-bold text-slate-900">{entry.gerente}</div>
+                      <div className="text-xs text-slate-600">
+                        {entry.quantidade} aguardando assinatura • Mais antigo: {entry.maisAntigoDias} dias
+                      </div>
+                    </div>
+                    <div className="shrink-0 rounded-lg border border-amber-300 bg-amber-100 px-3 py-1 text-lg font-extrabold text-amber-950 shadow-sm">
+                      {entry.quantidade}
+                    </div>
+                  </button>
+                ))}
+              </div>
+              <div className="border-t border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-950">
+                Total aguardando assinatura no geral: <span className="font-extrabold">{awaitingSignatureTotal}</span> processo(s)
+              </div>
+            </div>
+          ) : (
+            overdueSignatureSummary.map((entry) => (
+              <button
+                key={entry.gerente}
+                type="button"
+                onClick={() => applyOverdueSignatureFilter(entry.gerente)}
+                className={cls(
+                  "w-full rounded-xl border bg-white px-4 py-3 text-left shadow-sm transition hover:border-amber-300 hover:bg-amber-50",
+                  overdueSignatureOnly ? "border-amber-400 ring-2 ring-amber-300" : "border-amber-200"
+                )}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate text-sm font-bold text-slate-900">{entry.gerente}</div>
+                    <div className="text-xs text-slate-600">Você tem {entry.quantidade} aguardando assinatura • Mais antigo: {entry.maisAntigoDias} dias</div>
                   </div>
-                  <div className="text-xs text-amber-900">
-                    {isAdminView
-                      ? "Visão geral por gerente. Clique no nome para abrir os processos daquele gerente."
-                      : "Seus próprios processos. Clique no quadro para listar quais são."}
+                  <div className="shrink-0 rounded-lg border border-amber-300 bg-amber-100 px-3 py-1 text-lg font-extrabold text-amber-950 shadow-sm">
+                    {entry.quantidade}
                   </div>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setShowOverdueSignaturePanel(false)}
-                  className="rounded-lg border border-amber-300 bg-white px-3 py-1.5 text-sm font-semibold text-amber-900 hover:bg-amber-100"
-                >
-                  Fechar
-                </button>
-              </div>
-
-              <div className="max-h-[78vh] overflow-y-auto p-4">
-                {overdueSignatureSummaryWithShare.length === 0 ? (
-                  <div className="rounded-xl border border-amber-200 bg-white px-4 py-4 text-sm font-medium text-slate-600">
-                    Nenhum processo enviado há mais de {OVERDUE_SIGNATURE_DAYS} dias aguardando assinatura no momento.
-                  </div>
-                ) : isAdminView ? (
-                  <div className="rounded-xl border border-amber-200 bg-white shadow-sm">
-                    <div className="divide-y divide-amber-100">
-                      {overdueSignatureSummaryWithShare.map((entry, index) => (
-                        <button
-                          key={entry.gerente}
-                          type="button"
-                          onClick={() => {
-                            applyOverdueSignatureFilter(entry.gerente);
-                            setShowOverdueSignaturePanel(false);
-                          }}
-                          className={cls(
-                            "flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-amber-50",
-                            overdueSignatureOnly && gerenteFilter === entry.gerente ? "bg-amber-50" : "bg-white"
-                          )}
-                        >
-                          <div className="w-12 shrink-0 text-xs font-bold uppercase tracking-wide text-amber-700">
-                            #{index + 1}
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <div className="truncate text-sm font-bold text-slate-900">{entry.gerente}</div>
-                            <div className="text-xs text-slate-600">
-                              {entry.quantidade} aguardando assinatura • {entry.percentualEnviados}% dos enviados • Mais antigo: {entry.maisAntigoDias} dias
-                            </div>
-                            <div className="mt-1 text-xs font-semibold text-slate-700">
-                              Valor da causa: {fmtBRL(entry.valorCausaTotal)} • Acordo provável: {fmtBRL(entry.acordoProvavelTotal)}
-                            </div>
-                          </div>
-                          <div className="shrink-0 rounded-lg border border-amber-300 bg-amber-100 px-3 py-1 text-lg font-extrabold text-amber-950 shadow-sm">
-                            {entry.quantidade}
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  overdueSignatureSummaryWithShare.map((entry) => (
-                    <button
-                      key={entry.gerente}
-                      type="button"
-                      onClick={() => {
-                        applyOverdueSignatureFilter(entry.gerente);
-                        setShowOverdueSignaturePanel(false);
-                      }}
-                      className={cls(
-                        "w-full rounded-xl border bg-white px-4 py-3 text-left shadow-sm transition hover:border-amber-300 hover:bg-amber-50",
-                        overdueSignatureOnly ? "border-amber-400 ring-2 ring-amber-300" : "border-amber-200"
-                      )}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="min-w-0 flex-1">
-                          <div className="truncate text-sm font-bold text-slate-900">{entry.gerente}</div>
-                          <div className="text-xs text-slate-600">Você tem {entry.quantidade} aguardando assinatura • {entry.percentualEnviados}% dos enviados • Mais antigo: {entry.maisAntigoDias} dias</div>
-                          <div className="mt-1 text-xs font-semibold text-slate-700">Valor da causa: {fmtBRL(entry.valorCausaTotal)} • Acordo provável: {fmtBRL(entry.acordoProvavelTotal)}</div>
-                        </div>
-                        <div className="shrink-0 rounded-lg border border-amber-300 bg-amber-100 px-3 py-1 text-lg font-extrabold text-amber-950 shadow-sm">
-                          {entry.quantidade}
-                        </div>
-                      </div>
-                    </button>
-                  ))
-                )}
-              </div>
-            </section>
-          </div>
-        )}
+              </button>
+            ))
+          )}
+        </section>
         {/* Resumo compacto desktop */}
         <div className="hidden md:flex items-center justify-between gap-4 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm shadow-sm mb-3">
           <div className="flex items-center gap-4 text-slate-700">
@@ -2176,6 +2065,7 @@ export default function GerencialProcessosPage() {
                       { key: "liquido_hoje", label: "Líquido Hoje", w: "w-[140px]", align: "text-right" },
                       { key: "liquido_futuro", label: "Líquido Futuro", w: "w-[150px]", align: "text-right" },
                       { key: "advogado_nome", label: "Advogado", w: "min-w-[180px]", align: "text-left" },
+                      { key: "comissao_gerente", label: "Comissão Gerente", w: "w-[160px]", align: "text-right" },
                       { key: "gerente_nome", label: "Gerente", w: "min-w-[160px]", align: "text-left" },
                       { key: "criado_em", label: "Criado em", w: "w-[130px]", align: "text-center" },
                       { key: "acoes", label: "Ações", w: "w-[120px]", align: "text-center" },
@@ -2213,7 +2103,6 @@ export default function GerencialProcessosPage() {
                     const pillCls = resultadoPillClass(resLabel);
                     const numeroProc = (it.numero_processo ?? it.numeroProcesso ?? it.processo_numero ?? "").toString().trim();
                     const haProcesso = numeroProc && numeroProc !== "None" && numeroProc !== "";
-                    const numeroProvisorio = hasProvisionalNumeroProcesso(it);
                     // const timeline = computeProcessTimeline(it, new Date()); // ❌ REMOVIDO - usa fase_atual agora
                     const comarcaUF = displayComarcaUF(it); // 🔵 COMARCA/UF
                     const comarcaNome = displayComarcaNome(it);
@@ -2324,7 +2213,7 @@ export default function GerencialProcessosPage() {
 
                         {/* Número do processo — negrito + COMARCA/UF abaixo */}
                         <td className="px-2.5 py-1.5 whitespace-nowrap">
-                          <span className={cls("font-bold", numeroProvisorio ? getProvisionalNumeroProcessoTextClass(it) : "text-slate-900")}>{formatarNumeroProcesso(numeroProc) || "—"}</span>
+                          <span className="font-bold text-slate-900">{formatarNumeroProcesso(numeroProc) || "—"}</span>
                           {/* 🔵 Comarca sob o número do processo */}
                           {comarcaNome && (
                             <div className="mt-0.5 text-[11px] text-slate-600 truncate" title={comarcaNome}>
@@ -2403,11 +2292,14 @@ export default function GerencialProcessosPage() {
                           {fmtBRL((it.liquido_futuro ?? (Number((it.valor_futuro ?? it.valor_corrigido_futuro) || 0) - (Number((it.honorarios_futuro_total ?? (Number(it.honorarios_futuro_adv || 0) + Number(it.honorarios_futuro_emp || 0)))) || 0))))}
                         </td>
 
-                        {/* Advogado / Gerente */}
+                        {/* Advogado / Comissão Gerente / Gerente */}
                         <td className="px-2.5 py-1">
                           <div className="truncate max-w-[200px]" title={displayAdvogadoName(it)}>
                             {displayAdvogadoName(it) || "—"}
                           </div>
+                        </td>
+                        <td className="px-2.5 py-1.5 text-right tabular-nums whitespace-nowrap">
+                          {(() => { const v = calcComissaoGerente(it); return v !== null ? fmtBRL(v) : "—"; })()}
                         </td>
                         <td className="px-2.5 py-1">
                           <div className="truncate max-w-[200px]" title={displayGerenteName(it) || (it.gerente_id ? `#${it.gerente_id}` : "")}>
@@ -2419,12 +2311,7 @@ export default function GerencialProcessosPage() {
                         <td className="px-2.5 py-1.5 whitespace-nowrap">{fmtDate(it.criado_em || it.data_exportacao)}</td>
                         <td className="px-2.5 py-1.5 whitespace-nowrap">
                           <button
-                            type="button"
-                            onClick={(event) => {
-                              event.preventDefault();
-                              event.stopPropagation();
-                              void handleDeleteProcesso(it);
-                            }}
+                            onClick={() => handleDeleteProcesso(it)}
                             disabled={deletingId === it.id}
                             className="inline-flex items-center gap-1 rounded-lg bg-red-600 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-red-500 disabled:opacity-60 disabled:cursor-not-allowed"
                             title="Excluir processo e anexos"
@@ -2475,8 +2362,8 @@ export default function GerencialProcessosPage() {
                     <td className="px-2.5 py-1.5 text-right font-semibold">{fmtBRL(totals.liqHojeSum)}</td>
                     {/* Coluna 15: Líquido Futuro */}
                     <td className="px-2.5 py-1.5 text-right font-semibold">{fmtBRL(totals.liqFutSum)}</td>
-                    {/* Colunas 16-19: Advogado, Gerente, Criado em, Ações */}
-                    <td colSpan={4}></td>
+                    {/* Colunas 16-20: Advogado, Comissão Gerente, Gerente, Criado em, Ações */}
+                    <td colSpan={5}></td>
                   </tr>
                 </tfoot>
               </table>
