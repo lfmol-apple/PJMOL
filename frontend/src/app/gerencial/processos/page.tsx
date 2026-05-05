@@ -929,6 +929,7 @@ export default function GerencialProcessosPage() {
   const [dateTo, setDateTo] = useState<string>("");
   const [onlyLive, setOnlyLive] = useState<boolean>(false); // mostra apenas processos com timer rodando
   const [overdueSignatureOnly, setOverdueSignatureOnly] = useState<boolean>(false);
+  const [overdueExpanded, setOverdueExpanded] = useState<boolean>(false);
 
   // Ordenação e Infinite Scroll
   const [sortKey, setSortKey] = useState<string>("id");
@@ -1818,81 +1819,94 @@ export default function GerencialProcessosPage() {
             </button>
           )}
         </div>
-        <section className="mb-4 rounded-2xl border border-amber-200 bg-linear-to-br from-amber-50 via-orange-50 to-white p-4 shadow-sm">
-          <div className="mb-3 flex items-start gap-3">
-            <div className="rounded-full bg-amber-100 p-2 text-amber-700">
-              <AlertCircle className="h-5 w-5" />
+        <section className="mb-4 rounded-2xl border border-amber-200 bg-linear-to-br from-amber-50 via-orange-50 to-white shadow-sm">
+          {/* Header — sempre visível, clicável para expandir */}
+          <button
+            type="button"
+            onClick={() => setOverdueExpanded((v) => !v)}
+            className="flex w-full items-center gap-3 px-4 py-3 text-left"
+          >
+            <div className="rounded-full bg-amber-100 p-1.5 text-amber-700">
+              <AlertCircle className="h-4 w-4" />
             </div>
-            <div>
-              <div className="text-base font-extrabold uppercase tracking-wide text-amber-950">
+            <div className="min-w-0 flex-1">
+              <div className="text-sm font-extrabold uppercase tracking-wide text-amber-950">
                 Aguardando assinatura há mais de {OVERDUE_SIGNATURE_DAYS} dias
               </div>
-              <div className="mt-1 text-sm text-amber-900">
-                {isAdminView
-                  ? "Visão geral por gerente. Clique no nome para abrir os processos daquele gerente."
-                  : "Seus próprios processos. Clique no quadro para listar quais são."}
+            </div>
+            {overdueSignatureSummary.length > 0 && (
+              <div className="shrink-0 rounded-lg border border-amber-300 bg-amber-100 px-2.5 py-0.5 text-sm font-extrabold text-amber-950">
+                {overdueSignatureTotal}
               </div>
+            )}
+            <div className="shrink-0 text-amber-700">
+              {overdueExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
             </div>
-          </div>
+          </button>
 
-          {overdueSignatureSummary.length === 0 ? (
-            <div className="rounded-xl border border-amber-200 bg-white px-4 py-4 text-sm font-medium text-slate-600">
-              Nenhum processo enviado há mais de {OVERDUE_SIGNATURE_DAYS} dias aguardando assinatura no momento.
-            </div>
-          ) : isAdminView ? (
-            <div className="rounded-xl border border-amber-200 bg-white shadow-sm">
-              <div className="divide-y divide-amber-100">
-                {overdueSignatureSummary.map((entry, index) => (
+          {/* Corpo — só aparece quando expandido */}
+          {overdueExpanded && (
+            <div className="border-t border-amber-200 p-4 pt-3">
+              {overdueSignatureSummary.length === 0 ? (
+                <div className="rounded-xl border border-amber-200 bg-white px-4 py-4 text-sm font-medium text-slate-600">
+                  Nenhum processo enviado há mais de {OVERDUE_SIGNATURE_DAYS} dias aguardando assinatura no momento.
+                </div>
+              ) : isAdminView ? (
+                <div className="rounded-xl border border-amber-200 bg-white shadow-sm">
+                  <div className="divide-y divide-amber-100">
+                    {overdueSignatureSummary.map((entry, index) => (
+                      <button
+                        key={entry.gerente}
+                        type="button"
+                        onClick={() => applyOverdueSignatureFilter(entry.gerente)}
+                        className={cls(
+                          "flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-amber-50",
+                          overdueSignatureOnly && gerenteFilter === entry.gerente ? "bg-amber-50" : "bg-white"
+                        )}
+                      >
+                        <div className="w-12 shrink-0 text-xs font-bold uppercase tracking-wide text-amber-700">
+                          #{index + 1}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="truncate text-sm font-bold text-slate-900">{entry.gerente}</div>
+                          <div className="text-xs text-slate-600">
+                            {entry.quantidade} aguardando assinatura • Mais antigo: {entry.maisAntigoDias} dias
+                          </div>
+                        </div>
+                        <div className="shrink-0 rounded-lg border border-amber-300 bg-amber-100 px-3 py-1 text-lg font-extrabold text-amber-950 shadow-sm">
+                          {entry.quantidade}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                  <div className="border-t border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-950">
+                    Total aguardando assinatura no geral: <span className="font-extrabold">{awaitingSignatureTotal}</span> processo(s)
+                  </div>
+                </div>
+              ) : (
+                overdueSignatureSummary.map((entry) => (
                   <button
                     key={entry.gerente}
                     type="button"
                     onClick={() => applyOverdueSignatureFilter(entry.gerente)}
                     className={cls(
-                      "flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-amber-50",
-                      overdueSignatureOnly && gerenteFilter === entry.gerente ? "bg-amber-50" : "bg-white"
+                      "w-full rounded-xl border bg-white px-4 py-3 text-left shadow-sm transition hover:border-amber-300 hover:bg-amber-50",
+                      overdueSignatureOnly ? "border-amber-400 ring-2 ring-amber-300" : "border-amber-200"
                     )}
                   >
-                    <div className="w-12 shrink-0 text-xs font-bold uppercase tracking-wide text-amber-700">
-                      #{index + 1}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="truncate text-sm font-bold text-slate-900">{entry.gerente}</div>
-                      <div className="text-xs text-slate-600">
-                        {entry.quantidade} aguardando assinatura • Mais antigo: {entry.maisAntigoDias} dias
+                    <div className="flex items-center gap-3">
+                      <div className="min-w-0 flex-1">
+                        <div className="truncate text-sm font-bold text-slate-900">{entry.gerente}</div>
+                        <div className="text-xs text-slate-600">Você tem {entry.quantidade} aguardando assinatura • Mais antigo: {entry.maisAntigoDias} dias</div>
+                      </div>
+                      <div className="shrink-0 rounded-lg border border-amber-300 bg-amber-100 px-3 py-1 text-lg font-extrabold text-amber-950 shadow-sm">
+                        {entry.quantidade}
                       </div>
                     </div>
-                    <div className="shrink-0 rounded-lg border border-amber-300 bg-amber-100 px-3 py-1 text-lg font-extrabold text-amber-950 shadow-sm">
-                      {entry.quantidade}
-                    </div>
                   </button>
-                ))}
-              </div>
-              <div className="border-t border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-950">
-                Total aguardando assinatura no geral: <span className="font-extrabold">{awaitingSignatureTotal}</span> processo(s)
-              </div>
+                ))
+              )}
             </div>
-          ) : (
-            overdueSignatureSummary.map((entry) => (
-              <button
-                key={entry.gerente}
-                type="button"
-                onClick={() => applyOverdueSignatureFilter(entry.gerente)}
-                className={cls(
-                  "w-full rounded-xl border bg-white px-4 py-3 text-left shadow-sm transition hover:border-amber-300 hover:bg-amber-50",
-                  overdueSignatureOnly ? "border-amber-400 ring-2 ring-amber-300" : "border-amber-200"
-                )}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="min-w-0 flex-1">
-                    <div className="truncate text-sm font-bold text-slate-900">{entry.gerente}</div>
-                    <div className="text-xs text-slate-600">Você tem {entry.quantidade} aguardando assinatura • Mais antigo: {entry.maisAntigoDias} dias</div>
-                  </div>
-                  <div className="shrink-0 rounded-lg border border-amber-300 bg-amber-100 px-3 py-1 text-lg font-extrabold text-amber-950 shadow-sm">
-                    {entry.quantidade}
-                  </div>
-                </div>
-              </button>
-            ))
           )}
         </section>
         {/* Resumo compacto desktop */}
