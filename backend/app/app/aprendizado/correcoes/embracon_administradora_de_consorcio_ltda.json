@@ -1,0 +1,73 @@
+{
+  "cidade": [
+    {
+      "campo": "cidade",
+      "valor_original": "POUSO ALEGRE",
+      "valor_corrigido": "Pouso Alegre",
+      "padrao": {
+        "tipo_correcao": "texto",
+        "original": "POUSO ALEGRE",
+        "corrigido": "Pouso Alegre",
+        "substituicoes": [
+          {
+            "de": "POUSO ALEGRE",
+            "para": "Pouso Alegre"
+          }
+        ]
+      },
+      "contexto": {
+        "grupo": "009664",
+        "cota": "0700-03",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2025-10-30T21:20:16.518642-03:00",
+      "aplicado_automaticamente": 0
+    },
+    {
+      "campo": "cidade",
+      "valor_original": "POUSO ALEGRE",
+      "valor_corrigido": "Pouso Alegre",
+      "padrao": {
+        "tipo_correcao": "texto",
+        "original": "POUSO ALEGRE",
+        "corrigido": "Pouso Alegre",
+        "substituicoes": [
+          {
+            "de": "POUSO ALEGRE",
+            "para": "Pouso Alegre"
+          }
+        ]
+      },
+      "contexto": {
+        "grupo": "009664",
+        "cota": "0700-03",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2025-10-30T22:21:00.528551-03:00",
+      "aplicado_automaticamente": 0
+    },
+    {
+      "campo": "cidade",
+      "valor_original": "POUSO ALEGRE",
+      "valor_corrigido": "Pouso Alegre",
+      "padrao": {
+        "tipo_correcao": "texto",
+        "original": "POUSO ALEGRE",
+        "corrigido": "Pouso Alegre",
+        "substituicoes": [
+          {
+            "de": "POUSO ALEGRE",
+            "para": "Pouso Alegre"
+          }
+        ]
+      },
+      "contexto": {
+        "grupo": "009664",
+        "cota": "0700-03",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2025-10-30T22:21:00.528793-03:00",
+      "aplicado_automaticamente": 0
+    }
+  ]
+}

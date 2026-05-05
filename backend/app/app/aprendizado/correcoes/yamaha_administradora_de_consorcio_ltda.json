@@ -1,0 +1,14 @@
+{
+  "cidade": [
+    {
+      "original": "AVARÉ",
+      "corrigido": "Avaré",
+      "contexto": {
+        "grupo": "008055",
+        "cota": "0035-01",
+        "administradora": "YAMAHA ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-03-23T19:10:51.402431"
+    }
+  ]
+}

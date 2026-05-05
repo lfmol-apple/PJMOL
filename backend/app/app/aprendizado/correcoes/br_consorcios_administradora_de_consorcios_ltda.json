@@ -1,0 +1,48 @@
+{
+  "cidade": [
+    {
+      "campo": "cidade",
+      "valor_original": "BELO HORIZONTE",
+      "valor_corrigido": "Belo Horizonte",
+      "padrao": {
+        "tipo_correcao": "texto",
+        "original": "BELO HORIZONTE",
+        "corrigido": "Belo Horizonte",
+        "substituicoes": [
+          {
+            "de": "BELO HORIZONTE",
+            "para": "Belo Horizonte"
+          }
+        ]
+      },
+      "contexto": {
+        "grupo": "000999",
+        "cota": "0878-00",
+        "administradora": "BR CONSORCIOS ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2025-10-30T09:55:23.004844-03:00",
+      "aplicado_automaticamente": 0
+    }
+  ],
+  "nome_cliente": [
+    {
+      "campo": "nome_cliente",
+      "valor_original": "30/06/2025 17:56:30 - Extrato Atualizado",
+      "valor_corrigido": "João Jose Ferreira Neto - ME",
+      "padrao": {
+        "tipo_correcao": "formato",
+        "original": "30/06/2025 17:56:30 - Extrato Atualizado",
+        "corrigido": "João Jose Ferreira Neto - ME",
+        "regex_busca": "30/06/2025\\ 17:56:30\\ \\-\\ Extrato\\ Atualizado",
+        "formato_destino": "João Jose Ferreira Neto - ME"
+      },
+      "contexto": {
+        "grupo": "E432",
+        "cota": "0346",
+        "administradora": "BR CONSORCIOS ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2025-10-30T10:01:00.866590-03:00",
+      "aplicado_automaticamente": 0
+    }
+  ]
+}

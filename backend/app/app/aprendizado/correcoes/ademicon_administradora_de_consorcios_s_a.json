@@ -1,0 +1,27 @@
+{
+  "cidade": [
+    {
+      "campo": "cidade",
+      "valor_original": "FAZENDA RIO GRANDE",
+      "valor_corrigido": "Fazenda Rio Grande",
+      "padrao": {
+        "tipo_correcao": "texto",
+        "original": "FAZENDA RIO GRANDE",
+        "corrigido": "Fazenda Rio Grande",
+        "substituicoes": [
+          {
+            "de": "FAZENDA RIO GRANDE",
+            "para": "Fazenda Rio Grande"
+          }
+        ]
+      },
+      "contexto": {
+        "grupo": "001620",
+        "cota": "0734-00",
+        "administradora": "ADEMICON ADMINISTRADORA DE CONSORCIOS S/A"
+      },
+      "timestamp": "2025-10-30T21:44:28.352856-03:00",
+      "aplicado_automaticamente": 0
+    }
+  ]
+}

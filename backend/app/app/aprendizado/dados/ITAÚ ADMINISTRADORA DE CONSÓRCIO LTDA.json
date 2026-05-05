@@ -1,0 +1,21 @@
+{
+  "total_processados": 2,
+  "com_sucesso": 2,
+  "falha": 0,
+  "usou_ia": 0,
+  "ultimos_5": [
+    {
+      "sucesso": true,
+      "usou_ia": false,
+      "data_encerramento_via": "vinda_do_campo",
+      "timestamp": "2025-10-30T21:45:02.077128-03:00"
+    },
+    {
+      "sucesso": true,
+      "usou_ia": false,
+      "data_encerramento_via": "vinda_do_campo",
+      "timestamp": "2025-11-01T10:04:10.169678-03:00"
+    }
+  ],
+  "campos_aprendidos": {}
+}

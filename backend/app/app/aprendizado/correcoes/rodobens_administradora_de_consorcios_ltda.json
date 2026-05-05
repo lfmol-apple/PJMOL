@@ -1,0 +1,24 @@
+{
+  "cidade": [
+    {
+      "original": "PETROLÂNDIA",
+      "corrigido": "Petrolândia",
+      "contexto": {
+        "grupo": "002102",
+        "cota": "0382",
+        "administradora": "RODOBENS ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-03-24T20:36:40.351188"
+    },
+    {
+      "original": "PETROLÂNDIA",
+      "corrigido": "Petrolândia",
+      "contexto": {
+        "grupo": "002102",
+        "cota": "0382",
+        "administradora": "RODOBENS ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-03-24T20:36:46.131920"
+    }
+  ]
+}

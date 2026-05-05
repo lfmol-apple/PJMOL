@@ -1,0 +1,2861 @@
+{
+  "ADEMICON ADMINISTRADORA DE CONSORCIOS S/A": {
+    "nome": "ADEMICON ADMINISTRADORA DE CONSORCIOS S/A",
+    "total_extratos_processados": 41,
+    "ultima_atualizacao": "2025-10-30T12:17:43.935837",
+    "padroes": {
+      "parcelas": [],
+      "valores": [],
+      "datas": [],
+      "regex_patterns": [],
+      "estrutura_tabela": {
+        "tem_tabela": true,
+        "colunas_detectadas": 8,
+        "exemplos": [
+          {
+            "num_colunas": 5,
+            "exemplo_linha": "% normal: 29,2863 6,8808 63,8329 100,0000 Ideal pago: 29,3783",
+            "valores_exemplo": [
+              "29,28",
+              "6,88",
+              "63,83",
+              "100,00",
+              "29,37"
+            ]
+          },
+          {
+            "num_colunas": 4,
+            "exemplo_linha": "% antecipado: 0,0000 0,0000 Diferença: 0,0920 % Seguro: 0,000000",
+            "valores_exemplo": [
+              "0,00",
+              "0,00",
+              "0,09",
+              "0,00"
+            ]
+          },
+          {
+            "num_colunas": 6,
+            "exemplo_linha": "TOTAL: 29,2863 6,8808 63,8329 100,0000 Ideal Devido: 70,6217 Valor contribuição mensal: 1.495,11",
+            "valores_exemplo": [
+              "29,28",
+              "6,88",
+              "63,83",
+              "100,00",
+              "70,62"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "BRADESCO ADMINISTRADORA DE CONSÓRCIO LTDA": {
+    "nome": "BRADESCO ADMINISTRADORA DE CONSÓRCIO LTDA",
+    "total_extratos_processados": 95,
+    "ultima_atualizacao": "2025-10-30T12:18:03.745247",
+    "padroes": {
+      "parcelas": [],
+      "valores": [],
+      "datas": [],
+      "regex_patterns": [],
+      "estrutura_tabela": {
+        "tem_tabela": true,
+        "colunas_detectadas": 8,
+        "exemplos": [
+          {
+            "num_colunas": 6,
+            "exemplo_linha": "% Normal: 3,8885 33,9991 62,1124 100,0000 Ideal Pago: 3,8885 % Mensal c/ Taxas: 1,5417",
+            "valores_exemplo": [
+              "3,88",
+              "33,99",
+              "62,11",
+              "100,00",
+              "3,88"
+            ]
+          },
+          {
+            "num_colunas": 3,
+            "exemplo_linha": "% Antecipado: 0,0000 0,0000 Diferença: 0,0000",
+            "valores_exemplo": [
+              "0,00",
+              "0,00",
+              "0,00"
+            ]
+          },
+          {
+            "num_colunas": 6,
+            "exemplo_linha": "TOTAL 3,8885 33,9991 62,1124 100,0000 Ideal Devido: 96,1115 Valor Contrib. Mensal: 1.400,27",
+            "valores_exemplo": [
+              "3,88",
+              "33,99",
+              "62,11",
+              "100,00",
+              "96,11"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "YAMAHA ADMINISTRADORA DE CONSÓRCIO LTDA": {
+    "nome": "YAMAHA ADMINISTRADORA DE CONSÓRCIO LTDA",
+    "total_extratos_processados": 14,
+    "ultima_atualizacao": "2025-10-30T12:18:11.285351",
+    "padroes": {
+      "parcelas": [],
+      "valores": [],
+      "datas": [],
+      "regex_patterns": [],
+      "estrutura_tabela": {
+        "tem_tabela": true,
+        "colunas_detectadas": 8,
+        "exemplos": [
+          {
+            "num_colunas": 6,
+            "exemplo_linha": "% Normal: 39,2872 38,9898 21,7344 100,0114 Ideal Pago: 39,3497 % Mensal c/ Taxas: 2,5117",
+            "valores_exemplo": [
+              "39,28",
+              "38,98",
+              "21,73",
+              "100,01",
+              "39,34"
+            ]
+          },
+          {
+            "num_colunas": 3,
+            "exemplo_linha": "% Antecipado: -0,0114 -0,0114 Diferença: 0,0739",
+            "valores_exemplo": [
+              "0,01",
+              "0,01",
+              "0,07"
+            ]
+          },
+          {
+            "num_colunas": 6,
+            "exemplo_linha": "TOTAL 39,2758 38,9898 21,7344 100,0000 Ideal Devido: 60,6503 Valor Contrib. Mensal: 1.546,84",
+            "valores_exemplo": [
+              "39,27",
+              "38,98",
+              "21,73",
+              "100,00",
+              "60,65"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "SICOOB ADMINISTRADORA DE CONSÓRCIOS LTDA": {
+    "nome": "SICOOB ADMINISTRADORA DE CONSÓRCIOS LTDA",
+    "total_extratos_processados": 15,
+    "ultima_atualizacao": "2025-10-30T12:18:28.891105",
+    "padroes": {
+      "parcelas": [],
+      "valores": [],
+      "datas": [],
+      "regex_patterns": [],
+      "estrutura_tabela": {
+        "tem_tabela": true,
+        "colunas_detectadas": 8,
+        "exemplos": [
+          {
+            "num_colunas": 5,
+            "exemplo_linha": "% Normal: 10,9079 0,0000 83,2652 94,1731 Ideal Pago: 16,7397",
+            "valores_exemplo": [
+              "10,90",
+              "0,00",
+              "83,26",
+              "94,17",
+              "16,73"
+            ]
+          },
+          {
+            "num_colunas": 3,
+            "exemplo_linha": "% Antecipado: 5,8269 5,8269 Diferença: 0,0049",
+            "valores_exemplo": [
+              "5,82",
+              "5,82",
+              "0,00"
+            ]
+          },
+          {
+            "num_colunas": 6,
+            "exemplo_linha": "TOTAL 16,7348 0,0000 83,2652 100,0000 Ideal Devido: 83,2603 Valor Contrib. Mensal: 909,57",
+            "valores_exemplo": [
+              "16,73",
+              "0,00",
+              "83,26",
+              "100,00",
+              "83,26"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "SANTANDER BRASIL ADMINISTRADORA DE CONSÓRCIO LTDA": {
+    "nome": "SANTANDER BRASIL ADMINISTRADORA DE CONSÓRCIO LTDA",
+    "total_extratos_processados": 37,
+    "ultima_atualizacao": "2025-10-30T12:18:57.233176",
+    "padroes": {
+      "parcelas": [],
+      "valores": [],
+      "datas": [],
+      "regex_patterns": [],
+      "estrutura_tabela": {
+        "tem_tabela": true,
+        "colunas_detectadas": 8,
+        "exemplos": [
+          {
+            "num_colunas": 5,
+            "exemplo_linha": "% normal: 12,9025 0,0000 86,7057 99,6082 Ideal pago: 13,2943",
+            "valores_exemplo": [
+              "12,90",
+              "0,00",
+              "86,70",
+              "99,60",
+              "13,29"
+            ]
+          },
+          {
+            "num_colunas": 4,
+            "exemplo_linha": "% antecipado: 0,3918 0,3918 Diferença: 0,0000 % Seguro: 0,057105",
+            "valores_exemplo": [
+              "0,39",
+              "0,39",
+              "0,00",
+              "0,05"
+            ]
+          },
+          {
+            "num_colunas": 6,
+            "exemplo_linha": "TOTAL: 13,2943 0,0000 86,7057 100,0000 Ideal Devido: 86,7057 Valor contribuição mensal: 1.554,94",
+            "valores_exemplo": [
+              "13,29",
+              "0,00",
+              "86,70",
+              "100,00",
+              "86,70"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "BR CONSÓRCIOS ADMINISTRADORA DE CONSÓRCIOS LTDA": {
+    "nome": "BR CONSÓRCIOS ADMINISTRADORA DE CONSÓRCIOS LTDA",
+    "total_extratos_processados": 19,
+    "ultima_atualizacao": "2025-10-30T12:19:11.696410",
+    "padroes": {
+      "parcelas": [],
+      "valores": [],
+      "datas": [],
+      "regex_patterns": [],
+      "estrutura_tabela": {
+        "tem_tabela": true,
+        "colunas_detectadas": 8,
+        "exemplos": [
+          {
+            "num_colunas": 6,
+            "exemplo_linha": "% Normal: 47,0883 0,0000 -0,0024 47,0859 Ideal Pago: 100,0000 % Mensal c/ Taxas: 1,2335",
+            "valores_exemplo": [
+              "47,08",
+              "0,00",
+              "0,00",
+              "47,08",
+              "100,00"
+            ]
+          },
+          {
+            "num_colunas": 3,
+            "exemplo_linha": "% Antecipado: 52,9141 52,9141 Diferença: -0,0024",
+            "valores_exemplo": [
+              "52,91",
+              "52,91",
+              "0,00"
+            ]
+          },
+          {
+            "num_colunas": 6,
+            "exemplo_linha": "TOTAL 100,0024 0,0000 -0,0024 100,0000 Ideal Devido: 0,0000 Valor Contrib. Mensal: 428,60",
+            "valores_exemplo": [
+              "100,00",
+              "0,00",
+              "0,00",
+              "100,00",
+              "0,00"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "PORTO SEGURO ADMINISTRADORA DE CONSÓRCIOS LTDA": {
+    "nome": "PORTO SEGURO ADMINISTRADORA DE CONSÓRCIOS LTDA",
+    "total_extratos_processados": 184,
+    "ultima_atualizacao": "2025-10-30T12:21:21.799427",
+    "padroes": {
+      "parcelas": [],
+      "valores": [],
+      "datas": [],
+      "regex_patterns": [],
+      "estrutura_tabela": {
+        "tem_tabela": true,
+        "colunas_detectadas": 8,
+        "exemplos": [
+          {
+            "num_colunas": 6,
+            "exemplo_linha": "% Normal: 18,6127 0,0000 81,3873 100,0000 Ideal Pago: 18,6127 % Mensal c/ Taxas: 0,4703",
+            "valores_exemplo": [
+              "18,61",
+              "0,00",
+              "81,38",
+              "100,00",
+              "18,61"
+            ]
+          },
+          {
+            "num_colunas": 3,
+            "exemplo_linha": "% Antecipado: 0,0000 0,0000 Diferença: 0,0000",
+            "valores_exemplo": [
+              "0,00",
+              "0,00",
+              "0,00"
+            ]
+          },
+          {
+            "num_colunas": 6,
+            "exemplo_linha": "TOTAL 18,6127 0,0000 81,3873 100,0000 Ideal Devido: 81,3873 Valor Contrib. Mensal: 3.135,56",
+            "valores_exemplo": [
+              "18,61",
+              "0,00",
+              "81,38",
+              "100,00",
+              "81,38"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "ZEMA ADMINISTRADORA DE CONSORCIO LTDA CNPJ: 23.367.634/0001-82": {
+    "nome": "ZEMA ADMINISTRADORA DE CONSORCIO LTDA CNPJ: 23.367.634/0001-82",
+    "total_extratos_processados": 7,
+    "ultima_atualizacao": "2025-10-30T13:32:50.420458",
+    "layouts": {
+      "COL9_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL9_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 7,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 9,
+            "exemplos": [
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "Bem: 8010 CREDITO VEICULOS 150.000,00 Valor atual bem: 179.418,81 Valor bem c/ taxas: 224.273,51",
+                "valores_exemplo": [
+                  "150.000,00",
+                  "179.418,81",
+                  "224.273,51"
+                ]
+              },
+              {
+                "num_colunas": 9,
+                "exemplo_linha": "81 18/08/2021 18/08/2021 23/08/2021 1 6.375,00 0,00 0,00 151,20 150.000,00 6.375,00 0,100800 0,100800 Normal1aParc 0,000000 bc",
+                "valores_exemplo": [
+                  "6.375,00",
+                  "0,00",
+                  "0,00",
+                  "151,20",
+                  "150.000,00"
+                ]
+              },
+              {
+                "num_colunas": 9,
+                "exemplo_linha": "83 14/10/2021 14/10/2021 18/10/2021 3 1.875,00 0,00 0,00 151,08 150.000,00 1.875,00 0,100720 0,100720 Normal 0,000000 bc",
+                "valores_exemplo": [
+                  "1.875,00",
+                  "0,00",
+                  "0,00",
+                  "151,08",
+                  "150.000,00"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "ITAÚ ADMINISTRADORA DE CONSÓRCIO LTDA": {
+    "nome": "ITAÚ ADMINISTRADORA DE CONSÓRCIO LTDA",
+    "total_extratos_processados": 16,
+    "ultima_atualizacao": "2026-02-26T15:38:57.294331",
+    "layouts": {
+      "COL6_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL6_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 13,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 5,
+                "exemplo_linha": "% normal: 8,1250 10,0000 81,8750 100,0000 Ideal pago: 8,1250",
+                "valores_exemplo": [
+                  "8,12",
+                  "10,00",
+                  "81,87",
+                  "100,00",
+                  "8,12"
+                ]
+              },
+              {
+                "num_colunas": 4,
+                "exemplo_linha": "% antecipado: 0,0000 0,0000 Diferença: 0,0000 % Seguro: 0,057572",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,00",
+                  "0,05"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL: 8,1250 10,0000 81,8750 100,0000 Ideal Devido: 91,8750 Valor contribuição mensal: 1.068,58",
+                "valores_exemplo": [
+                  "8,12",
+                  "10,00",
+                  "81,87",
+                  "100,00",
+                  "91,87"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "ASSEMBLEIA_COL8_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "ASSEMBLEIA_COL8_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 1,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 5,
+                "exemplo_linha": "% normal: 14,8682 47,2950 37,8368 100,0000 Ideal pago: 14,8670",
+                "valores_exemplo": [
+                  "14,86",
+                  "47,29",
+                  "37,83",
+                  "100,00",
+                  "14,86"
+                ]
+              },
+              {
+                "num_colunas": 4,
+                "exemplo_linha": "% antecipado: 0,0000 0,0000 Diferença: -0,0012 % Seguro: 0,000000",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,00",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL: 14,8682 47,2950 37,8368 100,0000 Ideal Devido: 85,1330 Valor contribuição mensal: 3.437,21",
+                "valores_exemplo": [
+                  "14,86",
+                  "47,29",
+                  "37,83",
+                  "100,00",
+                  "85,13"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "COL2_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL2_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 1,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 6,
+            "exemplos": [
+              {
+                "num_colunas": 5,
+                "exemplo_linha": "% Normal: 19,1391 1,1389 79,7220 100,0000 Ideal Pago: 19,1394",
+                "valores_exemplo": [
+                  "19,13",
+                  "1,13",
+                  "79,72",
+                  "100,00",
+                  "19,13"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: 0,0000 0,0000 Diferença: 0,0003",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 19,1391 1,1389 79,7220 100,0000 Ideal Devido: 80,8606 Valor Contrib. Mensal: 279,66",
+                "valores_exemplo": [
+                  "19,13",
+                  "1,13",
+                  "79,72",
+                  "100,00",
+                  "80,86"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "COL5_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL5_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 1,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 5,
+                "exemplo_linha": "% Normal: 2,7998 1,8856 95,3146 100,0000 Ideal Pago: 2,7998",
+                "valores_exemplo": [
+                  "2,79",
+                  "1,88",
+                  "95,31",
+                  "100,00",
+                  "2,79"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: 0,0000 0,0000 Diferença: 0,0000",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 2,7998 1,8856 95,3146 100,0000 Ideal Devido: 97,2002 Valor Contrib. Mensal: 1,097.90",
+                "valores_exemplo": [
+                  "2,79",
+                  "1,88",
+                  "95,31",
+                  "100,00",
+                  "97,20"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "GMAC ADMINISTRADORA DE CONSÓRCIOS LTDA": {
+    "nome": "GMAC ADMINISTRADORA DE CONSÓRCIOS LTDA",
+    "total_extratos_processados": 53,
+    "ultima_atualizacao": "2026-02-24T13:41:09.456064",
+    "layouts": {
+      "COL6_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL6_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 27,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "% Normal: 26,9146 3,1362 69,9492 100,0000 Ideal Pago: 26,9146 % Mensal c/ Taxas: 1,2911",
+                "valores_exemplo": [
+                  "26,91",
+                  "3,13",
+                  "69,94",
+                  "100,00",
+                  "26,91"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: 0,0000 0,0000 Diferença: 0,0000",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 26,9146 3,1362 69,9492 100,0000 Ideal Devido: 73,0854 Valor Contrib. Mensal: 854,25",
+                "valores_exemplo": [
+                  "26,91",
+                  "3,13",
+                  "69,94",
+                  "100,00",
+                  "73,08"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "ASSEMBLEIA_COL2_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "ASSEMBLEIA_COL2_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 26,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "% Normal: 18,1390 0,0000 81,8610  100,0000 Ideal Pago: 18,1386 '“% Mensal c/ Taxas: 1,7558",
+                "valores_exemplo": [
+                  "18,13",
+                  "0,00",
+                  "81,86",
+                  "100,00",
+                  "18,13"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: 0,0000 0,0000 Diferença: -0,0004",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 18,1390 0,0000 81,8610  100,0000 Ideal Devido: 81,8614 Valor Contrib. Mensal: 1.481,77",
+                "valores_exemplo": [
+                  "18,13",
+                  "0,00",
+                  "81,86",
+                  "100,00",
+                  "81,86"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "BB ADMINISTRADORA DE CONSÓRCIO S.A.": {
+    "nome": "BB ADMINISTRADORA DE CONSÓRCIO S.A.",
+    "total_extratos_processados": 20,
+    "ultima_atualizacao": "2026-03-06T12:29:05.666296",
+    "layouts": {
+      "COL2_CONTEMPLAÇÃO_COTA_DATA_LONGA_EXTRATO_PARCELA": {
+        "assinatura": "COL2_CONTEMPLAÇÃO_COTA_DATA_LONGA_EXTRATO_PARCELA",
+        "extratos_com_este_layout": 20,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 4,
+            "exemplos": [
+              {
+                "num_colunas": 4,
+                "exemplo_linha": "Fundo Comum 6,6275 3.313,76 93,3725 51.929,61",
+                "valores_exemplo": [
+                  "6,62",
+                  "3.313,76",
+                  "93,37",
+                  "51.929,61"
+                ]
+              },
+              {
+                "num_colunas": 4,
+                "exemplo_linha": "Taxa Administração 1,7212 860,58 0,0000 13.447,17",
+                "valores_exemplo": [
+                  "1,72",
+                  "860,58",
+                  "0,00",
+                  "13.447,17"
+                ]
+              },
+              {
+                "num_colunas": 4,
+                "exemplo_linha": "Fundo Reserva 0,1989 99,46 2,8011 1.557,84",
+                "valores_exemplo": [
+                  "0,19",
+                  "99,46",
+                  "2,80",
+                  "1.557,84"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "0101 ANCORA ADMINISTRADORA DE CONSORCIOS S.A.": {
+    "nome": "0101 ANCORA ADMINISTRADORA DE CONSORCIOS S.A.",
+    "total_extratos_processados": 4,
+    "ultima_atualizacao": "2025-11-02T14:11:20.284851",
+    "layouts": {
+      "ASSEMBLEIA_COL8_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "ASSEMBLEIA_COL8_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 4,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 8,
+                "exemplo_linha": "001 3553129 001-0 RECBTO. PARCELA 21/11/2023 24/11/2023 CD16 53.000,00 673,10 673,10 13,46 0,67 0,00 0,0480 0,0010",
+                "valores_exemplo": [
+                  "53.000,00",
+                  "673,10",
+                  "673,10",
+                  "13,46",
+                  "0,67"
+                ]
+              },
+              {
+                "num_colunas": 8,
+                "exemplo_linha": "002 3996129 001-0 RECBTO. PARCELA 21/12/2023 20/12/2023 CD16 53.000,00 673,10 673,10 0,00 0,00 0,00 0,0490 0,0000",
+                "valores_exemplo": [
+                  "53.000,00",
+                  "673,10",
+                  "673,10",
+                  "0,00",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 8,
+                "exemplo_linha": "003 4145764 001-0 RECBTO. PARCELA 22/01/2024 22/01/2024 CD16 53.000,00 673,10 687,20 0,00 0,00 0,00 0,0500 -0,0010",
+                "valores_exemplo": [
+                  "53.000,00",
+                  "673,10",
+                  "687,20",
+                  "0,00",
+                  "0,00"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "VOLKSWAGEN ADMINISTRADORA DE CONSÓRCIO LTDA": {
+    "nome": "VOLKSWAGEN ADMINISTRADORA DE CONSÓRCIO LTDA",
+    "total_extratos_processados": 76,
+    "ultima_atualizacao": "2026-04-01T15:53:12.876876",
+    "layouts": {
+      "COL6_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL6_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 66,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "% Normal: 1,0054 2,1540 96,8406 100,0000 Ideal Pago: 1,0054 % Mensal c/ Taxas: 1,3250",
+                "valores_exemplo": [
+                  "1,00",
+                  "2,15",
+                  "96,84",
+                  "100,00",
+                  "1,00"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: 0,0000 0,0000 Diferença: 0,0000",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 1,0054 2,1540 96,8406 100,0000 Ideal Devido: 98,9946 Valor Contrib. Mensal: 2.093,84",
+                "valores_exemplo": [
+                  "1,00",
+                  "2,15",
+                  "96,84",
+                  "100,00",
+                  "98,99"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "ASSEMBLEIA_COL8_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "ASSEMBLEIA_COL8_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 6,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 5,
+                "exemplo_linha": "% Normal: 5,1255% 0,0000% 94,8745% 100,0000% Ideal Pago: 5,1255%",
+                "valores_exemplo": [
+                  "5,12",
+                  "0,00",
+                  "94,87",
+                  "100,00",
+                  "5,12"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: 0,0000% 0,0000% Diferença: 0,0000%",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 5,1255% 0,0000% 94,8745% 100,0000% Ideal Devido: 94,8745% Valor Contrib. Mensal: R$ 1.579,18",
+                "valores_exemplo": [
+                  "5,12",
+                  "0,00",
+                  "94,87",
+                  "100,00",
+                  "94,87"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "COL1_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL1_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 1,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "% Normal: 6,2366 1,1099 91,5910 98,9375 Ideal Pago: 7,2993 % Mensal c/ Taxas: 1,3561",
+                "valores_exemplo": [
+                  "6,23",
+                  "1,10",
+                  "91,59",
+                  "98,93",
+                  "7,29"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: 1,0625 1,0625 Diferença: 0,0002",
+                "valores_exemplo": [
+                  "1,06",
+                  "1,06",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 7,2991 1,1099 91,5910 100,0000 Ideal Devido:  92,7007 Valor Contrib. Mensal: 787,05",
+                "valores_exemplo": [
+                  "7,29",
+                  "1,10",
+                  "91,59",
+                  "100,00",
+                  "92,70"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "COL2_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL2_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 3,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 5,
+                "exemplo_linha": "% Normal: 5,3600% 0,0000% 94,6400% 100,0000% Ideal Pago: 5,3600%",
+                "valores_exemplo": [
+                  "5,36",
+                  "0,00",
+                  "94,64",
+                  "100,00",
+                  "5,36"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: 0,0000% 0,0000% Diferença: 0,0000%",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 5,3600% 0,0000% 94,6400% 100,0000% Ideal Devido: 94,6400% Valor Contrib. Mensal: R$ 1.023,43",
+                "valores_exemplo": [
+                  "5,36",
+                  "0,00",
+                  "94,64",
+                  "100,00",
+                  "94,64"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "0101 CNP CONSORCIO S.A. ADMINISTRADORA DE CONSORCIOS": {
+    "nome": "0101 CNP CONSORCIO S.A. ADMINISTRADORA DE CONSORCIOS",
+    "total_extratos_processados": 2,
+    "ultima_atualizacao": "2025-10-30T13:30:54.963082",
+    "layouts": {
+      "COL5_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL5_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 2,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 5,
+                "exemplo_linha": "% Normal: 2,8984 18,8396 78,2620 100,0000 Ideal Pago: 2,8984",
+                "valores_exemplo": [
+                  "2,89",
+                  "18,83",
+                  "78,26",
+                  "100,00",
+                  "2,89"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: 0,0000 0,0000 Diferença: 0,0000",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 2,8984 18,8396 78,2620 100,0000 Ideal Devido: 97,1016 Valor Contrib. Mensal: 3.700,53",
+                "valores_exemplo": [
+                  "2,89",
+                  "18,83",
+                  "78,26",
+                  "100,00",
+                  "97,10"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "CANOPUS ADMINISTRADORA DE CONSÓRCIOS S/A": {
+    "nome": "CANOPUS ADMINISTRADORA DE CONSÓRCIOS S/A",
+    "total_extratos_processados": 8,
+    "ultima_atualizacao": "2025-12-08T18:12:53.267977",
+    "layouts": {
+      "COL2_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL2_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 8,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "% Normal: 24,5230 0,0000 49,1176 73,6406 Ideal Pago: 50,8824 % Mensal c/ Taxas: 1,1175",
+                "valores_exemplo": [
+                  "24,52",
+                  "0,00",
+                  "49,11",
+                  "73,64",
+                  "50,88"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: 26,3594 26,3594 Diferença: 0,0000",
+                "valores_exemplo": [
+                  "26,35",
+                  "26,35",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 50,8824 0,0000 49,1176 100,0000 Ideal Devido: 49,1176 Valor Contrib. Mensal: 306,71",
+                "valores_exemplo": [
+                  "50,88",
+                  "0,00",
+                  "49,11",
+                  "100,00",
+                  "49,11"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "DISAL ADMINISTRADORA DE CONSÓRCIO LTDA": {
+    "nome": "DISAL ADMINISTRADORA DE CONSÓRCIO LTDA",
+    "total_extratos_processados": 8,
+    "ultima_atualizacao": "2026-03-02T17:09:06.095415",
+    "layouts": {
+      "COL2_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL2_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 7,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 5,
+                "exemplo_linha": "% Normal: 0,8551 0,6800 98,4649 100,0000 Ideal Pago: 0,8600",
+                "valores_exemplo": [
+                  "0,85",
+                  "0,68",
+                  "98,46",
+                  "100,00",
+                  "0,86"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: 0,0000 0,0000 Diferença: 0,0049",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 0,8551 0,6800 98,4649 100,0000 Ideal Devido: 99,1400 Valor Contrib. Mensal: 1,957.13",
+                "valores_exemplo": [
+                  "0,85",
+                  "0,68",
+                  "98,46",
+                  "100,00",
+                  "99,14"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "COL5_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL5_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 1,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 5,
+                "exemplo_linha": "% Normal: 7,3880 19,2640 73,3480 100,0000 Ideal Pago: 7,4064",
+                "valores_exemplo": [
+                  "7,38",
+                  "19,26",
+                  "73,34",
+                  "100,00",
+                  "7,40"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: 0,0000 0,0000 Diferença: 0,0184",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,01"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 7,3880 19,2640 73,3480 100,0000 Ideal Devido: 92,5936 Valor Contrib. Mensal: 686.46",
+                "valores_exemplo": [
+                  "7,38",
+                  "19,26",
+                  "73,34",
+                  "100,00",
+                  "92,59"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "LUIZA ADMINISTRADORA DE CONSORCIOS LTDA": {
+    "nome": "LUIZA ADMINISTRADORA DE CONSORCIOS LTDA",
+    "total_extratos_processados": 6,
+    "ultima_atualizacao": "2025-11-03T08:50:44.259378",
+    "layouts": {
+      "COL6_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL6_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 6,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "% Normal: 2,0971 2,3310 95,5719 100,0000 Ideal Pago: 2,0970 % Mensal c/ Taxas: 0,3650",
+                "valores_exemplo": [
+                  "2,09",
+                  "2,33",
+                  "95,57",
+                  "100,00",
+                  "2,09"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: 0,0000 0,0000 Diferença: -0,0001",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 2,0971 2,3310 95,5719 100,0000 Ideal Devido: 97,9030 Valor Contrib. Mensal: 991,24",
+                "valores_exemplo": [
+                  "2,09",
+                  "2,33",
+                  "95,57",
+                  "100,00",
+                  "97,90"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "HS ADMINISTRADORA DE CONSÓRCIOS LTDA": {
+    "nome": "HS ADMINISTRADORA DE CONSÓRCIOS LTDA",
+    "total_extratos_processados": 35,
+    "ultima_atualizacao": "2026-03-11T18:33:58.827370",
+    "layouts": {
+      "COL3_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL3_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 26,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "Plano Básico: 100 meses Taxa Adm: 15,0000 Fdo. Reserva: 1,0000 Percentual Mensal: 0,5217",
+                "valores_exemplo": [
+                  "15,00",
+                  "1,00",
+                  "0,52"
+                ]
+              },
+              {
+                "num_colunas": 5,
+                "exemplo_linha": "% Normal: 16,0862 0,0000 83,9138 100,0000Mensal: 0,5217",
+                "valores_exemplo": [
+                  "16,08",
+                  "0,00",
+                  "83,91",
+                  "100,00",
+                  "0,52"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "% Rateio: 0,0000 0,0000 0,0000 0,0000Ideal: 16,0862 Percentual dos Seguros com Taxas: 0,0000",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,00",
+                  "0,00",
+                  "16,08"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "ASSEMBLEIA_COL6_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "ASSEMBLEIA_COL6_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 6,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "% Normal: 29,9227 0,8598 69,2175 100,0000 Ideal Pago: 29,9399 % Mensal c/ Taxas: 0,3417",
+                "valores_exemplo": [
+                  "29,92",
+                  "0,85",
+                  "69,21",
+                  "100,00",
+                  "29,93"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: 0,0000 0,0000 Diferença: 0,0172",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,01"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 29,9227 0,8598 69,2175 100,0000 Ideal Devido: 70,0601 Valor Contrib. Mensal: 443,28",
+                "valores_exemplo": [
+                  "29,92",
+                  "0,85",
+                  "69,21",
+                  "100,00",
+                  "70,06"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "COL6_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL6_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 3,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "% Normal: 15,9765 1,0466 82,9769 100,0000 Ideal Pago: 16,0033 % Mensal c/ Taxas: 0,5890",
+                "valores_exemplo": [
+                  "15,97",
+                  "1,04",
+                  "82,97",
+                  "100,00",
+                  "16,00"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: 0,0000 0,0000 Diferença: 0,0268",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,02"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 15,9765 1,0466 82,9769 100,0000 Ideal Devido: 83,9967 Valor Contrib. Mensal: 267,24",
+                "valores_exemplo": [
+                  "15,97",
+                  "1,04",
+                  "82,97",
+                  "100,00",
+                  "83,99"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "EMBRACON ADMINISTRADORA DE CONSÓRCIO LTDA": {
+    "nome": "EMBRACON ADMINISTRADORA DE CONSÓRCIO LTDA",
+    "total_extratos_processados": 549,
+    "ultima_atualizacao": "2026-04-01T15:38:45.414299",
+    "layouts": {
+      "COL6_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL6_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 469,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "% Normal: 3,5498 0,0000 96,4502 100,0000 Ideal Pago: 3,4066 % Mensal c/ Taxas: 1,3009",
+                "valores_exemplo": [
+                  "3,54",
+                  "0,00",
+                  "96,45",
+                  "100,00",
+                  "3,40"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: 0,0000 0,0000 Diferença: -0,1432",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,14"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 3,5498 0,0000 96,4502 100,0000 Ideal Devido: 96,5934 Valor Contrib. Mensal: 3.122,16",
+                "valores_exemplo": [
+                  "3,54",
+                  "0,00",
+                  "96,45",
+                  "100,00",
+                  "96,59"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "COL2_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL2_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 50,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 5,
+                "exemplo_linha": "% Normal: 7,0150% 0,9150% 92,0700% 100,0000% Ideal Pago: 7,0150%",
+                "valores_exemplo": [
+                  "7,01",
+                  "0,91",
+                  "92,07",
+                  "100,00",
+                  "7,01"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: 0,0000% 0,0000% Diferença: 0,0000%",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 7,0150% 0,9150% 92,0700% 100,0000% Ideal Devido: 92,9850% Valor Contrib. Mensal: R$ 1.449,88",
+                "valores_exemplo": [
+                  "7,01",
+                  "0,91",
+                  "92,07",
+                  "100,00",
+                  "92,98"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "COL5_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL5_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 3,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 5,
+                "exemplo_linha": "% Normal: 9,2759 0,0000 90,7241 100,0000 Ideal Pago: 9,2949",
+                "valores_exemplo": [
+                  "9,27",
+                  "0,00",
+                  "90,72",
+                  "100,00",
+                  "9,29"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: 0,0000 0,0000 Diferença: 0,0190",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,01"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 9,2759 0,0000 90,7241 100,0000 Ideal Devido: 90,7051 Valor Contrib. Mensal: 1.211,18",
+                "valores_exemplo": [
+                  "9,27",
+                  "0,00",
+                  "90,72",
+                  "100,00",
+                  "90,70"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "COL1_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL1_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 9,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 5,
+                "exemplo_linha": "% Normal: 3,9328 2,8260 932412  100,0000 | Ideal Pago: 3,9386  % Mensal c/ Taxas: 0,6475",
+                "valores_exemplo": [
+                  "3,93",
+                  "2,82",
+                  "100,00",
+                  "3,93",
+                  "0,64"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: 0,0000 0,0000 Diferença: 0,0058",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 3,9328 2,8260 93,2412 100,0000 Ideal Devido:  96,0614 Valor Contrib. Mensal: 2.056,45",
+                "valores_exemplo": [
+                  "3,93",
+                  "2,82",
+                  "93,24",
+                  "100,00",
+                  "96,06"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "ASSEMBLEIA_COL8_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "ASSEMBLEIA_COL8_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 16,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 5,
+                "exemplo_linha": "% Normal: 1,1088% 0,1008% 98,7904% 100,0000% Ideal Pago: 1,1088%",
+                "valores_exemplo": [
+                  "1,10",
+                  "0,10",
+                  "98,79",
+                  "100,00",
+                  "1,10"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: 0,0000% 0,0000% Diferença: 0,0000%",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 1,1088% 0,1008% 98,7904% 100,0000% Ideal Devido: 98,8912% Valor Contrib. Mensal: R$ 1.824,93",
+                "valores_exemplo": [
+                  "1,10",
+                  "0,10",
+                  "98,79",
+                  "100,00",
+                  "98,89"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "COL1_DATA_LONGA_PARCELA": {
+        "assinatura": "COL1_DATA_LONGA_PARCELA",
+        "extratos_com_este_layout": 1,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": []
+        }
+      },
+      "COL7_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL7_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 1,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 5,
+                "exemplo_linha": "% Normal: 11,2498 0.0000 100,0000 Ideal Pago: 11,2498 % Mensal c/ Taxas: 1,2281",
+                "valores_exemplo": [
+                  "11,24",
+                  "0.00",
+                  "100,00",
+                  "11,24",
+                  "1,22"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: 0,0000 0,0000 Diferença: 0.0000",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0.00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 11,2498 0,0000 88,7502 100,0000 Ideal Devido: 88,7502 Valor Contrib. Mensal: 1.036,23",
+                "valores_exemplo": [
+                  "11,24",
+                  "0,00",
+                  "88,75",
+                  "100,00",
+                  "88,75"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "UNIFISA ADMINISTRADORA NACIONAL DE CONSÓRCIO LTDA. 17/10/2024 15:48:34 PÁGINA 1": {
+    "nome": "UNIFISA ADMINISTRADORA NACIONAL DE CONSÓRCIO LTDA. 17/10/2024 15:48:34 PÁGINA 1",
+    "total_extratos_processados": 4,
+    "ultima_atualizacao": "2025-11-03T08:21:50.429858",
+    "layouts": {
+      "COL6_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL6_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 4,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 5,
+                "exemplo_linha": "% normal: 0,2817 0,6779 98,7722 99,7318 Ideal pago: 0,4526",
+                "valores_exemplo": [
+                  "0,28",
+                  "0,67",
+                  "98,77",
+                  "99,73",
+                  "0,45"
+                ]
+              },
+              {
+                "num_colunas": 4,
+                "exemplo_linha": "% antecipado: 0,2682 0,2682 Diferença: -0,0973 % Seguro: 0,000000",
+                "valores_exemplo": [
+                  "0,26",
+                  "0,26",
+                  "0,09",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL: 0,5499 0,6779 98,7722 100,0000 Ideal Devido: 99,5474 Valor contribuição mensal: 556,36",
+                "valores_exemplo": [
+                  "0,54",
+                  "0,67",
+                  "98,77",
+                  "100,00",
+                  "99,54"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "0101 BANCORBRAS ADMINISTRADORA DE CONSÓRCIOS S/A": {
+    "nome": "0101 BANCORBRAS ADMINISTRADORA DE CONSÓRCIOS S/A",
+    "total_extratos_processados": 2,
+    "ultima_atualizacao": "2025-10-30T13:30:47.913076",
+    "layouts": {
+      "COL5_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL5_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 2,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 5,
+                "exemplo_linha": "% Normal: 19,5572 0,0000 80,4428 100,0000 Ideal Pago: 19,5572",
+                "valores_exemplo": [
+                  "19,55",
+                  "0,00",
+                  "80,44",
+                  "100,00",
+                  "19,55"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: 0,0000 0,0000 Diferença: 0,0000",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 19,5572 0,0000 80,4428 100,0000 Ideal Devido: 80,4428 Valor Contrib. Mensal: 610,92",
+                "valores_exemplo": [
+                  "19,55",
+                  "0,00",
+                  "80,44",
+                  "100,00",
+                  "80,44"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "BAMAQ ADMINISTRADORA DE CONSORCIOS LTDA": {
+    "nome": "BAMAQ ADMINISTRADORA DE CONSORCIOS LTDA",
+    "total_extratos_processados": 21,
+    "ultima_atualizacao": "2026-02-20T17:53:26.644195",
+    "layouts": {
+      "COL2_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL2_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 21,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 6,
+            "exemplos": [
+              {
+                "num_colunas": 5,
+                "exemplo_linha": "% Normal: 8,4585 5,9960 85,9143 100,3688 Ideal Pago: 8,0901",
+                "valores_exemplo": [
+                  "8,45",
+                  "5,99",
+                  "85,91",
+                  "100,36",
+                  "8,09"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: -0,3688 -0,3688 Diferença: 0,0004",
+                "valores_exemplo": [
+                  "0,36",
+                  "0,36",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 8,0897 5,9960 85,9143 100,0000 Ideal Devido: 91,9099 Valor Contrib. Mensal: 680,43",
+                "valores_exemplo": [
+                  "8,08",
+                  "5,99",
+                  "85,91",
+                  "100,00",
+                  "91,90"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "LUIZA ADMINISTRADORA DE CONSÓRCIOS LTDA": {
+    "nome": "LUIZA ADMINISTRADORA DE CONSÓRCIOS LTDA",
+    "total_extratos_processados": 12,
+    "ultima_atualizacao": "2026-02-11T15:57:44.517373",
+    "layouts": {
+      "COL6_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL6_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 12,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "% Normal: 14,7994 6,0228 75,6232 96,4454 Ideal Pago: 18,3540 % Mensal c/ Taxas: 0,7927",
+                "valores_exemplo": [
+                  "14,79",
+                  "6,02",
+                  "75,62",
+                  "96,44",
+                  "18,35"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: 3,5546 3,5546 Diferença: 0,0000",
+                "valores_exemplo": [
+                  "3,55",
+                  "3,55",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 18,3540 6,0228 75,6232 100,0000 Ideal Devido: 81,6460 Valor Contrib. Mensal: 983,82",
+                "valores_exemplo": [
+                  "18,35",
+                  "6,02",
+                  "75,62",
+                  "100,00",
+                  "81,64"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "ÂNCORA ADMINISTRADORA DE CONSÓRCIOS S.A.": {
+    "nome": "ÂNCORA ADMINISTRADORA DE CONSÓRCIOS S.A.",
+    "total_extratos_processados": 18,
+    "ultima_atualizacao": "2026-03-12T16:09:10.346736",
+    "layouts": {
+      "ASSEMBLEIA_COL8_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "ASSEMBLEIA_COL8_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 7,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 8,
+                "exemplo_linha": "001 3553129 001-0 RECBTO. PARCELA 21/11/2023 24/11/2023 CD16 53.000,00 673,10 673,10 13,46 0,67 0,00 0,0480 0,0010",
+                "valores_exemplo": [
+                  "53.000,00",
+                  "673,10",
+                  "673,10",
+                  "13,46",
+                  "0,67"
+                ]
+              },
+              {
+                "num_colunas": 8,
+                "exemplo_linha": "002 3996129 001-0 RECBTO. PARCELA 21/12/2023 20/12/2023 CD16 53.000,00 673,10 673,10 0,00 0,00 0,00 0,0490 0,0000",
+                "valores_exemplo": [
+                  "53.000,00",
+                  "673,10",
+                  "673,10",
+                  "0,00",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 8,
+                "exemplo_linha": "003 4145764 001-0 RECBTO. PARCELA 22/01/2024 22/01/2024 CD16 53.000,00 673,10 687,20 0,00 0,00 0,00 0,0500 -0,0010",
+                "valores_exemplo": [
+                  "53.000,00",
+                  "673,10",
+                  "687,20",
+                  "0,00",
+                  "0,00"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "COL6_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL6_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 11,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "% Normal: 0,0300 0,0500 99,9200 100,0000 Ideal Pago: 0,0300 % Mensal c/ Taxas: 0,3850",
+                "valores_exemplo": [
+                  "0,03",
+                  "0,05",
+                  "99,92",
+                  "100,00",
+                  "0,03"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: 0,0000 0,0000 Diferença: 0,0000",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 0,0300 0,0500 99,9200 100,0000 Ideal Devido: 99,9700 Valor Contrib. Mensal: 1.732,50",
+                "valores_exemplo": [
+                  "0,03",
+                  "0,05",
+                  "99,92",
+                  "100,00",
+                  "99,97"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "RODOBENS ADMINISTRADORA DE CONSORCIOS LTDA": {
+    "nome": "RODOBENS ADMINISTRADORA DE CONSORCIOS LTDA",
+    "total_extratos_processados": 31,
+    "ultima_atualizacao": "2026-03-04T15:38:53.795509",
+    "layouts": {
+      "COL6_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL6_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 22,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "% Normal: 11,1850 0,3146 88,5004 100,0000 Ideal Pago: 11,1850 % Mensal c/ Taxas: 0,4580",
+                "valores_exemplo": [
+                  "11,18",
+                  "0,31",
+                  "88,50",
+                  "100,00",
+                  "11,18"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: 0,0000 0,0000 Diferença: 0,0000",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 11,1850 0,3146 88,5004 100,0000 Ideal Devido: 88,8150 Valor Contrib. Mensal: 633,38",
+                "valores_exemplo": [
+                  "11,18",
+                  "0,31",
+                  "88,50",
+                  "100,00",
+                  "88,81"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "COL4_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL4_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 5,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "Bem: CCI170000D CREDITO IMOVEL R$ 170.000,00. Valor atual bem : 238.079,71 Valor bem c/ taxas: 304.742,02",
+                "valores_exemplo": [
+                  "170.000,00",
+                  "238.079,71",
+                  "304.742,02"
+                ]
+              },
+              {
+                "num_colunas": 4,
+                "exemplo_linha": "170.000,00 167,33 0,1666607 0,166667 NormaltaParc",
+                "valores_exemplo": [
+                  "170.000,00",
+                  "167,33",
+                  "0,16",
+                  "0,16"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "100 15/07/20 20/07/20 25/07/20 3 1.167,33 283,33 170.000,00 1.167,33 0,166667 | 0,166667 Normal bc",
+                "valores_exemplo": [
+                  "1.167,33",
+                  "283,33",
+                  "170.000,00",
+                  "1.167,33",
+                  "0,16"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "COL1_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL1_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 1,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "Yo Normal: 8,26/2 2,4222 89,3106 100,0000 Ideal Pago: 8,3211 % Mensal c/ Taxas: 0,5716",
+                "valores_exemplo": [
+                  "8,26",
+                  "2,42",
+                  "89,31",
+                  "100,00",
+                  "8,32"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Ântecipado: 0,0000 0,0000 Diferença: 0,0539",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,05"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 8,2672 2,4222 89,3106 100,0000 Ideal Devido:  91,6789 Valor Contrib. Mensal: 1.275,29",
+                "valores_exemplo": [
+                  "8,26",
+                  "2,42",
+                  "89,31",
+                  "100,00",
+                  "91,67"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "COL5_COTA_DATA_LONGA_EXTRATO_PARCELA": {
+        "assinatura": "COL5_COTA_DATA_LONGA_EXTRATO_PARCELA",
+        "extratos_com_este_layout": 2,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 5,
+            "exemplos": [
+              {
+                "num_colunas": 4,
+                "exemplo_linha": "039 (PARCELA) 001-0 RECBTO. PARCELA 10/01/2025 005830 421.000,47 3.825 42 0,00: 0,00 5 06838",
+                "valores_exemplo": [
+                  "421.000,47",
+                  "3.82",
+                  "0,00",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 5,
+                "exemplo_linha": "040 (PARCELA) 001-0 RECBTO. PARCELA 1002/2025 005830 421.000. 47 3.825,42 0,00 0.00 5 : 0,6838",
+                "valores_exemplo": [
+                  "421.00",
+                  "3.825,42",
+                  "0,00",
+                  "0.00",
+                  "0,68"
+                ]
+              },
+              {
+                "num_colunas": 4,
+                "exemplo_linha": "041 (PARCELA) 001-0 RECBTO. PARCELA 1003/2025 005830 421.090,47 3.825,42 0,00. 0.00 s 06838",
+                "valores_exemplo": [
+                  "421.090,47",
+                  "3.825,42",
+                  "0,00",
+                  "0.00"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "COL7_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL7_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 1,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 7,
+            "exemplos": [
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "% normal: 1,9540 6,1208 91,9252 100,0000 Ideal pago: 1,9540 % Seguro: 0,041634",
+                "valores_exemplo": [
+                  "1,95",
+                  "6,12",
+                  "91,92",
+                  "100,00",
+                  "1,95"
+                ]
+              },
+              {
+                "num_colunas": 4,
+                "exemplo_linha": "% antecipado: 0,0000 0,0000 Diferença: 0,0000 % mensal c/ taxas: 0,6516",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,00",
+                  "0,65"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL: 1,9540 6,1208 91,9252 100,0000 Ideal Devido: 98,0460 Valor contribuição mensal: 1.145,11",
+                "valores_exemplo": [
+                  "1,95",
+                  "6,12",
+                  "91,92",
+                  "100,00",
+                  "98,04"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "CNP CONSÓRCIO S.A. ADMINISTRADORA DE CONSÓRCIOS": {
+    "nome": "CNP CONSÓRCIO S.A. ADMINISTRADORA DE CONSÓRCIOS",
+    "total_extratos_processados": 9,
+    "ultima_atualizacao": "2026-03-03T09:54:55.896913",
+    "layouts": {
+      "COL5_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL5_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 6,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 5,
+                "exemplo_linha": "% normal: 13,0258 17,5016 69,4726 100,0000 Ideal pago: 13,0260",
+                "valores_exemplo": [
+                  "13,02",
+                  "17,50",
+                  "69,47",
+                  "100,00",
+                  "13,02"
+                ]
+              },
+              {
+                "num_colunas": 4,
+                "exemplo_linha": "% antecipado: 0,0000 0,0000 Diferença: 0,0002 % Seguro: 0,000000",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,00",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL: 13,0258 17,5016 69,4726 100,0000 Ideal Devido: 86,9740 Valor contribuição mensal: 1.739,93",
+                "valores_exemplo": [
+                  "13,02",
+                  "17,50",
+                  "69,47",
+                  "100,00",
+                  "86,97"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "COL6_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL6_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 3,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 5,
+                "exemplo_linha": "% normal: 50,5008 0,0000 49,4992 100,0000 Ideal pago: 50,5008",
+                "valores_exemplo": [
+                  "50,50",
+                  "0,00",
+                  "49,49",
+                  "100,00",
+                  "50,50"
+                ]
+              },
+              {
+                "num_colunas": 4,
+                "exemplo_linha": "% antecipado: 0,0000 0,0000 Diferença: 0,0000 % Seguro: 0,000000",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,00",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL: 50,5008 0,0000 49,4992 100,0000 Ideal Devido: 49,4992 Valor contribuição mensal: 4.190,58",
+                "valores_exemplo": [
+                  "50,50",
+                  "0,00",
+                  "49,49",
+                  "100,00",
+                  "49,49"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "ZEMA ADMINISTRADORA DE CONSÓRCIO LTDA": {
+    "nome": "ZEMA ADMINISTRADORA DE CONSÓRCIO LTDA",
+    "total_extratos_processados": 5,
+    "ultima_atualizacao": "2026-02-26T14:48:23.139845",
+    "layouts": {
+      "COL9_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL9_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 5,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 9,
+            "exemplos": [
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "Bem: 0423 CREDITO IMOVEL 300.000,00 Valor atual bem: 490.263,13 Valor bem c/ taxas: 622.634,17",
+                "valores_exemplo": [
+                  "300.000,00",
+                  "490.263,13",
+                  "622.634,17"
+                ]
+              },
+              {
+                "num_colunas": 9,
+                "exemplo_linha": "41 30/08/2018 13/09/2018 17/09/2018 1 2.116,80 0,00 0,00 91,80 300.000,00 2.116,80 0,030600 0,030600 Normal1aParc*0,000000 cx",
+                "valores_exemplo": [
+                  "2.116,80",
+                  "0,00",
+                  "0,00",
+                  "91,80",
+                  "300.000,00"
+                ]
+              },
+              {
+                "num_colunas": 9,
+                "exemplo_linha": "42 17/10/2018 18/10/2018 22/10/2018 2 2.116,80 0,00 0,00 91,80 300.000,00 2.116,80 0,030600 0,030600 Normal* 0,000000 cx",
+                "valores_exemplo": [
+                  "2.116,80",
+                  "0,00",
+                  "0,00",
+                  "91,80",
+                  "300.000,00"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "ANCORA ADMINISTRADORA DE CONSORCIOS S.A.": {
+    "nome": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A.",
+    "total_extratos_processados": 3,
+    "ultima_atualizacao": "2025-11-02T19:07:24.368258",
+    "layouts": {
+      "COL6_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL6_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 3,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "% Normal: 62,3781 0,0000 38,2510 100,6291 Ideal Pago: 61,7491 % Mensal c/ Taxas: 1,0235",
+                "valores_exemplo": [
+                  "62,37",
+                  "0,00",
+                  "38,25",
+                  "100,62",
+                  "61,74"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: -0,6291 -0,6291 Diferença: 0,0001",
+                "valores_exemplo": [
+                  "0,62",
+                  "0,62",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 61,7490 0,0000 38,2510 100,0000 Ideal Devido: 38,2509 Valor Contrib. Mensal: 508,99",
+                "valores_exemplo": [
+                  "61,74",
+                  "0,00",
+                  "38,25",
+                  "100,00",
+                  "38,25"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "LUIZA ADMINISTRADORA DE CONSORCIOS LTDA 23/10/2025 13:18:51 PÁGINA 1": {
+    "nome": "LUIZA ADMINISTRADORA DE CONSORCIOS LTDA 23/10/2025 13:18:51 PÁGINA 1",
+    "total_extratos_processados": 2,
+    "ultima_atualizacao": "2025-10-30T22:51:51.565761",
+    "layouts": {
+      "COL6_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL6_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 2,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 5,
+                "exemplo_linha": "% normal: 25,0554 0,3692 72,2914 97,7160 Ideal pago: 27,3394",
+                "valores_exemplo": [
+                  "25,05",
+                  "0,36",
+                  "72,29",
+                  "97,71",
+                  "27,33"
+                ]
+              },
+              {
+                "num_colunas": 4,
+                "exemplo_linha": "% antecipado: 2,2840 2,2840 Diferença: 0,0000 % Seguro: 0,000000",
+                "valores_exemplo": [
+                  "2,28",
+                  "2,28",
+                  "0,00",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL: 27,3394 0,3692 72,2914 100,0000 Ideal Devido: 72,6606 Valor contribuição mensal: 1.329,24",
+                "valores_exemplo": [
+                  "27,33",
+                  "0,36",
+                  "72,29",
+                  "100,00",
+                  "72,66"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "BANCORBRAS ADMINISTRADORA DE CONSÓRCIOS S/A": {
+    "nome": "BANCORBRAS ADMINISTRADORA DE CONSÓRCIOS S/A",
+    "total_extratos_processados": 1,
+    "ultima_atualizacao": "2025-10-30T13:41:20.221321",
+    "layouts": {
+      "COL5_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL5_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 1,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 5,
+                "exemplo_linha": "% Normal: 19,5572 0,0000 80,4428 100,0000 Ideal Pago: 19,5572",
+                "valores_exemplo": [
+                  "19,55",
+                  "0,00",
+                  "80,44",
+                  "100,00",
+                  "19,55"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: 0,0000 0,0000 Diferença: 0,0000",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 19,5572 0,0000 80,4428 100,0000 Ideal Devido: 80,4428 Valor Contrib. Mensal: 610,92",
+                "valores_exemplo": [
+                  "19,55",
+                  "0,00",
+                  "80,44",
+                  "100,00",
+                  "80,44"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "UNIFISA ADMINISTRADORA NACIONAL DE CONSÓRCIO LTDA": {
+    "nome": "UNIFISA ADMINISTRADORA NACIONAL DE CONSÓRCIO LTDA",
+    "total_extratos_processados": 4,
+    "ultima_atualizacao": "2025-11-04T23:24:21.663248",
+    "layouts": {
+      "COL6_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL6_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 4,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 5,
+                "exemplo_linha": "% normal: 0,2817 0,6779 98,7722 99,7318 Ideal pago: 0,4526",
+                "valores_exemplo": [
+                  "0,28",
+                  "0,67",
+                  "98,77",
+                  "99,73",
+                  "0,45"
+                ]
+              },
+              {
+                "num_colunas": 4,
+                "exemplo_linha": "% antecipado: 0,2682 0,2682 Diferença: -0,0973 % Seguro: 0,000000",
+                "valores_exemplo": [
+                  "0,26",
+                  "0,26",
+                  "0,09",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL: 0,5499 0,6779 98,7722 100,0000 Ideal Devido: 99,5474 Valor contribuição mensal: 556,36",
+                "valores_exemplo": [
+                  "0,54",
+                  "0,67",
+                  "98,77",
+                  "100,00",
+                  "99,54"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "KSK ADMINISTRADORA DE CONSORCIO LTDA": {
+    "nome": "KSK ADMINISTRADORA DE CONSORCIO LTDA",
+    "total_extratos_processados": 47,
+    "ultima_atualizacao": "2025-11-04T14:36:23.566054",
+    "layouts": {
+      "ASSEMBLEIA_COL8_COTA_DATA_LONGA_DEMONSTRATIVO": {
+        "assinatura": "ASSEMBLEIA_COL8_COTA_DATA_LONGA_DEMONSTRATIVO",
+        "extratos_com_este_layout": 47,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 8,
+                "exemplo_linha": "032 034 08 Quitacao Parcelas 08/04/2025 399.938,75 10.931,95 10.859,55 1.191,82 72,40 0,2000 0,2980 0,0181 1",
+                "valores_exemplo": [
+                  "399.938,75",
+                  "10.931,95",
+                  "10.859,55",
+                  "1.191,82",
+                  "72,40"
+                ]
+              },
+              {
+                "num_colunas": 8,
+                "exemplo_linha": "032 034 08 Est.Quit.Parcelas 08/04/2025 399.938,75 10.931,95- 10.859,55- 1.191,82- 72,40- 0,2000 0,2980-  0,0181- 2",
+                "valores_exemplo": [
+                  "399.938,75",
+                  "10.931,95",
+                  "10.859,55",
+                  "1.191,82",
+                  "72,40"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "033 02 Parcela Inicial 08/05/2025 14/05/2025 08/04/2025 399.938,75 3.619,85 3.619,85 399,94 0,1000 0,1000 3",
+                "valores_exemplo": [
+                  "399.938,75",
+                  "3.619,85",
+                  "3.619,85",
+                  "399,94",
+                  "0,10"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "ADMINISTRADORA DE CONSÓRCIO RCI LTDA": {
+    "nome": "ADMINISTRADORA DE CONSÓRCIO RCI LTDA",
+    "total_extratos_processados": 2,
+    "ultima_atualizacao": "2026-02-10T13:53:17.768254",
+    "layouts": {
+      "COL6_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL6_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 2,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 5,
+                "exemplo_linha": "% Normal: 17,7798 19,4460 62,7742 100,0000 Ideal Pago: 17,7792",
+                "valores_exemplo": [
+                  "17,77",
+                  "19,44",
+                  "62,77",
+                  "100,00",
+                  "17,77"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: 0,0000 0,0000 Diferença: -0,0006",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 17,7798 19,4460 62,7742 100,0000 Ideal Devido: 82,2208 Valor Contrib. Mensal: 1.844,12",
+                "valores_exemplo": [
+                  "17,77",
+                  "19,44",
+                  "62,77",
+                  "100,00",
+                  "82,22"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "EVOY ADMINISTRADORA DE CONSÓRCIO LTDA": {
+    "nome": "EVOY ADMINISTRADORA DE CONSÓRCIO LTDA",
+    "total_extratos_processados": 3,
+    "ultima_atualizacao": "2026-02-17T14:16:48.203785",
+    "layouts": {
+      "COL6_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL6_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 3,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "% Normal: 0,6500 0,0000 99,3500 100,0000 Ideal Pago: 0,6500 % Mensal c/ Taxas: 0,9287",
+                "valores_exemplo": [
+                  "0,65",
+                  "0,00",
+                  "99,35",
+                  "100,00",
+                  "0,65"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: 0,0000 0,0000 Diferença: 0,0000",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 0,6500 0,0000 99,3500 100,0000 Ideal Devido: 99,3500 Valor Contrib. Mensal: 3.132,73",
+                "valores_exemplo": [
+                  "0,65",
+                  "0,00",
+                  "99,35",
+                  "100,00",
+                  "99,35"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "XS5 ADMINISTRADORA DE CONSORCIOS S.A.": {
+    "nome": "XS5 ADMINISTRADORA DE CONSORCIOS S.A.",
+    "total_extratos_processados": 1,
+    "ultima_atualizacao": "2026-02-20T15:51:37.333433",
+    "layouts": {
+      "COL5_COTA_DATA_LONGA_EXTRATO": {
+        "assinatura": "COL5_COTA_DATA_LONGA_EXTRATO",
+        "extratos_com_este_layout": 1,
+        "padroes": {
+          "parcelas": [],
+          "valores": [],
+          "datas": [],
+          "regex_patterns": [],
+          "estrutura_tabela": {
+            "tem_tabela": true,
+            "colunas_detectadas": 8,
+            "exemplos": [
+              {
+                "num_colunas": 5,
+                "exemplo_linha": "% Normal: 4,8691 1,8249 93,3060 100,0000 Ideal Pago: 4,8664",
+                "valores_exemplo": [
+                  "4,86",
+                  "1,82",
+                  "93,30",
+                  "100,00",
+                  "4,86"
+                ]
+              },
+              {
+                "num_colunas": 3,
+                "exemplo_linha": "% Antecipado: 0,0000 0,0000 Diferença: -0,0027",
+                "valores_exemplo": [
+                  "0,00",
+                  "0,00",
+                  "0,00"
+                ]
+              },
+              {
+                "num_colunas": 6,
+                "exemplo_linha": "TOTAL 4,8691 1,8249 93,3060 100,0000 Ideal Devido: 95,1336 Valor Contrib. Mensal: 2.370,00",
+                "valores_exemplo": [
+                  "4,86",
+                  "1,82",
+                  "93,30",
+                  "100,00",
+                  "95,13"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

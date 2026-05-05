@@ -1,0 +1,92 @@
+{
+  "bairro": [
+    {
+      "campo": "bairro",
+      "valor_original": "MOOCA",
+      "valor_corrigido": "Mooca",
+      "padrao": {
+        "tipo_correcao": "texto",
+        "original": "MOOCA",
+        "corrigido": "Mooca",
+        "substituicoes": [
+          {
+            "de": "MOOCA",
+            "para": "Mooca"
+          }
+        ]
+      },
+      "contexto": {
+        "grupo": "010678",
+        "cota": "0644-01",
+        "administradora": "BRADESCO ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2025-10-30T11:24:20.870299-03:00",
+      "aplicado_automaticamente": 0
+    },
+    {
+      "original": "MOOCA",
+      "corrigido": "Mooca",
+      "contexto": {
+        "grupo": "010678",
+        "cota": "0644-01",
+        "administradora": "BRADESCO ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-04-11T19:48:34.725938"
+    }
+  ],
+  "cidade": [
+    {
+      "campo": "cidade",
+      "valor_original": "ABREU E LIMA",
+      "valor_corrigido": "Abreu e Lima",
+      "padrao": {
+        "tipo_correcao": "texto",
+        "original": "ABREU E LIMA",
+        "corrigido": "Abreu e Lima",
+        "substituicoes": [
+          {
+            "de": "ABREU E LIMA",
+            "para": "Abreu e Lima"
+          }
+        ]
+      },
+      "contexto": {
+        "grupo": "010511",
+        "cota": "0003-01",
+        "administradora": "BRADESCO ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2025-10-30T21:16:18.733200-03:00",
+      "aplicado_automaticamente": 0
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "010678",
+        "cota": "0644-01",
+        "administradora": "BRADESCO ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-04-11T19:48:23.455852"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "010678",
+        "cota": "0644-01",
+        "administradora": "BRADESCO ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-04-11T20:13:58.153666"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "010678",
+        "cota": "0644-01",
+        "administradora": "BRADESCO ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-04-11T20:15:32.569478"
+    }
+  ]
+}

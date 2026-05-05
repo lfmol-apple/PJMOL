@@ -1,0 +1,14 @@
+{
+  "rua": [
+    {
+      "original": "Logradouro Numero - Complemento",
+      "corrigido": "Baixa Grande",
+      "contexto": {
+        "grupo": "00504",
+        "cota": "0713.05",
+        "administradora": "KSK ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-04-03T19:02:14.642260"
+    }
+  ]
+}

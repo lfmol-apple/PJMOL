@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Timers - Debug</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .timer { margin: 10px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+        .timer.active { background-color: #e7f5e7; border-color: #28a745; }
+        .timer.completed { background-color: #f8f9fa; border-color: #6c757d; }
+        .timer.negative { background-color: #f8d7da; border-color: #dc3545; }
+    </style>
+</head>
+<body>
+    <h1>🕐 Test Timers - NOVA IMPLEMENTAÇÃO ROBUSTA</h1>
+    <div style="background: #d4edda; border: 1px solid #28a745; padding: 10px; margin: 10px 0; border-radius: 5px;">
+        <strong>✅ Status:</strong> Timers reimplementados com lógica robusta - SEM valores negativos!
+    </div>
+    <div id="content">Carregando...</div>
+
+    <script>
+        async function loadData() {
+            try {
+                const response = await fetch('http://localhost:8000/extratos');
+                const extratos = await response.json();
+                
+                let html = '<h2>Extratos com Timers:</h2>';
+                
+                extratos.forEach(extrato => {
+                    const extras = extrato.extras || {};
+                    const hasTimers = extras.timer_assinatura_started_at || 
+                                    extras.timer_anexos_started_at || 
+                                    extras.timer_advogado_started_at;
+                    
+                    if (hasTimers) {
+                        html += `<div class="timer">`;
+                        html += `<h3>📄 ${extrato.nome_cliente} (ID: ${extrato.id})</h3>`;
+                        
+                        // Timer Assinatura
+                        if (extras.timer_assinatura_started_at) {
+                            const start = new Date(extras.timer_assinatura_started_at);
+                            const end = extras.timer_assinatura_ended_at ? new Date(extras.timer_assinatura_ended_at) : new Date();
+                            const diff = Math.floor((end - start) / 1000);
+                            const isActive = !extras.timer_assinatura_ended_at;
+                            
+                            html += `<p><strong>Assinatura:</strong> ${formatDuration(diff)} ${isActive ? '(ativo)' : '(concluído)'}</p>`;
+                        }
+                        
+                        // Timer Anexos
+                        if (extras.timer_anexos_started_at) {
+                            const start = new Date(extras.timer_anexos_started_at);
+                            const end = extras.timer_anexos_ended_at ? new Date(extras.timer_anexos_ended_at) : new Date();
+                            const diff = Math.floor((end - start) / 1000);
+                            const isActive = !extras.timer_anexos_ended_at;
+                            
+                            html += `<p><strong>Gerente:</strong> ${formatDuration(diff)} ${isActive ? '(ativo)' : '(concluído)'}</p>`;
+                        }
+                        
+                        // Timer Advogado
+                        if (extras.timer_advogado_started_at) {
+                            const start = new Date(extras.timer_advogado_started_at);
+                            const end = extras.timer_advogado_ended_at ? new Date(extras.timer_advogado_ended_at) : new Date();
+                            const diff = Math.floor((end - start) / 1000);
+                            const isActive = !extras.timer_advogado_ended_at;
+                            
+                            html += `<p><strong>Advogado:</strong> ${formatDuration(diff)} ${isActive ? '(ativo)' : '(concluído)'}</p>`;
+                        }
+                        
+                        html += '</div>';
+                    }
+                });
+                
+                if (!extratos.some(e => e.extras.timer_assinatura_started_at || e.extras.timer_anexos_started_at || e.extras.timer_advogado_started_at)) {
+                    html += '<p>⚠️ Nenhum extrato com timers ativos encontrado.</p>';
+                }
+                
+                document.getElementById('content').innerHTML = html;
+                
+            } catch (error) {
+                document.getElementById('content').innerHTML = `<p style="color: red;">Erro ao carregar dados: ${error.message}</p>`;
+            }
+        }
+        
+        function formatDuration(seconds) {
+            const days = Math.floor(seconds / 86400);
+            const hours = Math.floor((seconds % 86400) / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            
+            let result = [];
+            if (days > 0) result.push(`${days}d`);
+            if (hours > 0) result.push(`${hours}h`);
+            if (minutes > 0) result.push(`${minutes}m`);
+            if (secs > 0 || result.length === 0) result.push(`${secs}s`);
+            
+            return result.join(' ');
+        }
+        
+        // Carregar dados ao iniciar
+        loadData();
+        
+        // Atualizar a cada 5 segundos
+        setInterval(loadData, 5000);
+    </script>
+</body>
+</html>

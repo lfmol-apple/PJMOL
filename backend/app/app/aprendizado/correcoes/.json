@@ -1,0 +1,26 @@
+{
+  "numero_contrato": [
+    {
+      "original": "0005965213",
+      "corrigido": "0008057077",
+      "contexto": {
+        "grupo": "",
+        "cota": "",
+        "administradora": ""
+      },
+      "timestamp": "2026-03-24T20:28:50.134230"
+    }
+  ],
+  "cnpj_administradora": [
+    {
+      "original": "05.349.595/0001-09",
+      "corrigido": "58.113.812/0001-23",
+      "contexto": {
+        "grupo": "009688",
+        "cota": "0150-00",
+        "administradora": ""
+      },
+      "timestamp": "2026-03-24T20:30:16.314323"
+    }
+  ]
+}

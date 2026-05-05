@@ -1,0 +1,126 @@
+# ============================================================
+# PJMOL — .gitignore principal
+# ============================================================
+
+# ------ SEGREDOS E CREDENCIAIS ------
+.env
+.env.*
+!.env.example
+*.pickle
+credentials.json
+*-service-account.json
+global-course-*.json
+token_drive_oauth*
+
+# ------ BANCO DE DADOS ------
+*.db
+*.db.backup*
+*.db.bak*
+*.db.CORRIGIDO*
+*.sqlite
+*.sqlite3
+database
+database.bd
+extratos.db
+
+# ------ DADOS GERADOS / STORAGE ------
+storage/
+storage_backup_*/
+documentos_gerados/
+temp_uploads/
+uploads/
+imagens/
+audio/
+
+# ------ BACKUPS E DUMPS ------
+*.tar.gz
+*.zip
+*.sql
+backups/
+*_backup_*/
+*backup*/
+
+# ------ PYTHON ------
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+.Python
+venv/
+.venv/
+env/
+.env.bak
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+
+# ------ NODE / FRONTEND ------
+node_modules/
+.next/
+.nuxt/
+dist/
+.cache/
+.parcel-cache/
+.turbo/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+tsconfig.tsbuildinfo
+*.tsbuildinfo
+
+# ------ LOGS ------
+*.log
+*.log.*
+logs/
+server.log
+uvicorn.log
+
+# ------ SISTEMA OPERACIONAL ------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V8
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ------ EDITORES / IDEs ------
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.cursor/
+
+# ------ ARQUIVOS TEMPORÁRIOS ------
+debug_*.txt
+*.tmp
+*.bak
+*.orig
+saida/
+static/
+
+# ------ MODELOS (templates Word/PDF) — NÃO versionar dados de produção ------
+# Descomente a linha abaixo se quiser ignorar os modelos também:
+# modelos/
+
+# ------ ÍNDICES ML ------
+indices/
+feedbacks/

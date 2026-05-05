@@ -1,0 +1,14 @@
+{
+  "cidade": [
+    {
+      "original": "ARAGUARI",
+      "corrigido": "Araguari",
+      "contexto": {
+        "grupo": "006033",
+        "cota": "1010",
+        "administradora": "LUIZA ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-04-06T14:29:13.167648"
+    }
+  ]
+}

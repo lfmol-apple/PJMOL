@@ -1,0 +1,44 @@
+{
+  "cidade": [
+    {
+      "original": "MOGI DAS CRUZES",
+      "corrigido": "Mogi das Cruzes",
+      "contexto": {
+        "grupo": "002503",
+        "cota": "0344-01",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-03-26T18:58:26.951264"
+    },
+    {
+      "original": "UBERLÂNDIA",
+      "corrigido": "Uberlândia",
+      "contexto": {
+        "grupo": "000705",
+        "cota": "0454-05",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-04-07T18:43:51.118804"
+    },
+    {
+      "original": "UBERLÂNDIA",
+      "corrigido": "Uberlândia",
+      "contexto": {
+        "grupo": "000705",
+        "cota": "0454-05",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-04-07T18:43:54.852825"
+    },
+    {
+      "original": "CAMPO LIMPO PAULISTA",
+      "corrigido": "Campo Limpo Paulista",
+      "contexto": {
+        "grupo": "000251",
+        "cota": "0105-00",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-04-09T17:31:16.760160"
+    }
+  ]
+}

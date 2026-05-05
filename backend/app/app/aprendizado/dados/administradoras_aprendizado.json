@@ -1,0 +1,82 @@
+[
+  {
+    "timestamp": "2025-11-17T13:34:20.366945",
+    "acao": "administradora_nova",
+    "dados": {
+      "cnpj": "04862600000110",
+      "nome": "PORTOSEG S/A - CREDITO, FINANCIAMENTO E INVESTIMENTO",
+      "cep": "01216012",
+      "fonte": "automatico"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T17:40:27.390838",
+    "acao": "administradora_nova",
+    "dados": {
+      "cnpj": "48041735003024",
+      "nome": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA",
+      "cep": "30310000",
+      "fonte": "automatico"
+    }
+  },
+  {
+    "timestamp": "2025-12-12T15:44:09.570892",
+    "acao": "administradora_nova",
+    "dados": {
+      "cnpj": "58113812017360",
+      "nome": "EMBRACON ADMINISTRADORA DE CONSORCIO S/A",
+      "cep": "01037910",
+      "fonte": "automatico"
+    }
+  },
+  {
+    "timestamp": "2025-12-15T12:29:42.712375",
+    "acao": "administradora_nova",
+    "dados": {
+      "cnpj": "40011095000163",
+      "nome": "XS5 ADMINISTRADORA DE CONSORCIOS S.A.",
+      "cep": "04578911",
+      "fonte": "automatico"
+    }
+  },
+  {
+    "timestamp": "2026-02-04T09:26:51.364762",
+    "acao": "administradora_nova",
+    "dados": {
+      "cnpj": "62307848000115",
+      "nome": "BANCO RCI BRASIL S.A",
+      "cep": "80250104",
+      "fonte": "automatico"
+    }
+  },
+  {
+    "timestamp": "2026-02-18T12:12:25.380663",
+    "acao": "administradora_nova",
+    "dados": {
+      "cnpj": "71045363000191",
+      "nome": "BAMAQ ADMINISTRADORA DE CONSORCIOS LTDA.",
+      "cep": "34300000",
+      "fonte": "automatico"
+    }
+  },
+  {
+    "timestamp": "2026-02-23T15:41:52.282152",
+    "acao": "administradora_nova",
+    "dados": {
+      "cnpj": "17437740000192",
+      "nome": "FUNDACAO MARIA IMACULADA EM LIQUIDACAO",
+      "cep": "30190000",
+      "fonte": "automatico"
+    }
+  },
+  {
+    "timestamp": "2026-03-05T16:31:00.731297",
+    "acao": "administradora_nova",
+    "dados": {
+      "cnpj": "76515071000199",
+      "nome": "SERVOPA ADMINISTRADORA DE CONSORCIOS LTDA",
+      "cep": "80230130",
+      "fonte": "automatico"
+    }
+  }
+]

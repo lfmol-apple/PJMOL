@@ -1,0 +1,54 @@
+{
+  "cidade": [
+    {
+      "original": "VITÓRIA",
+      "corrigido": "Vitória",
+      "contexto": {
+        "grupo": "001043",
+        "cota": "0261",
+        "administradora": "CNP CONSORCIO S.A. ADMINISTRADORA DE CONSORCIOS"
+      },
+      "timestamp": "2026-04-02T20:08:40.210871"
+    },
+    {
+      "original": "VITÓRIA",
+      "corrigido": "Vitória",
+      "contexto": {
+        "grupo": "001043",
+        "cota": "0261",
+        "administradora": "CNP CONSORCIO S.A. ADMINISTRADORA DE CONSORCIOS"
+      },
+      "timestamp": "2026-04-02T20:08:44.933821"
+    },
+    {
+      "original": "BRASÍLIA",
+      "corrigido": "Brasília",
+      "contexto": {
+        "grupo": "001019",
+        "cota": "0765",
+        "administradora": "CNP CONSORCIO S.A. ADMINISTRADORA DE CONSORCIOS"
+      },
+      "timestamp": "2026-04-08T21:34:15.552707"
+    },
+    {
+      "original": "BRASÍLIA",
+      "corrigido": "Brasília",
+      "contexto": {
+        "grupo": "001019",
+        "cota": "0765",
+        "administradora": "CNP CONSORCIO S.A. ADMINISTRADORA DE CONSORCIOS"
+      },
+      "timestamp": "2026-04-08T21:51:01.446914"
+    },
+    {
+      "original": "SERRA",
+      "corrigido": "Serra",
+      "contexto": {
+        "grupo": "001042",
+        "cota": "0139",
+        "administradora": "CNP CONSORCIO S.A. ADMINISTRADORA DE CONSORCIOS"
+      },
+      "timestamp": "2026-04-09T12:59:34.777329"
+    }
+  ]
+}
