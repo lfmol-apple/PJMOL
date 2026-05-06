@@ -292,7 +292,15 @@ export default function ProducaoMensalPage() {
                         <div className={`${headingFont.className} text-sm font-bold uppercase tracking-[0.12em] text-green-800`}>Acordos efetivos</div>
                         <div className={`${headingFont.className} mt-2 text-3xl font-extrabold text-green-950 sm:text-4xl`}>{gerente.acordos.quantidade}</div>
                         <div className="mt-2 text-sm font-semibold text-green-900 sm:text-base">Honorários: {fmtBRL(gerente.acordos.honorarios_total)}</div>
-                        <div className="mt-1 text-sm font-semibold text-green-900 sm:text-base">Comissão (÷12): <strong>{fmtBRL(gerente.acordos.comissao_gerente)}</strong></div>
+                      </div>
+                    )}
+
+                    {/* Comissão gerente */}
+                    {gerente.acordos && gerente.acordos.quantidade > 0 && (
+                      <div className="rounded-2xl border border-violet-300 bg-violet-50 p-4 shadow-sm min-[420px]:col-span-2 xl:col-span-1">
+                        <div className={`${headingFont.className} text-sm font-bold uppercase tracking-[0.12em] text-violet-800`}>Comissão gerente</div>
+                        <div className={`${headingFont.className} mt-2 text-2xl font-extrabold leading-tight text-violet-950 sm:text-3xl`}>{fmtBRL(gerente.acordos.comissao_gerente)}</div>
+                        <div className="mt-2 text-sm font-semibold text-violet-900 sm:text-base">÷12 sobre honorários</div>
                       </div>
                     )}
                   </div>
