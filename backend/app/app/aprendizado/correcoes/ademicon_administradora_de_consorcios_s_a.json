@@ -22,6 +22,46 @@
       },
       "timestamp": "2025-10-30T21:44:28.352856-03:00",
       "aplicado_automaticamente": 0
+    },
+    {
+      "original": "LONDRINA",
+      "corrigido": "Londrina",
+      "contexto": {
+        "grupo": "001623",
+        "cota": "0154",
+        "administradora": "ADEMICON ADMINISTRADORA DE CONSORCIOS S/A"
+      },
+      "timestamp": "2026-04-16T17:31:59.334334"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "000690",
+        "cota": "2381-00",
+        "administradora": "ADEMICON ADMINISTRADORA DE CONSORCIOS S/A"
+      },
+      "timestamp": "2026-04-30T19:23:40.057006"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "000690",
+        "cota": "2381-00",
+        "administradora": "ADEMICON ADMINISTRADORA DE CONSORCIOS S/A"
+      },
+      "timestamp": "2026-05-05T14:14:05.656143"
+    },
+    {
+      "original": "PERDÕES",
+      "corrigido": "Perdões",
+      "contexto": {
+        "grupo": "000950",
+        "cota": "2610-00",
+        "administradora": "ADEMICON ADMINISTRADORA DE CONSORCIOS S/A"
+      },
+      "timestamp": "2026-05-05T17:36:08.346413"
     }
   ]
 }

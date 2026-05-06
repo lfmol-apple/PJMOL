@@ -1820,7 +1820,7 @@ export default function GerencialProcessosPage() {
           )}
         </div>
         <section className="mb-4 rounded-2xl border border-amber-200 bg-linear-to-br from-amber-50 via-orange-50 to-white shadow-sm">
-          {/* Header — sempre visível, clicável para expandir */}
+          {/* Header sempre visivel; expande corpo apenas quando ha mais de uma entrada */}
           <button
             type="button"
             onClick={() => setOverdueExpanded((v) => !v)}
@@ -1834,18 +1834,19 @@ export default function GerencialProcessosPage() {
                 Aguardando assinatura há mais de {OVERDUE_SIGNATURE_DAYS} dias
               </div>
             </div>
-            {overdueSignatureSummary.length > 0 && (
+            {overdueSignatureSummary.length > 1 && (
               <div className="shrink-0 rounded-lg border border-amber-300 bg-amber-100 px-2.5 py-0.5 text-sm font-extrabold text-amber-950">
                 {overdueSignatureTotal}
               </div>
             )}
-            <div className="shrink-0 text-amber-700">
-              {overdueExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-            </div>
+            {overdueSignatureSummary.length > 1 && (
+              <div className="shrink-0 text-amber-700">
+                {overdueExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+              </div>
+            )}
           </button>
 
-          {/* Corpo — só aparece quando expandido */}
-          {overdueExpanded && (
+          {(overdueSignatureSummary.length <= 1 || overdueExpanded) && (
             <div className="border-t border-amber-200 p-4 pt-3">
               {overdueSignatureSummary.length === 0 ? (
                 <div className="rounded-xl border border-amber-200 bg-white px-4 py-4 text-sm font-medium text-slate-600">
@@ -2101,12 +2102,12 @@ export default function GerencialProcessosPage() {
                 <tbody>
                   {loading && (
                     <tr>
-                      <td colSpan={25} className="px-4 py-10 text-center text-slate-500">Carregando processos…</td>
+                      <td colSpan={26} className="px-4 py-10 text-center text-slate-500">Carregando processos…</td>
                     </tr>
                   )}
                   {!loading && visibleProcesses.length === 0 && (
                     <tr>
-                      <td colSpan={25} className="px-4 py-10 text-center text-slate-500">Nenhum processo encontrado.</td>
+                      <td colSpan={26} className="px-4 py-10 text-center text-slate-500">Nenhum processo encontrado.</td>
                     </tr>
                   )}
                   {!loading && visibleProcesses.map((it) => {

@@ -45,6 +45,106 @@
       },
       "timestamp": "2025-10-30T22:34:50.930400-03:00",
       "aplicado_automaticamente": 0
+    },
+    {
+      "original": "ITAQUAQUECETUBA",
+      "corrigido": "Itaquaquecetuba",
+      "contexto": {
+        "grupo": "005029",
+        "cota": "8517-1",
+        "administradora": "BAMAQ ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-04-16T13:43:01.369921"
+    },
+    {
+      "original": "BELO HORIZONTE",
+      "corrigido": "Belo Horizonte",
+      "contexto": {
+        "grupo": "005035",
+        "cota": "554-1",
+        "administradora": "BAMAQ ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-04-23T15:22:04.780840"
+    },
+    {
+      "original": "BELO HORIZONTE",
+      "corrigido": "Belo Horizonte",
+      "contexto": {
+        "grupo": "005029",
+        "cota": "7198-0",
+        "administradora": "BAMAQ ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-04-23T19:58:03.278329"
+    },
+    {
+      "original": "MOGI DAS CRUZES",
+      "corrigido": "Mogi das Cruzes",
+      "contexto": {
+        "grupo": "005030",
+        "cota": "36-0",
+        "administradora": "BAMAQ ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-04-28T13:59:45.763690"
+    },
+    {
+      "original": "RIO DE JANEIRO",
+      "corrigido": "Rio de Janeiro",
+      "contexto": {
+        "grupo": "005031",
+        "cota": "6987-0",
+        "administradora": "BAMAQ ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-04-28T16:36:41.173749"
+    },
+    {
+      "original": "RIO DE JANEIRO",
+      "corrigido": "Rio de Janeiro",
+      "contexto": {
+        "grupo": "005031",
+        "cota": "6987-0",
+        "administradora": "BAMAQ ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-04-28T16:36:47.252992"
+    },
+    {
+      "original": "SÃO JOSÉ DOS CAMPOS",
+      "corrigido": "São José dos Campos",
+      "contexto": {
+        "grupo": "005031",
+        "cota": "7758-1",
+        "administradora": "BAMAQ ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-04-29T17:48:55.867710"
+    },
+    {
+      "original": "SANTA BÁRBARA",
+      "corrigido": "Santa Bárbara",
+      "contexto": {
+        "grupo": "004010",
+        "cota": "716-6",
+        "administradora": "BAMAQ ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-04-30T17:09:49.507836"
+    },
+    {
+      "original": "SANTA BÁRBARA",
+      "corrigido": "Santa Bárbara",
+      "contexto": {
+        "grupo": "004010",
+        "cota": "716-6",
+        "administradora": "BAMAQ ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-04-30T17:09:53.264464"
+    },
+    {
+      "original": "PINDAMONHANGABA",
+      "corrigido": "Pindamonhangaba",
+      "contexto": {
+        "grupo": "004010",
+        "cota": "105-2",
+        "administradora": "BAMAQ ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-05T20:24:09.144694"
     }
   ]
 }

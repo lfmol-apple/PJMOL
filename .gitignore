@@ -1,126 +1,122 @@
-# ============================================================
-# PJMOL — .gitignore principal
-# ============================================================
-
-# ------ SEGREDOS E CREDENCIAIS ------
+# ── Credenciais e configurações sensíveis ─────────────────────────────────────
 .env
 .env.*
 !.env.example
-*.pickle
-credentials.json
-*-service-account.json
-global-course-*.json
-token_drive_oauth*
+*.key
+*.pem
 
-# ------ BANCO DE DADOS ------
+# ── Banco de dados (todos os formatos e backups) ──────────────────────────────
 *.db
-*.db.backup*
-*.db.bak*
-*.db.CORRIGIDO*
+*.db.*
 *.sqlite
 *.sqlite3
-database
-database.bd
-extratos.db
+*.bd
+database/
+database.db*
 
-# ------ DADOS GERADOS / STORAGE ------
-storage/
-storage_backup_*/
-documentos_gerados/
-temp_uploads/
-uploads/
-imagens/
-audio/
+# ── Dados de usuário (nunca commitar) ─────────────────────────────────────────
+backend/app/storage/
+backend/app/documentos_gerados/
+backend/app/temp_uploads/
+backend/app/storage_backup_*/
+backend/documentos_gerados/
+backend/temp_uploads/
+backend/app/imagens/
+backend/app/feedbacks/
 
-# ------ BACKUPS E DUMPS ------
-*.tar.gz
-*.zip
-*.sql
+# ── Backups e artefatos de deploy ─────────────────────────────────────────────
+backend/modelos_backup_*/
 backups/
-*_backup_*/
-*backup*/
+_comparacao_producao/
+*.tar.gz
+*.tar.bz2
+*.backup*
+*.bak
+*.orig
+*.corrupted
+*.CORRIGIDO*
+*.bak_*
 
-# ------ PYTHON ------
+# ── Scripts e arquivos temporários de manutenção ─────────────────────────────
+adicionar_*.py
+atualizar_*.py
+buscar_*.py
+add_*.py
+*.sql
+ROLLBACK_*.sh
+
+# ── Python ────────────────────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
-*$py.class
 *.pyo
-*.pyd
-.Python
 venv/
-.venv/
 env/
-.env.bak
-pip-log.txt
-pip-delete-this-directory.txt
-.pytest_cache/
-.mypy_cache/
-.dmypy.json
-dmypy.json
+.venv/
 *.egg-info/
 dist/
 build/
-eggs/
-parts/
-var/
-sdist/
-develop-eggs/
-.installed.cfg
-lib/
-lib64/
+.pytest_cache/
+.mypy_cache/
 
-# ------ NODE / FRONTEND ------
+# ── Node / Next.js ────────────────────────────────────────────────────────────
 node_modules/
 .next/
-.nuxt/
-dist/
-.cache/
-.parcel-cache/
-.turbo/
+out/
+.vercel/
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-tsconfig.tsbuildinfo
-*.tsbuildinfo
 
-# ------ LOGS ------
-*.log
-*.log.*
-logs/
-server.log
-uvicorn.log
-
-# ------ SISTEMA OPERACIONAL ------
+# ── macOS ─────────────────────────────────────────────────────────────────────
 .DS_Store
-.DS_Store?
+**/.DS_Store
 ._*
-.Spotlight-V8
-.Trashes
-Thumbs.db
-ehthumbs.db
-Desktop.ini
 
-# ------ EDITORES / IDEs ------
-.idea/
+# ── IDEs ──────────────────────────────────────────────────────────────────────
 .vscode/
+.idea/
 *.swp
-*.swo
-*~
-.cursor/
 
-# ------ ARQUIVOS TEMPORÁRIOS ------
-debug_*.txt
-*.tmp
-*.bak
-*.orig
-saida/
-static/
+# ── Logs e relatórios gerados automaticamente ─────────────────────────────────
+*.log
+NGROK_URLS.md
+docs/auditoria/
 
-# ------ MODELOS (templates Word/PDF) — NÃO versionar dados de produção ------
-# Descomente a linha abaixo se quiser ignorar os modelos também:
-# modelos/
+# ── Credenciais Google / OAuth ────────────────────────────────────────────────
+credentials.json
+*.json.backup
+global-course-*.json
+token_drive_oauth.pickle
+*.pickle
 
-# ------ ÍNDICES ML ------
-indices/
-feedbacks/
+# ── Scripts de manutenção pontual ─────────────────────────────────────────────
+fix_*.py
+test_*.py
+teste_*.py
+audit_*.py
+startup_timezone_fix.py
+debug_*.py
+maintenance_*.py
+test_all_functions.py
+
+# ── Backups de páginas frontend ───────────────────────────────────────────────
+*-backup*.tsx
+*-backup*.ts
+*-complete.tsx
+*page-backup*.tsx
+*.backup_antes_*
+
+# ── Áudio gerado ──────────────────────────────────────────────────────────────
+backend/audio/
+frontend/public/audio/
+
+# ── Cópias e backups de páginas frontend ──────────────────────────────────────
+"frontend/src/app/gerencial/processos/page - *"
+frontend/src/app/gerencial/processos/page-*.tsx
+frontend/src/app/gerencial/processos/page.tsx.new
+frontend/src/app/gerencial/processos/test-redesigned/
+frontend/src/app/dashboard-relatorio/page-*.tsx
+frontend/src/app/page_ml_update.tsx
+
+# ── Diretório database (arquivo, não dir) ─────────────────────────────────────
+backend/database
+backend/app/database
+frontend/src/app/gerencial/processos/page\ -\ *.tsx

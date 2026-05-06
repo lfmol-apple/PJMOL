@@ -13,7 +13,6 @@ from app.utils.storage_extrato import (
     extrato_dir,
     purge_extrato_dir,
 )
-from app.core.config import STORAGE_ROOT, STORAGE_EXTRATO_SUBDIR
 
 # opcional: para tentar achar o nome no DB
 try:
@@ -25,7 +24,7 @@ router = APIRouter(prefix="/extratos", tags=["extratos-storage"])
 
 
 def _find_extrato_pdf(extrato_id: int) -> Optional[Path]:
-    directory = STORAGE_ROOT / STORAGE_EXTRATO_SUBDIR / str(extrato_id)
+    directory = extrato_dir(extrato_id)
     if not directory.exists():
         return None
     pdf_files = sorted(

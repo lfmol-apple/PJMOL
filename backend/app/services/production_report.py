@@ -14,7 +14,7 @@ from app.utils.mailer import send_email
 
 ADMIN_IDS = {5, 8, 11}
 FIXED_REPORT_RECIPIENTS = {
-    "marcofariajunior@hotmail.com",
+    "marcoafariajunior@hotmail.com",
     "luanadsrocha12@gmail.com",
     "leonardofmol@gmail.com",
     "henriquefmol@gmail.com",

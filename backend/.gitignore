@@ -1,57 +1,16 @@
-# Backend .gitignore
-.env
-.env.*
-!.env.example
-*.pickle
-credentials.json
-global-course-*.json
-token_drive_oauth*
-
-# Banco de dados
-*.db
-*.db.*
-*.db.backup*
-*.sqlite
-
-# Python
 __pycache__/
 *.pyc
-*.pyo
-venv/
-.venv/
-
-# Logs
-*.log
-
-# Dados e storage
+*.db
+.env
 temp_uploads/
-storage/
-documentos_gerados/
-imagens/
-audio/
-static/
 saida/
 app/saida/
-
-# ML
-indices/
-feedbacks/
-
-# Backups
-*_backup_*/
-*.tar.gz
-*.sql
-
-# Arquivos Office gerados
 *.xlsx
 *.xls
+*.txt
 *.pdf
 *.png
 *.jpg
 *.jpeg
 *.csv
 *.zip
-*.txt
-
-# Sistema
-.DS_Store

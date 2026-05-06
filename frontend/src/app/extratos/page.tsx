@@ -52,6 +52,9 @@ const ADM_NAMES = [
   "henrique mol",
   "henrique de freitas mol",
   "henriquefmol@yahoo.com.br",
+  "marco antonio",
+  "marco antonio faria junior",
+  "marcoafariajunior@hotmail.com",
 ];
 const GERENTE_NAMES = ["breno", "marcel"];
 
