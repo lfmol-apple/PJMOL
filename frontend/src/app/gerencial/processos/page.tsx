@@ -1543,7 +1543,12 @@ export default function GerencialProcessosPage() {
       return acc + (num(i.liquido_futuro) || (bruto - tot));
     }, 0);
 
-    return { sumHoje, sumFuturo, sumValorCausa, sumAcordoProvavel, sumExpectativaHonorarios, hHojeAdv, hHojeEmp, hHojeTot, hFutAdv, hFutEmp, hFutTot, liqHojeSum, liqFutSum,
+    const sumComissaoGerente = filtered.reduce((acc, i) => {
+      const v = calcComissaoGerente(i);
+      return acc + (v !== null ? v : 0);
+    }, 0);
+
+    return { sumHoje, sumFuturo, sumValorCausa, sumAcordoProvavel, sumExpectativaHonorarios, hHojeAdv, hHojeEmp, hHojeTot, hFutAdv, hFutEmp, hFutTot, liqHojeSum, liqFutSum, sumComissaoGerente,
       hasHoje: filtered.some(i => i.valor_corrigido_hoje != null),
       hasFuturo: filtered.some(i => (i.valor_futuro ?? i.valor_corrigido_futuro) != null),
       hasValorCausa: filtered.some(i => i.valor_causa != null),
@@ -2377,8 +2382,12 @@ export default function GerencialProcessosPage() {
                     <td className="px-2.5 py-1.5 text-right font-semibold">{fmtBRL(totals.liqHojeSum)}</td>
                     {/* Coluna 15: Líquido Futuro */}
                     <td className="px-2.5 py-1.5 text-right font-semibold">{fmtBRL(totals.liqFutSum)}</td>
-                    {/* Colunas 16-20: Advogado, Comissão Gerente, Gerente, Criado em, Ações */}
-                    <td colSpan={5}></td>
+                    {/* Coluna 23: Advogado */}
+                    <td></td>
+                    {/* Coluna 24: Comissão Gerente */}
+                    <td className="px-2.5 py-1.5 text-right font-semibold tabular-nums">{fmtBRL(totals.sumComissaoGerente)}</td>
+                    {/* Colunas 25-27: Gerente, Criado em, Ações */}
+                    <td colSpan={3}></td>
                   </tr>
                 </tfoot>
               </table>
