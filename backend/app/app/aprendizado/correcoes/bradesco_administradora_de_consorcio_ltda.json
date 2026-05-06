@@ -157,6 +157,16 @@
         "administradora": "BRADESCO ADMINISTRADORA DE CONSORCIO LTDA"
       },
       "timestamp": "2026-05-06T00:26:48.455716"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "010678",
+        "cota": "0644-01",
+        "administradora": "BRADESCO ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-06T00:37:01.627528"
     }
   ]
 }
