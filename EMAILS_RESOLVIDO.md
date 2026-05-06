@@ -185,7 +185,7 @@ Antes de fazer deploy para produção (`www.pjmol.com.br`):
 - **Backend Local**: `http://localhost:8000`
 - **Backend Ngrok**: `https://a667103938b9.ngrok-free.app`
 - **Ngrok Dashboard**: `http://localhost:4040`
-- **Webhook ZapSign**: `https://a667103938b9.ngrok-free.app/assinaturas/hook/5145ee69d9202235aeaeb29b2f7bd6a1?secret=a6f0a07b6b40e274ff5ccd903ed26b23`
+- **Webhook ZapSign**: `https://<host>/assinaturas/hook/<WEBHOOK_PATH_TOKEN>?secret=<ZAPSIGN_WEBHOOK_SECRET>`
 
 ---
 

@@ -1,9 +1,11 @@
 from jose import jwt, JWTError
 from datetime import timedelta
+import os
 from app.core.time import now_sp  # ✅ usar fuso America/Sao_Paulo
 
-# Pode mover essas constantes para seu arquivo de configurações
-SECRET_KEY = "sua-chave-secreta"  # substitua por uma chave segura
+SECRET_KEY = os.getenv("SECRET_KEY") or os.getenv("JWT_SECRET_KEY")
+if not SECRET_KEY:
+    raise RuntimeError("SECRET_KEY/JWT_SECRET_KEY não configurada no ambiente.")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 

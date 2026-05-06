@@ -273,7 +273,14 @@ app.include_router(push_notifications_route.router)
 security = HTTPBasic()
 
 def verificar_autenticacao(credentials: HTTPBasicCredentials = Depends(security)):
-    if not (credentials.username == "admin" and credentials.password == "senha123"):
+    basic_user = os.getenv("BASIC_AUTH_USER")
+    basic_password = os.getenv("BASIC_AUTH_PASSWORD")
+    if not basic_user or not basic_password:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Autenticação básica não configurada.",
+        )
+    if not (credentials.username == basic_user and credentials.password == basic_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Credenciais inválidas",

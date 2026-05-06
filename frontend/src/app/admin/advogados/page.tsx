@@ -7,10 +7,6 @@ import { PatternFormat } from "react-number-format";
 
 const API_BASE = "/api";
 
-// Padrão do escritório (Jaider) — aplicado automaticamente em todos os novos advogados
-const DEFAULT_API_KEY_ZAPSIGN = "3fb8d0b6-cb8a-4362-87b1-93ee51c9e5079c159f10-2047-49ed-a459-e978082f9108";
-const DEFAULT_WEBHOOK_PATH_TOKEN = "5145ee69d9202235aeaeb29b2f7bd6a1";
-
 interface Advogado {
   id: number;
   nome_completo: string;
@@ -128,8 +124,8 @@ export default function AdminAdvogados() {
         email: form.email.trim().toLowerCase(),
         telefone: form.telefone,
         senha: form.senha,
-        api_key_zapsign: DEFAULT_API_KEY_ZAPSIGN,
-        webhook_path_token: DEFAULT_WEBHOOK_PATH_TOKEN,
+        api_key_zapsign: "",
+        webhook_path_token: "",
         genero: form.genero,
       };
 

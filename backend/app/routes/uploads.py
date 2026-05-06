@@ -26,8 +26,7 @@ from jose import jwt
 try:
     from app.auth_utils import SECRET_KEY, ALGORITHM
 except Exception:
-    SECRET_KEY = "dev-secret-change-me"  # não usar em produção
-    ALGORITHM = "HS256"
+    raise RuntimeError("SECRET_KEY/JWT_SECRET_KEY não configurada no ambiente.")
 
 # ===== Imports opcionais (db, modelos, mailer) =====
 try:

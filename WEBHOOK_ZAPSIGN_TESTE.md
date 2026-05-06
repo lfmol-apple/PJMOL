@@ -3,8 +3,8 @@
 ## 🎯 Status Atual
 
 ### ✅ Webhook Funcionando
-- **URL Ngrok**: `https://a667103938b9.ngrok-free.app`
-- **Endpoint**: `/assinaturas/hook/5145ee69d9202235aeaeb29b2f7bd6a1?secret=a6f0a07b6b40e274ff5ccd903ed26b23`
+- **URL Ngrok**: `https://<ngrok-ou-host>`
+- **Endpoint**: `/assinaturas/hook/<WEBHOOK_PATH_TOKEN>?secret=<ZAPSIGN_WEBHOOK_SECRET>`
 - **Status**: ✅ **ONLINE E RESPONDENDO**
 - **Advogado ID**: 6
 - **Teste ping**: ✅ Passou
@@ -55,7 +55,7 @@ O webhook procura o extrato nesta ordem:
 
 ### 1️⃣ Teste de Ping (Já passou ✅)
 ```bash
-curl -s 'https://a667103938b9.ngrok-free.app/assinaturas/hook/5145ee69d9202235aeaeb29b2f7bd6a1?secret=a6f0a07b6b40e274ff5ccd903ed26b23' \
+curl -s 'https://<ngrok-ou-host>/assinaturas/hook/<WEBHOOK_PATH_TOKEN>?secret=<ZAPSIGN_WEBHOOK_SECRET>' \
   -X POST \
   -H "Content-Type: application/json" \
   -d '{"event_type": "ping", "token": "test_token"}'
@@ -119,8 +119,8 @@ Advogado ID: (vazio)
 
 ## 🔐 Segurança do Webhook
 
-✅ **Token de caminho**: `5145ee69d9202235aeaeb29b2f7bd6a1`
-✅ **Secret obrigatório**: `a6f0a07b6b40e274ff5ccd903ed26b23`
+✅ **Token de caminho**: `<WEBHOOK_PATH_TOKEN>`
+✅ **Secret obrigatório**: `<ZAPSIGN_WEBHOOK_SECRET>`
 ✅ **Validação dupla**: Token + Secret
 ✅ **Advogado específico**: ID 6
 
@@ -134,7 +134,7 @@ Se algum parâmetro estiver errado, webhook retorna:
 
 1. ✅ **Cole a URL no ZapSign** (você já fez!)
    ```
-   https://a667103938b9.ngrok-free.app/assinaturas/hook/5145ee69d9202235aeaeb29b2f7bd6a1?secret=a6f0a07b6b40e274ff5ccd903ed26b23
+   https://<ngrok-ou-host>/assinaturas/hook/<WEBHOOK_PATH_TOKEN>?secret=<ZAPSIGN_WEBHOOK_SECRET>
    ```
 
 2. 🧪 **Envie um documento para assinatura** pelo sistema

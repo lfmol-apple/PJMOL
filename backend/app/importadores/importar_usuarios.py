@@ -1,6 +1,7 @@
 from database import SessionLocal
 from app.models import Usuario
 from sqlalchemy.exc import IntegrityError
+import os
 
 def importar_usuarios():
     session = SessionLocal()
@@ -10,16 +11,19 @@ def importar_usuarios():
         {
             "nome": "Admin",
             "email": "admin@pjmol.com",
-            "senha": "admin123"  # 🔒 Em produção, aplicar hash
+            "senha": os.getenv("SEED_ADMIN_PASSWORD", "")
         },
         {
             "nome": "Usuário Padrão",
             "email": "usuario@pjmol.com",
-            "senha": "usuario123"
+            "senha": os.getenv("SEED_USER_PASSWORD", "")
         }
     ]
 
     for u in usuarios_padrao:
+        if not u["senha"]:
+            print(f"Senha não configurada para {u['email']}; usuário não importado.")
+            continue
         existente = session.query(Usuario).filter_by(email=u["email"]).first()
         if not existente:
             novo_usuario = Usuario(
