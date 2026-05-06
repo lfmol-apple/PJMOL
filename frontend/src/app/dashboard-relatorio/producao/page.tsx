@@ -360,6 +360,13 @@ export default function ProducaoMensalPage() {
                       <div className="mt-1 text-sm font-semibold text-green-900">Honorários: {fmtBRL(report.acordos_geral.honorarios_total)}</div>
                     </div>
                   )}
+                  {report.acordos_geral && report.acordos_geral.quantidade > 0 && (
+                    <div className="rounded-2xl border border-violet-300 bg-violet-50 p-4">
+                      <div className={`${headingFont.className} text-sm font-bold uppercase tracking-[0.12em] text-violet-800`}>Comissão gerente</div>
+                      <div className={`${headingFont.className} mt-2 text-3xl font-extrabold leading-tight text-violet-950`}>{fmtBRL(report.acordos_geral.comissao_gerente)}</div>
+                      <div className="mt-1 text-sm font-semibold text-violet-900">Total do período</div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Ranking */}
