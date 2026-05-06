@@ -355,6 +355,20 @@ function calcComissaoGerente(it: any): number | null {
   return honor / 12;
 }
 
+function calcComissaoTodos(it: any): number | null {
+  const numeroProc = (it.numero_processo ?? it.numeroProcesso ?? it.processo_numero ?? "").toString().trim();
+  if (!numeroProc || numeroProc === "None") return null;
+  const raw = it.honorarios_hoje_total ?? (Number(it.honorarios_hoje_adv || 0) + Number(it.honorarios_hoje_emp || 0));
+  const parseVal = (v: any): number => {
+    if (typeof v === "number") return v;
+    const s = String(v ?? "").replace(/R\$\s*/g, "").replace(/\./g, "").replace(",", ".");
+    return parseFloat(s);
+  };
+  const honor = parseVal(raw);
+  if (!Number.isFinite(honor) || honor <= 0) return null;
+  return honor / 12;
+}
+
 function resultadoPillClass(label: string): string {
   if (label === "Acordo" || label === "Sentença à Vista")
     return "bg-indigo-100 text-indigo-700 ring-indigo-600/20";
@@ -1555,6 +1569,38 @@ export default function GerencialProcessosPage() {
     };
   }, [filtered]);
 
+  const comissaoSummary = useMemo(() => {
+    const scoped = filterByScope(items, perfil as any, currentUser as any);
+    const byGerente = new Map<string, { emAndamento: number; concluidas: number; qtdAndamento: number; qtdConcluidas: number }>();
+    let totalEmAndamento = 0;
+    let totalConcluidas = 0;
+    let qtdAndamento = 0;
+    let qtdConcluidas = 0;
+    for (const it of scoped) {
+      const isAcordo = getResultadoLabel(it) === "Acordo";
+      const v = calcComissaoTodos(it);
+      if (v === null) continue;
+      const gerente = displayGerenteName(it) || (pickUidFromRow(it) ? `#${pickUidFromRow(it)}` : "Sem gerente");
+      const entry = byGerente.get(gerente) ?? { emAndamento: 0, concluidas: 0, qtdAndamento: 0, qtdConcluidas: 0 };
+      if (isAcordo) {
+        entry.concluidas += v;
+        entry.qtdConcluidas += 1;
+        totalConcluidas += v;
+        qtdConcluidas += 1;
+      } else {
+        entry.emAndamento += v;
+        entry.qtdAndamento += 1;
+        totalEmAndamento += v;
+        qtdAndamento += 1;
+      }
+      byGerente.set(gerente, entry);
+    }
+    const byGerenteList = [...byGerente.entries()]
+      .map(([nome, vals]) => ({ nome, ...vals, total: vals.emAndamento + vals.concluidas }))
+      .sort((a, b) => b.total - a.total);
+    return { totalEmAndamento, totalConcluidas, total: totalEmAndamento + totalConcluidas, qtdAndamento, qtdConcluidas, byGerenteList };
+  }, [items, perfil, currentUser]);
+
   const exportCSV = () => {
     const header = [
       "ID","Cliente","Status","Resultado","Grupo","Cota","Administradora","Número do Processo","Valor da Causa","Aguardando",
@@ -1965,6 +2011,54 @@ export default function GerencialProcessosPage() {
           </div>
         </div>
 
+        {/* ===== PAINEL DE COMISSÕES ===== */}
+        {comissaoSummary.total > 0 && (
+          <div className="mb-3 rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden">
+            <div className="flex items-center justify-between px-4 py-2.5 border-b border-slate-100 bg-slate-50">
+              <h2 className="text-sm font-semibold text-slate-800">💰 Relatório de Comissões</h2>
+              <button
+                onClick={() => window.location.reload()}
+                className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-600 hover:bg-slate-100 transition"
+                title="Atualizar dados"
+              >
+                <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd"/></svg>
+                Reload
+              </button>
+            </div>
+            <div className="grid grid-cols-3 divide-x divide-slate-100">
+              <div className="px-4 py-3 text-center">
+                <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wide mb-1">Em andamento</div>
+                <div className="text-lg font-bold text-slate-900">{fmtBRL(comissaoSummary.totalEmAndamento)}</div>
+                <div className="text-xs text-slate-400 mt-0.5">{comissaoSummary.qtdAndamento} processo(s)</div>
+              </div>
+              <div className="px-4 py-3 text-center">
+                <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wide mb-1">Concluídas</div>
+                <div className="text-lg font-bold text-blue-700">{fmtBRL(comissaoSummary.totalConcluidas)}</div>
+                <div className="text-xs text-slate-400 mt-0.5">{comissaoSummary.qtdConcluidas} acordo(s)</div>
+              </div>
+              <div className="px-4 py-3 text-center">
+                <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wide mb-1">Total</div>
+                <div className="text-lg font-bold text-slate-900">{fmtBRL(comissaoSummary.total)}</div>
+                <div className="text-xs text-slate-400 mt-0.5">geral</div>
+              </div>
+            </div>
+            {isAdminView && comissaoSummary.byGerenteList.length > 1 && (
+              <div className="border-t border-slate-100">
+                <div className="divide-y divide-slate-50">
+                  {comissaoSummary.byGerenteList.map((g) => (
+                    <div key={g.nome} className="flex items-center gap-3 px-4 py-2 text-xs hover:bg-slate-50">
+                      <div className="flex-1 font-medium text-slate-800 truncate">{g.nome}</div>
+                      <div className="text-slate-500 whitespace-nowrap">And.: <span className="font-medium text-slate-900">{fmtBRL(g.emAndamento)}</span></div>
+                      <div className="text-slate-500 whitespace-nowrap">Conc.: <span className="font-bold text-blue-700">{fmtBRL(g.concluidas)}</span></div>
+                      <div className="font-bold text-slate-900 whitespace-nowrap w-28 text-right">{fmtBRL(g.total)}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Resumo mobile (mantido original) */}
 
                 {overdueSignatureOnly && (
@@ -2319,7 +2413,16 @@ export default function GerencialProcessosPage() {
                           </div>
                         </td>
                         <td className="px-2.5 py-1.5 text-right tabular-nums whitespace-nowrap">
-                          {(() => { const v = calcComissaoGerente(it); return v !== null ? fmtBRL(v) : "—"; })()}
+                          {(() => {
+                            const isAcordo = getResultadoLabel(it) === "Acordo";
+                            const v = isAcordo ? calcComissaoGerente(it) : calcComissaoTodos(it);
+                            if (v === null) return <span className="text-slate-400">—</span>;
+                            return (
+                              <span className={isAcordo ? "font-bold text-blue-700" : "text-slate-900"}>
+                                {fmtBRL(v)}
+                              </span>
+                            );
+                          })()}
                         </td>
                         <td className="px-2.5 py-1">
                           <div className="truncate max-w-[200px]" title={displayGerenteName(it) || (it.gerente_id ? `#${it.gerente_id}` : "")}>
