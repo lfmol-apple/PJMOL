@@ -392,6 +392,17 @@ export default function ProducaoMensalPage() {
                           </tr>
                         ))}
                       </tbody>
+                      <tfoot>
+                        <tr className="border-t-2 border-amber-200 bg-amber-100/70">
+                          <td className={`${headingFont.className} px-4 py-3 font-extrabold text-amber-900`} colSpan={2}>Total</td>
+                          <td className="px-4 py-3 text-right font-extrabold text-slate-900">{report.totais.quantidade}</td>
+                          <td className={`${headingFont.className} px-4 py-3 text-right font-extrabold text-emerald-950`}>{fmtBRL(report.totais.valor_causa_total)}</td>
+                          <td className="px-4 py-3 text-right font-extrabold text-sky-950">{fmtBRL(report.totais.acordo_provavel_total)}</td>
+                          <td className={`${headingFont.className} px-4 py-3 text-right font-extrabold text-green-900`}>
+                            {report.acordos_geral && report.acordos_geral.quantidade > 0 ? fmtBRL(report.acordos_geral.comissao_gerente) : "—"}
+                          </td>
+                        </tr>
+                      </tfoot>
                     </table>
                   </div>
                 </div>
