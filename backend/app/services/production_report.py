@@ -95,10 +95,19 @@ def _new_bucket(name: str | None = None) -> dict[str, Any]:
     }
 
 
+def _new_acordos_bucket() -> dict[str, Any]:
+    return {"quantidade": 0, "honorarios_total": 0.0}
+
+
 def _accumulate(bucket: dict[str, Any], valor_causa: float, acordo_provavel: float) -> None:
     bucket["quantidade"] += 1
     bucket["valor_causa_total"] += valor_causa
     bucket["acordo_provavel_total"] += acordo_provavel
+
+
+def _accumulate_acordo(bucket: dict[str, Any], honorarios: float) -> None:
+    bucket["quantidade"] += 1
+    bucket["honorarios_total"] += honorarios
 
 
 def _serialize_bucket(bucket: dict[str, Any]) -> dict[str, Any]:
@@ -108,6 +117,18 @@ def _serialize_bucket(bucket: dict[str, Any]) -> dict[str, Any]:
         "acordo_provavel_total": round(bucket["acordo_provavel_total"], 2),
         "valor_causa_total_fmt": _fmt_brl(bucket["valor_causa_total"]),
         "acordo_provavel_total_fmt": _fmt_brl(bucket["acordo_provavel_total"]),
+    }
+
+
+def _serialize_acordos(bucket: dict[str, Any]) -> dict[str, Any]:
+    h = round(bucket["honorarios_total"], 2)
+    comissao = round(h / 12, 2) if h > 0 else 0.0
+    return {
+        "quantidade": bucket["quantidade"],
+        "honorarios_total": h,
+        "honorarios_total_fmt": _fmt_brl(h),
+        "comissao_gerente": comissao,
+        "comissao_gerente_fmt": _fmt_brl(comissao),
     }
 
 
@@ -146,6 +167,7 @@ def build_production_report(db: Session, start_date: date, end_date: date) -> di
     period_end = datetime.combine(end_date, time.max)
 
     geral = _new_bucket("Geral")
+    geral_acordos = _new_acordos_bucket()
     geral_statuses: dict[str, dict[str, Any]] = defaultdict(lambda: _new_bucket())
     geral_administradoras: dict[str, dict[str, Any]] = {}
     gerentes: dict[int, dict[str, Any]] = {}
@@ -165,8 +187,18 @@ def build_production_report(db: Session, start_date: date, end_date: date) -> di
         valor_causa = float(getattr(extrato, "valor_causa", None) or 0.0)
         acordo_provavel = round(valor_causa * 0.7, 2)
 
+        # Acordos efetivos (resultado_processo == "acordo")
+        resultado = (getattr(extrato, "resultado_processo", None) or "").strip().lower()
+        is_acordo = resultado == "acordo"
+        honorarios = (
+            float(getattr(extrato, "honorarios_hoje_adv", None) or 0.0)
+            + float(getattr(extrato, "honorarios_hoje_emp", None) or 0.0)
+        )
+
         _accumulate(geral, valor_causa, acordo_provavel)
         _accumulate(geral_statuses[status], valor_causa, acordo_provavel)
+        if is_acordo and honorarios > 0:
+            _accumulate_acordo(geral_acordos, honorarios)
 
         adm_bucket = geral_administradoras.setdefault(
             administradora,
@@ -184,6 +216,7 @@ def build_production_report(db: Session, start_date: date, end_date: date) -> di
                 "gerente_nome": gerente_nome,
                 "gerente_email": gerente_email,
                 "totais": _new_bucket(gerente_nome),
+                "acordos": _new_acordos_bucket(),
                 "statuses": defaultdict(lambda: _new_bucket()),
                 "administradoras": {},
             }
@@ -192,6 +225,8 @@ def build_production_report(db: Session, start_date: date, end_date: date) -> di
         active_manager_ids.add(gerente_id)
         _accumulate(gerente_bucket["totais"], valor_causa, acordo_provavel)
         _accumulate(gerente_bucket["statuses"][status], valor_causa, acordo_provavel)
+        if is_acordo and honorarios > 0:
+            _accumulate_acordo(gerente_bucket["acordos"], honorarios)
 
         gerente_adm_bucket = gerente_bucket["administradoras"].setdefault(
             administradora,
@@ -227,6 +262,7 @@ def build_production_report(db: Session, start_date: date, end_date: date) -> di
                 "gerente_nome": gerente["gerente_nome"],
                 "gerente_email": gerente["gerente_email"],
                 "totais": _serialize_bucket(gerente["totais"]),
+                "acordos": _serialize_acordos(gerente["acordos"]),
                 "statuses": [
                     {"status": status, **_serialize_bucket(bucket)}
                     for status, bucket in sorted(gerente["statuses"].items(), key=lambda item: item[0].lower())
@@ -260,6 +296,7 @@ def build_production_report(db: Session, start_date: date, end_date: date) -> di
             "data_final": end_date.isoformat(),
         },
         "totais": _serialize_bucket(geral),
+        "acordos_geral": _serialize_acordos(geral_acordos),
         "resumo_assinaturas": {
             "enviados": enviados_bucket,
             "aguardando_assinatura": aguardando_assinatura_bucket,
@@ -319,36 +356,97 @@ def _render_admin_blocks(administradoras: Iterable[dict[str, Any]]) -> str:
 
 
 def render_production_report_email(report: dict[str, Any]) -> str:
-    manager_blocks = []
-    for gerente in report["gerentes"]:
-        manager_blocks.append(
-            "<section style='margin:24px 0;padding:18px;border:1px solid #dbe1ea;border-radius:14px;background:#f8fafc'>"
-            f"<h2 style='margin:0 0 10px;font-size:18px;color:#0f172a'>{gerente['gerente_nome']}</h2>"
-            f"<p style='margin:0 0 12px;color:#334155'>Total do gerente: <strong>{gerente['totais']['quantidade']}</strong> processos | Valor da causa: <strong>{gerente['totais']['valor_causa_total_fmt']}</strong> | Acordo provável: <strong>{gerente['totais']['acordo_provavel_total_fmt']}</strong></p>"
-            f"{_render_admin_blocks(gerente['administradoras'])}"
-            "</section>"
-        )
-
     periodo = report["periodo"]
     totais = report["totais"]
+    acordos_geral = report.get("acordos_geral", _serialize_acordos(_new_acordos_bucket()))
     resumo_assinaturas = report.get("resumo_assinaturas", {})
     enviados = resumo_assinaturas.get("enviados", _serialize_bucket(_new_bucket()))
     aguardando = resumo_assinaturas.get("aguardando_assinatura", _serialize_bucket(_new_bucket()))
     assinados = resumo_assinaturas.get("assinados", _serialize_bucket(_new_bucket()))
     assinados_fora = resumo_assinaturas.get("assinados_fora", _serialize_bucket(_new_bucket()))
+
+    # Blocos por gerente (ordenado por produção total)
+    gerentes_sorted = sorted(
+        report["gerentes"],
+        key=lambda g: float(g["totais"].get("valor_causa_total", 0) or 0),
+        reverse=True,
+    )
+    manager_blocks = []
+    for gerente in gerentes_sorted:
+        ac = gerente.get("acordos", _serialize_acordos(_new_acordos_bucket()))
+        ac_block = (
+            "<div style='margin:12px 0;padding:12px 16px;border:1px solid #bbf7d0;border-radius:10px;background:#f0fdf4'>"
+            "<strong style='color:#166534'>Acordos efetivos no período</strong><br>"
+            f"Quantidade: <strong>{ac['quantidade']}</strong> &nbsp;|&nbsp; "
+            f"Honorários totais: <strong>{ac['honorarios_total_fmt']}</strong> &nbsp;|&nbsp; "
+            f"Comissão do gerente (÷12): <strong style='color:#15803d'>{ac['comissao_gerente_fmt']}</strong>"
+            "</div>"
+        ) if ac["quantidade"] > 0 else ""
+
+        manager_blocks.append(
+            "<section style='margin:24px 0;padding:18px;border:1px solid #dbe1ea;border-radius:14px;background:#f8fafc'>"
+            f"<h2 style='margin:0 0 4px;font-size:18px;color:#0f172a'>{gerente['gerente_nome']}</h2>"
+            f"<p style='margin:0 0 4px;color:#334155'>Processos: <strong>{gerente['totais']['quantidade']}</strong></p>"
+            f"<p style='margin:0 0 4px;color:#334155'>Produção total (valor da causa): <strong>{gerente['totais']['valor_causa_total_fmt']}</strong></p>"
+            f"<p style='margin:0 0 12px;color:#334155'>Acordo provável: <strong>{gerente['totais']['acordo_provavel_total_fmt']}</strong></p>"
+            f"{ac_block}"
+            f"{_render_admin_blocks(gerente['administradoras'])}"
+            "</section>"
+        )
+
+    # Ranking final
+    ranking_rows = "".join(
+        f"<tr style='background:{'#fffbeb' if i % 2 == 0 else '#ffffff'}'>"
+        f"<td style='padding:8px 12px;border:1px solid #fde68a;font-weight:bold'>#{i+1}</td>"
+        f"<td style='padding:8px 12px;border:1px solid #fde68a'>{g['gerente_nome']}</td>"
+        f"<td style='padding:8px 12px;border:1px solid #fde68a;text-align:right'>{g['totais']['quantidade']}</td>"
+        f"<td style='padding:8px 12px;border:1px solid #fde68a;text-align:right'>{g['totais']['valor_causa_total_fmt']}</td>"
+        f"<td style='padding:8px 12px;border:1px solid #fde68a;text-align:right'>{g['totais']['acordo_provavel_total_fmt']}</td>"
+        f"<td style='padding:8px 12px;border:1px solid #fde68a;text-align:right;color:#15803d'>"
+        f"{g.get('acordos', {}).get('comissao_gerente_fmt', 'R$ 0,00')}</td>"
+        "</tr>"
+        for i, g in enumerate(gerentes_sorted)
+    )
+    ranking_block = (
+        "<div style='margin:32px 0 0;padding:20px;border:2px solid #fbbf24;border-radius:14px;background:#fffbeb'>"
+        "<h2 style='margin:0 0 12px;font-size:18px;color:#78350f'>Ranking de Produção</h2>"
+        "<table style='width:100%;border-collapse:collapse;font-size:13px'>"
+        "<thead><tr style='background:#fef3c7'>"
+        "<th style='padding:8px 12px;border:1px solid #fde68a;text-align:left'>#</th>"
+        "<th style='padding:8px 12px;border:1px solid #fde68a;text-align:left'>Gerente</th>"
+        "<th style='padding:8px 12px;border:1px solid #fde68a;text-align:right'>Processos</th>"
+        "<th style='padding:8px 12px;border:1px solid #fde68a;text-align:right'>Produção total</th>"
+        "<th style='padding:8px 12px;border:1px solid #fde68a;text-align:right'>Acordo provável</th>"
+        "<th style='padding:8px 12px;border:1px solid #fde68a;text-align:right'>Comissão gerente</th>"
+        "</tr></thead>"
+        f"<tbody>{ranking_rows}</tbody>"
+        "</table></div>"
+    )
+
     return (
-        "<div style='font-family:Arial,sans-serif;color:#0f172a'>"
+        "<div style='font-family:Arial,sans-serif;color:#0f172a;max-width:800px'>"
         "<h1 style='margin-bottom:8px'>Relatório Mensal de Produção</h1>"
         f"<p style='margin-top:0;color:#475569'>Período: <strong>{periodo['data_inicial']}</strong> a <strong>{periodo['data_final']}</strong></p>"
-        f"<p style='color:#334155'>Total geral: <strong>{totais['quantidade']}</strong> processos | Valor da causa: <strong>{totais['valor_causa_total_fmt']}</strong> | Acordo provável: <strong>{totais['acordo_provavel_total_fmt']}</strong></p>"
+        # totais gerais
+        "<div style='margin:16px 0;padding:16px;border:1px solid #dbe1ea;border-radius:14px;background:#f8fafc'>"
+        "<h2 style='margin:0 0 10px;font-size:16px;color:#0f172a'>Totais do período</h2>"
+        f"<p style='margin:0 0 6px;color:#334155'>Processos: <strong>{totais['quantidade']}</strong></p>"
+        f"<p style='margin:0 0 6px;color:#334155'>Produção total: <strong>{totais['valor_causa_total_fmt']}</strong></p>"
+        f"<p style='margin:0 0 6px;color:#334155'>Acordo provável: <strong>{totais['acordo_provavel_total_fmt']}</strong></p>"
+        f"<p style='margin:0;color:#166534'>Acordos efetivos — honorários totais: <strong>{acordos_geral['honorarios_total_fmt']}</strong> | Comissões totais: <strong>{acordos_geral['comissao_gerente_fmt']}</strong></p>"
+        "</div>"
+        # resumo assinaturas
         "<div style='margin:16px 0;padding:16px;border:1px solid #dbe1ea;border-radius:14px;background:#ffffff'>"
         "<h2 style='margin:0 0 12px;font-size:16px;color:#0f172a'>Resumo de envio e assinatura</h2>"
-        f"<p style='margin:0 0 8px;color:#334155'><strong>Enviados:</strong> {enviados['quantidade']} | Valor da causa: {enviados['valor_causa_total_fmt']} | Acordo provável: {enviados['acordo_provavel_total_fmt']}</p>"
-        f"<p style='margin:0 0 8px;color:#334155'><strong>Aguardando assinatura:</strong> {aguardando['quantidade']} | Valor da causa: {aguardando['valor_causa_total_fmt']} | Acordo provável: {aguardando['acordo_provavel_total_fmt']}</p>"
-        f"<p style='margin:0 0 8px;color:#334155'><strong>Assinados:</strong> {assinados['quantidade']} | Valor da causa: {assinados['valor_causa_total_fmt']} | Acordo provável: {assinados['acordo_provavel_total_fmt']}</p>"
-        f"<p style='margin:0;color:#334155'><strong>Assinados fora:</strong> {assinados_fora['quantidade']} | Valor da causa: {assinados_fora['valor_causa_total_fmt']} | Acordo provável: {assinados_fora['acordo_provavel_total_fmt']}</p>"
+        f"<p style='margin:0 0 6px;color:#334155'><strong>Enviados:</strong> {enviados['quantidade']} | {enviados['valor_causa_total_fmt']} | Acordo provável: {enviados['acordo_provavel_total_fmt']}</p>"
+        f"<p style='margin:0 0 6px;color:#334155'><strong>Aguardando assinatura:</strong> {aguardando['quantidade']} | {aguardando['valor_causa_total_fmt']} | Acordo provável: {aguardando['acordo_provavel_total_fmt']}</p>"
+        f"<p style='margin:0 0 6px;color:#334155'><strong>Assinados:</strong> {assinados['quantidade']} | {assinados['valor_causa_total_fmt']} | Acordo provável: {assinados['acordo_provavel_total_fmt']}</p>"
+        f"<p style='margin:0;color:#334155'><strong>Assinados fora:</strong> {assinados_fora['quantidade']} | {assinados_fora['valor_causa_total_fmt']} | Acordo provável: {assinados_fora['acordo_provavel_total_fmt']}</p>"
         "</div>"
+        # blocos individuais por gerente
         f"{''.join(manager_blocks) or '<p>Nenhum processo no período informado.</p>'}"
+        # ranking no final
+        f"{ranking_block if gerentes_sorted else ''}"
         "</div>"
     )
 
