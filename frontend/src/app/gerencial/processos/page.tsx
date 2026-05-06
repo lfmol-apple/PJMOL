@@ -356,8 +356,6 @@ function calcComissaoGerente(it: any): number | null {
 }
 
 function calcComissaoTodos(it: any): number | null {
-  const numeroProc = (it.numero_processo ?? it.numeroProcesso ?? it.processo_numero ?? "").toString().trim();
-  if (!numeroProc || numeroProc === "None") return null;
   const raw = it.honorarios_hoje_total ?? (Number(it.honorarios_hoje_adv || 0) + Number(it.honorarios_hoje_emp || 0));
   const parseVal = (v: any): number => {
     if (typeof v === "number") return v;
