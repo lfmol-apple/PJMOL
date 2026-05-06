@@ -944,6 +944,7 @@ export default function GerencialProcessosPage() {
   const [onlyLive, setOnlyLive] = useState<boolean>(false); // mostra apenas processos com timer rodando
   const [overdueSignatureOnly, setOverdueSignatureOnly] = useState<boolean>(false);
   const [overdueExpanded, setOverdueExpanded] = useState<boolean>(false);
+  const [comissaoExpanded, setComissaoExpanded] = useState<boolean>(false);
 
   // Ordenação e Infinite Scroll
   const [sortKey, setSortKey] = useState<string>("id");
@@ -2014,46 +2015,71 @@ export default function GerencialProcessosPage() {
         {/* ===== PAINEL DE COMISSÕES ===== */}
         {comissaoSummary.total > 0 && (
           <div className="mb-3 rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden">
-            <div className="flex items-center justify-between px-4 py-2.5 border-b border-slate-100 bg-slate-50">
-              <h2 className="text-sm font-semibold text-slate-800">💰 Relatório de Comissões</h2>
+            {/* Header clicável — igual ao padrão do "aguardando assinatura" */}
+            <button
+              type="button"
+              onClick={() => setComissaoExpanded((v) => !v)}
+              className="flex w-full items-center gap-3 px-4 py-3 text-left bg-white hover:bg-slate-50 transition"
+            >
+              <div className="rounded-full bg-slate-100 p-1.5 text-slate-600">
+                <span className="text-sm leading-none">💰</span>
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="text-sm font-extrabold uppercase tracking-wide text-slate-900">
+                  Comissões
+                </div>
+              </div>
+              <div className="shrink-0 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-0.5 text-sm font-extrabold text-slate-900">
+                {fmtBRL(comissaoSummary.total)}
+              </div>
               <button
-                onClick={() => window.location.reload()}
-                className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-600 hover:bg-slate-100 transition"
+                type="button"
+                onClick={(e) => { e.stopPropagation(); window.location.reload(); }}
+                className="shrink-0 inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2 py-1 text-xs font-medium text-slate-500 hover:bg-slate-100 transition"
                 title="Atualizar dados"
               >
-                <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd"/></svg>
+                <svg className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd"/></svg>
                 Reload
               </button>
-            </div>
-            <div className="grid grid-cols-3 divide-x divide-slate-100">
-              <div className="px-4 py-3 text-center">
-                <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wide mb-1">Em andamento</div>
-                <div className="text-lg font-bold text-slate-900">{fmtBRL(comissaoSummary.totalEmAndamento)}</div>
-                <div className="text-xs text-slate-400 mt-0.5">{comissaoSummary.qtdAndamento} processo(s)</div>
+              <div className="shrink-0 text-slate-500">
+                {comissaoExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
               </div>
-              <div className="px-4 py-3 text-center">
-                <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wide mb-1">Concluídas</div>
-                <div className="text-lg font-bold text-blue-700">{fmtBRL(comissaoSummary.totalConcluidas)}</div>
-                <div className="text-xs text-slate-400 mt-0.5">{comissaoSummary.qtdConcluidas} acordo(s)</div>
-              </div>
-              <div className="px-4 py-3 text-center">
-                <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wide mb-1">Total</div>
-                <div className="text-lg font-bold text-slate-900">{fmtBRL(comissaoSummary.total)}</div>
-                <div className="text-xs text-slate-400 mt-0.5">geral</div>
-              </div>
-            </div>
-            {isAdminView && comissaoSummary.byGerenteList.length > 1 && (
+            </button>
+
+            {/* Body colapsável */}
+            {comissaoExpanded && (
               <div className="border-t border-slate-100">
-                <div className="divide-y divide-slate-50">
-                  {comissaoSummary.byGerenteList.map((g) => (
-                    <div key={g.nome} className="flex items-center gap-3 px-4 py-2 text-xs hover:bg-slate-50">
-                      <div className="flex-1 font-medium text-slate-800 truncate">{g.nome}</div>
-                      <div className="text-slate-500 whitespace-nowrap">And.: <span className="font-medium text-slate-900">{fmtBRL(g.emAndamento)}</span></div>
-                      <div className="text-slate-500 whitespace-nowrap">Conc.: <span className="font-bold text-blue-700">{fmtBRL(g.concluidas)}</span></div>
-                      <div className="font-bold text-slate-900 whitespace-nowrap w-28 text-right">{fmtBRL(g.total)}</div>
-                    </div>
-                  ))}
+                <div className="grid grid-cols-3 divide-x divide-slate-100">
+                  <div className="px-4 py-3 text-center">
+                    <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wide mb-1">Em andamento</div>
+                    <div className="text-lg font-bold text-slate-900">{fmtBRL(comissaoSummary.totalEmAndamento)}</div>
+                    <div className="text-xs text-slate-400 mt-0.5">{comissaoSummary.qtdAndamento} processo(s)</div>
+                  </div>
+                  <div className="px-4 py-3 text-center">
+                    <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wide mb-1">Concluídas</div>
+                    <div className="text-lg font-bold text-blue-700">{fmtBRL(comissaoSummary.totalConcluidas)}</div>
+                    <div className="text-xs text-slate-400 mt-0.5">{comissaoSummary.qtdConcluidas} acordo(s)</div>
+                  </div>
+                  <div className="px-4 py-3 text-center">
+                    <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wide mb-1">Total</div>
+                    <div className="text-lg font-bold text-slate-900">{fmtBRL(comissaoSummary.total)}</div>
+                    <div className="text-xs text-slate-400 mt-0.5">geral</div>
+                  </div>
                 </div>
+                {isAdminView && comissaoSummary.byGerenteList.length > 1 && (
+                  <div className="border-t border-slate-100">
+                    <div className="divide-y divide-slate-50">
+                      {comissaoSummary.byGerenteList.map((g) => (
+                        <div key={g.nome} className="flex items-center gap-3 px-4 py-2 text-xs hover:bg-slate-50">
+                          <div className="flex-1 font-medium text-slate-800 truncate">{g.nome}</div>
+                          <div className="text-slate-500 whitespace-nowrap">And.: <span className="font-medium text-slate-900">{fmtBRL(g.emAndamento)}</span></div>
+                          <div className="text-slate-500 whitespace-nowrap">Conc.: <span className="font-bold text-blue-700">{fmtBRL(g.concluidas)}</span></div>
+                          <div className="font-bold text-slate-900 whitespace-nowrap w-28 text-right">{fmtBRL(g.total)}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
