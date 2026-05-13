@@ -1247,8 +1247,6 @@ def update_extrato(
     # Se está apenas salvando (não enviando para assinatura), registra data/hora atual
     # Mas se depois enviar para assinatura, a API do ZapSign vai sobrescrever este valor
     if ex.enviado_em is None:
-        # Usar UTC para garantir timezone correto no SQLite
-        from app.core.time import now_utc_for_sqlite
         ex.enviado_em = now_utc_for_sqlite()
 
     db.flush()
