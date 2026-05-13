@@ -99,6 +99,86 @@
         "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
       },
       "timestamp": "2026-04-09T14:55:10.731845"
+    },
+    {
+      "original": "CAIEIRAS",
+      "corrigido": "Caieiras",
+      "contexto": {
+        "grupo": "001133",
+        "cota": "0735-00",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-04-15T16:42:59.518130"
+    },
+    {
+      "original": "SENADOR CANEDO",
+      "corrigido": "Senador Canedo",
+      "contexto": {
+        "grupo": "001152",
+        "cota": "1866-00",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-04-17T18:48:36.954419"
+    },
+    {
+      "original": "LINHARES",
+      "corrigido": "Linhares",
+      "contexto": {
+        "grupo": "001147",
+        "cota": "3279-02",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-04-22T16:26:46.694604"
+    },
+    {
+      "original": "LINHARES",
+      "corrigido": "Linhares",
+      "contexto": {
+        "grupo": "001147",
+        "cota": "3279-02",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-04-22T16:26:52.731614"
+    },
+    {
+      "original": "BETIM",
+      "corrigido": "Betim",
+      "contexto": {
+        "grupo": "001147",
+        "cota": "4237-00",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-04-22T16:30:57.801060"
+    },
+    {
+      "original": "PALMARES",
+      "corrigido": "Palmares",
+      "contexto": {
+        "grupo": "001131",
+        "cota": "0083-00",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-04-23T17:51:18.180586"
+    },
+    {
+      "original": "CURITIBA",
+      "corrigido": "Curitiba",
+      "contexto": {
+        "grupo": "001160",
+        "cota": "3266-01",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-04-24T17:46:41.339733"
+    },
+    {
+      "original": "BETIM",
+      "corrigido": "Betim",
+      "contexto": {
+        "grupo": "091393",
+        "cota": "0879-01",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-04-25T15:14:56.653696"
     }
   ]
 }

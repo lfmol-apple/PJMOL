@@ -5,11 +5,12 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import {
   RefreshCw, Search, ChevronDown, ChevronUp, Download, Plus, ArrowLeft,
-  AlertCircle , Paperclip, CheckCircle2, Trash2, FileText, CheckCircle, BarChart3
+  AlertCircle , Paperclip, CheckCircle2, Trash2, FileText, CheckCircle, BarChart3, DollarSign
 } from "lucide-react";
 import { getLoggedUser, getToken, filterByScope } from "@/app/lib/auth";
 import { logoutCurrentSession } from "@/app/lib/sessionPresence";
 import { AlertModalContent } from "@/components/DailyAlertModal";
+import ComissaoMes from "@/components/ComissaoMes";
 
 /** ===================== Helpers ===================== */
 function displayGerenteName(row: any): string {
@@ -327,27 +328,6 @@ function getDisplayStatus(row: any): string {
 }
 // 🔵 FIM
 
-function getNumeroProcessoExtras(row: any): Record<string, any> {
-  const rawExtras = row?.extras;
-  if (!rawExtras) return {};
-  return typeof rawExtras === "string"
-    ? (() => { try { return JSON.parse(rawExtras); } catch { return {}; } })()
-    : rawExtras;
-}
-
-function hasProvisionalNumeroProcesso(row: any): boolean {
-  const extras = getNumeroProcessoExtras(row);
-  const marker = extras?.numero_processo_provisorio;
-  return marker === true || marker === 1 || marker === "1";
-}
-
-function getProvisionalNumeroProcessoTextClass(row: any): string {
-  const extras = getNumeroProcessoExtras(row);
-  const origem = String(extras?.numero_processo_provisorio_origem || "").toUpperCase();
-  if (origem.includes("JULIO")) return "text-green-700";
-  return "text-red-700";
-}
-
 const isAvista = (s?: string | null) =>
   ["avista","a vista","à vista","a_vista","a-vista"].includes(String(s||"").toLowerCase());
 
@@ -361,6 +341,40 @@ function getResultadoLabel(it: any): string {
   if (r) return r.charAt(0).toUpperCase() + r.slice(1);
   return "Sem Julgamento";
 }
+function calcExpectativaHonorarios(it: any): number | null {
+  const causa = Number(it.valor_causa);
+  if (!Number.isFinite(causa) || causa <= 0) return null;
+  const pct = Number(it.honorarios_percentual);
+  if (!Number.isFinite(pct) || pct <= 0) return null;
+  return causa * 0.7 * (pct / 100);
+}
+
+function divisorComissao(it: any): number {
+  const nome = (it.gerente_nome ?? it.gerente?.nome ?? it.criado_por_nome ?? it.usuario_criador_nome ?? "").toUpperCase();
+  const id = Number(it.gerente_id ?? it.criado_por_id ?? it.usuario_id ?? 0);
+  if (id === 11 || nome.includes("MARCO ANTONIO FARIA")) return 6;
+  return 12;
+}
+
+function calcComissaoTodos(it: any): number | null {
+  const divisor = divisorComissao(it);
+  if (getResultadoLabel(it) === "Acordo") {
+    const raw = it.honorarios_hoje_total ?? (Number(it.honorarios_hoje_adv || 0) + Number(it.honorarios_hoje_emp || 0));
+    const base = typeof raw === "number" ? raw : parseFloat(String(raw ?? "").replace(/R\$\s*/g, "").replace(/\./g, "").replace(",", "."));
+    if (!Number.isFinite(base) || base <= 0) return null;
+    return base / divisor;
+  }
+  const exp = calcExpectativaHonorarios(it);
+  if (exp === null) return null;
+  return exp / divisor;
+}
+
+function calcComissaoGerente(it: any): number | null {
+  if (getResultadoLabel(it) !== "Acordo") return null;
+  return calcComissaoTodos(it);
+}
+
+
 function resultadoPillClass(label: string): string {
   if (label === "Acordo" || label === "Sentença à Vista")
     return "bg-indigo-100 text-indigo-700 ring-indigo-600/20";
@@ -577,6 +591,12 @@ function TarjaInline() {
   const [usuarioId, setUsuarioId] = useState<number | null>(null);
   const [hydrated, setHydrated] = useState(false);
   const [showDesempenho, setShowDesempenho] = useState(false);
+  const [tacticoPulsing, setTacticoPulsing] = useState<boolean>(true);
+
+  useEffect(() => {
+    const t = setTimeout(() => setTacticoPulsing(false), 5000);
+    return () => clearTimeout(t);
+  }, []);
 
   useEffect(() => {
     setHydrated(true);
@@ -587,10 +607,9 @@ function TarjaInline() {
       const nomeExib = (nomeAdv || nomeUser || "").toString();
       const perfilRaw = ((read("perfil") || read("perfilUsuario") || read("role") || read("papel") || "") + "").toLowerCase();
       const uidRaw = typeof window !== "undefined" ? localStorage.getItem("usuarioId") : null;
-      const uid = uidRaw ? parseInt(uidRaw, 10) : null;
       setNome(nomeExib || "Usuário");
-      setPerfil(uid === 5 || uid === 8 || uid === 11 ? "admin" : (perfilRaw || "usuario"));
-      setUsuarioId(uid);
+      setPerfil(perfilRaw || "usuario");
+      setUsuarioId(uidRaw ? parseInt(uidRaw, 10) : null);
     } catch {}
   }, []);
 
@@ -627,7 +646,7 @@ function TarjaInline() {
         <AlertModalContent muted onClose={() => setShowDesempenho(false)} />
       )}
       <div className="w-full border rounded-2xl px-3 py-2 bg-gray-50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <div className="flex items-center gap-3 min-w-0 w-full sm:w-auto">
+        <div className="flex flex-wrap items-center gap-3 min-w-0 w-full sm:w-auto">
           <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-200">👤</span>
           <div className="truncate font-semibold text-black">{nome}</div>
           {perfil && (
@@ -635,6 +654,7 @@ function TarjaInline() {
               {perfil.charAt(0).toUpperCase() + perfil.slice(1)}
             </span>
           )}
+          {isGerente && <ComissaoMes />}
         </div>
 
         <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto sm:justify-end">
@@ -662,6 +682,14 @@ function TarjaInline() {
             >
               <span className="sm:hidden">Sessões</span>
               <span className="hidden sm:inline">Monitor de Sessões</span>
+            </a>
+          )}
+          {perfil === "admin" && (
+            <a
+              href="/dashboard-campanha"
+              className={`hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-purple-600 text-white text-sm font-semibold hover:bg-purple-700 transition-all ${tacticoPulsing ? "ring-4 ring-purple-400 ring-offset-1 animate-pulse scale-105" : ""}`}
+            >
+              📊 Info. Tática
             </a>
           )}
           {isGerente && (
@@ -709,7 +737,6 @@ function MobileProcessCard({ it, compact=false, onToggleSignedExternal, onDelete
   const pillCls = resultadoPillClass(resLabel);
   const numeroProc = (it.numero_processo ?? it.numeroProcesso ?? it.processo_numero ?? "").toString().trim();
   const haProcesso = numeroProc && numeroProc !== "None" && numeroProc !== "";
-  const numeroProvisorio = hasProvisionalNumeroProcesso(it);
   // const timeline = computeProcessTimeline(it, new Date()); // ❌ REMOVIDO - usa fase_atual agora
   const comarcaUF = displayComarcaUF(it); // 🔵 COMARCA/UF
   const comarcaNome = displayComarcaNome(it);
@@ -796,7 +823,7 @@ function MobileProcessCard({ it, compact=false, onToggleSignedExternal, onDelete
         {/* Número do Processo */}
         <div className={cls("text-slate-600", compact ? "text-sm" : "text-base")}>
           <span className="text-slate-500">Proc.:</span>{" "}
-          <span className={cls("font-semibold", numeroProvisorio ? getProvisionalNumeroProcessoTextClass(it) : "text-slate-900")}>{numeroProc || "—"}</span>
+          <span className="font-semibold text-slate-900">{numeroProc || "—"}</span>
         </div>
 
         {/* Informações em grid */}
@@ -937,6 +964,17 @@ export default function GerencialProcessosPage() {
   const [dateTo, setDateTo] = useState<string>("");
   const [onlyLive, setOnlyLive] = useState<boolean>(false); // mostra apenas processos com timer rodando
   const [overdueSignatureOnly, setOverdueSignatureOnly] = useState<boolean>(false);
+  const [overdueExpanded, setOverdueExpanded] = useState<boolean>(false);
+  const [showTacticoNotif, setShowTacticoNotif] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (perfil !== "admin") return;
+    const today = new Date().toDateString();
+    if (localStorage.getItem("tactico_seen") !== today) {
+      const timer = setTimeout(() => setShowTacticoNotif(true), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [perfil]);
 
   // Ordenação e Infinite Scroll
   const [sortKey, setSortKey] = useState<string>("id");
@@ -1357,18 +1395,15 @@ export default function GerencialProcessosPage() {
   const overdueSignatureSummary = useMemo(() => {
     const scoped = filterByScope(items, perfil as any, currentUser as any);
     const now = new Date();
-    const grouped = new Map<string, { gerente: string; quantidade: number; maisAntigoDias: number; valorCausaTotal: number; acordoProvavelTotal: number; processos: Processo[] }>();
+    const grouped = new Map<string, { gerente: string; quantidade: number; maisAntigoDias: number; processos: Processo[] }>();
 
     scoped.forEach((item) => {
       if (!isAwaitingSignatureOverFiveDays(item, now)) return;
       const gerente = displayGerenteName(item) || (pickUidFromRow(item) ? `#${pickUidFromRow(item)}` : "Sem gerente");
       const dias = getDaysSince(getSentAtDate(item), now);
-      const valorCausa = Number(item?.valor_causa || 0);
-      const current = grouped.get(gerente) || { gerente, quantidade: 0, maisAntigoDias: 0, valorCausaTotal: 0, acordoProvavelTotal: 0, processos: [] };
+      const current = grouped.get(gerente) || { gerente, quantidade: 0, maisAntigoDias: 0, processos: [] };
       current.quantidade += 1;
       current.maisAntigoDias = Math.max(current.maisAntigoDias, dias);
-      current.valorCausaTotal += valorCausa;
-      current.acordoProvavelTotal += valorCausa * 0.7;
       current.processos.push(item);
       grouped.set(gerente, current);
     });
@@ -1388,18 +1423,7 @@ export default function GerencialProcessosPage() {
     const scoped = filterByScope(items, perfil as any, currentUser as any);
     return scoped.reduce((acc, item) => acc + (getDisplayStatus(item) === "Enviado" ? 1 : 0), 0);
   }, [items, perfil, currentUser]);
-  const overdueSignaturePercentage = useMemo(() => {
-    if (!awaitingSignatureTotal) return 0;
-    return Math.round((overdueSignatureTotal / awaitingSignatureTotal) * 100);
-  }, [overdueSignatureTotal, awaitingSignatureTotal]);
   const isAdminView = perfil === "admin";
-
-  const overdueSignatureSummaryWithShare = useMemo(() => {
-    return overdueSignatureSummary.map((entry) => ({
-      ...entry,
-      percentualEnviados: awaitingSignatureTotal ? Math.round((entry.quantidade / awaitingSignatureTotal) * 100) : 0,
-    }));
-  }, [overdueSignatureSummary, awaitingSignatureTotal]);
 
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
@@ -1540,10 +1564,14 @@ export default function GerencialProcessosPage() {
     const sumFuturo = filtered.reduce((acc, i) => acc + getFuturo(i), 0);
     const sumValorCausa = filtered.reduce((acc, i) => acc + num(i.valor_causa), 0);
 
-    // 🆕 Acordo Provável = 70% do Valor da Causa
-    const sumAcordoProvavel = sumValorCausa * 0.7;
-    // 🆕 Expectativa de Honorários = 30% do Acordo Provável
-    const sumExpectativaHonorarios = sumAcordoProvavel * 0.3;
+    // Projeções: excluir processos que já têm acordo fechado
+    const semAcordo = filtered.filter(i => getResultadoLabel(i) !== "Acordo");
+    const sumValorCausaEmAndamento = semAcordo.reduce((acc, i) => acc + num(i.valor_causa), 0);
+    const sumAcordoProvavel = semAcordo.reduce((acc, i) => acc + num(i.valor_causa) * 0.7, 0);
+    const sumExpectativaHonorarios = semAcordo.reduce((acc, i) => {
+      const v = calcExpectativaHonorarios(i);
+      return acc + (v !== null ? v : 0);
+    }, 0);
 
     const hHojeAdv = filtered.reduce((acc, i) => acc + num(i.honorarios_hoje_adv), 0);
     const hHojeEmp = filtered.reduce((acc, i) => acc + num(i.honorarios_hoje_emp), 0);
@@ -1563,11 +1591,20 @@ export default function GerencialProcessosPage() {
       const bruto = getFuturo(i);
       return acc + (num(i.liquido_futuro) || (bruto - tot));
     }, 0);
+    const sumValorAcordos = filtered.reduce((acc, i) => {
+      if (getResultadoLabel(i) !== "Acordo") return acc;
+      return acc + num(i.valor_acordo ?? i.valor_corrigido_hoje ?? i.valor_sentenca);
+    }, 0);
+    const sumComissaoGerente = filtered.reduce((acc, i) => {
+      const v = calcComissaoGerente(i);
+      return acc + (v !== null ? v : 0);
+    }, 0);
 
-    return { sumHoje, sumFuturo, sumValorCausa, sumAcordoProvavel, sumExpectativaHonorarios, hHojeAdv, hHojeEmp, hHojeTot, hFutAdv, hFutEmp, hFutTot, liqHojeSum, liqFutSum,
+    return { sumHoje, sumFuturo, sumValorCausa, sumValorCausaEmAndamento, sumAcordoProvavel, sumExpectativaHonorarios, sumValorAcordos, hHojeAdv, hHojeEmp, hHojeTot, hFutAdv, hFutEmp, hFutTot, liqHojeSum, liqFutSum, sumComissaoGerente,
       hasHoje: filtered.some(i => i.valor_corrigido_hoje != null),
       hasFuturo: filtered.some(i => (i.valor_futuro ?? i.valor_corrigido_futuro) != null),
-      hasValorCausa: filtered.some(i => i.valor_causa != null),
+      hasValorCausa: filtered.some(i => calcExpectativaHonorarios(i) !== null),
+      hasAcordos: filtered.some(i => getResultadoLabel(i) === "Acordo"),
     };
   }, [filtered]);
 
@@ -1618,6 +1655,32 @@ export default function GerencialProcessosPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
+
+      {/* Toast: recomendações táticas (admin only, 1x/dia) */}
+      {showTacticoNotif && (
+        <div className="fixed bottom-5 right-5 z-[9999] flex items-start gap-3 rounded-2xl border border-purple-300 bg-white shadow-2xl px-5 py-4 max-w-sm animate-bounce-once">
+          <span className="text-2xl mt-0.5">📊</span>
+          <div className="flex-1">
+            <div className="text-sm font-bold text-slate-800">Recomendações táticas atualizadas</div>
+            <div className="text-xs text-slate-500 mt-0.5">Há novas sugestões baseadas nos dados atuais da carteira.</div>
+            <a
+              href="/dashboard-campanha"
+              onClick={() => { localStorage.setItem("tactico_seen", new Date().toDateString()); setShowTacticoNotif(false); }}
+              className="mt-2 inline-flex items-center gap-1 rounded-lg bg-purple-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-purple-700"
+            >
+              Ver Info. Tática →
+            </a>
+          </div>
+          <button
+            onClick={() => { localStorage.setItem("tactico_seen", new Date().toDateString()); setShowTacticoNotif(false); }}
+            className="text-slate-400 hover:text-slate-600 text-lg leading-none"
+            aria-label="Fechar"
+          >
+            ×
+          </button>
+        </div>
+      )}
+
       {/* Header */}
       <div className="mx-auto max-w-none px-4 pt-2 sm:px-6 lg:px-8">
         <TarjaInline />
@@ -1645,9 +1708,17 @@ export default function GerencialProcessosPage() {
                   {perfil}
                 </span>
               )}
+              <Link href="/gerencial/comissoes" className="inline-flex items-center gap-1 rounded-lg border border-emerald-300 bg-emerald-50 px-2 py-1.5 text-xs font-medium text-emerald-800 shadow-sm hover:bg-emerald-100" title="Comissões">
+                <DollarSign className="h-3.5 w-3.5" /> <span className="hidden md:inline">Comissões</span>
+              </Link>
               {perfil === "admin" && (
-                <Link href="/dashboard-relatorio/producao" className="inline-flex items-center gap-1 rounded-lg border border-emerald-300 bg-emerald-50 px-2 py-1.5 text-xs font-medium text-emerald-800 shadow-sm hover:bg-emerald-100" title="Relatório de produção">
+                <Link href="/dashboard-relatorio/producao" className="inline-flex items-center gap-1 rounded-lg border border-amber-300 bg-amber-50 px-2 py-1.5 text-xs font-medium text-amber-800 shadow-sm hover:bg-amber-100" title="Relatório de produção">
                   <BarChart3 className="h-3.5 w-3.5" /> <span className="hidden md:inline">Relatório Produção</span>
+                </Link>
+              )}
+              {perfil === "admin" && (
+                <Link href="/admin" className="inline-flex items-center gap-1 rounded-lg border border-blue-300 bg-blue-50 px-2 py-1.5 text-xs font-medium text-blue-800 shadow-sm hover:bg-blue-100" title="Painel administrativo">
+                  <span className="text-sm leading-none">Admin</span>
                 </Link>
               )}
               <Link href="/" className="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-xs font-medium text-slate-700 shadow-sm hover:bg-slate-50" title="Página principal">
@@ -1683,6 +1754,10 @@ export default function GerencialProcessosPage() {
               <TarjaInline />
             </div>
             <div className="flex items-center gap-2 shrink-0">
+              <Link href="/gerencial/comissoes" className="inline-flex items-center gap-1 rounded-md border border-emerald-300 bg-emerald-50 px-2 py-1 text-[10px] font-semibold text-emerald-900 shadow-sm" title="Comissões">
+                <DollarSign className="h-3 w-3" />
+                <span>Comissões</span>
+              </Link>
               {perfil === "admin" && (
                 <Link href="/dashboard-relatorio/producao" className="inline-flex items-center gap-1 rounded-md border border-amber-300 bg-amber-50 px-2 py-1 text-[10px] font-semibold text-amber-900 shadow-sm" title="Relatório de produção">
                   <BarChart3 className="h-3 w-3" />
@@ -1835,82 +1910,95 @@ export default function GerencialProcessosPage() {
             </button>
           )}
         </div>
-        <section className="mb-4 rounded-2xl border border-amber-200 bg-linear-to-br from-amber-50 via-orange-50 to-white p-4 shadow-sm">
-          <div className="mb-3 flex items-start gap-3">
-            <div className="rounded-full bg-amber-100 p-2 text-amber-700">
-              <AlertCircle className="h-5 w-5" />
+        <section className="mb-4 rounded-2xl border border-amber-200 bg-linear-to-br from-amber-50 via-orange-50 to-white shadow-sm">
+          {/* Header sempre visivel; expande corpo apenas quando ha mais de uma entrada */}
+          <button
+            type="button"
+            onClick={() => setOverdueExpanded((v) => !v)}
+            className="flex w-full items-center gap-3 px-4 py-3 text-left"
+          >
+            <div className="rounded-full bg-amber-100 p-1.5 text-amber-700">
+              <AlertCircle className="h-4 w-4" />
             </div>
-            <div>
-              <div className="text-base font-extrabold uppercase tracking-wide text-amber-950">
+            <div className="min-w-0 flex-1">
+              <div className="text-sm font-extrabold uppercase tracking-wide text-amber-950">
                 Aguardando assinatura há mais de {OVERDUE_SIGNATURE_DAYS} dias
               </div>
-              <div className="mt-1 text-sm text-amber-900">
-                {isAdminView
-                  ? "Visão geral por gerente. Clique no nome para abrir os processos daquele gerente."
-                  : "Seus próprios processos. Clique no quadro para listar quais são."}
+            </div>
+            {overdueSignatureSummary.length > 1 && (
+              <div className="shrink-0 rounded-lg border border-amber-300 bg-amber-100 px-2.5 py-0.5 text-sm font-extrabold text-amber-950">
+                {overdueSignatureTotal}
               </div>
-            </div>
-          </div>
+            )}
+            {overdueSignatureSummary.length > 1 && (
+              <div className="shrink-0 text-amber-700">
+                {overdueExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+              </div>
+            )}
+          </button>
 
-          {overdueSignatureSummaryWithShare.length === 0 ? (
-            <div className="rounded-xl border border-amber-200 bg-white px-4 py-4 text-sm font-medium text-slate-600">
-              Nenhum processo enviado há mais de {OVERDUE_SIGNATURE_DAYS} dias aguardando assinatura no momento.
-            </div>
-          ) : isAdminView ? (
-            <div className="rounded-xl border border-amber-200 bg-white shadow-sm">
-              <div className="divide-y divide-amber-100">
-                {overdueSignatureSummaryWithShare.map((entry, index) => (
+          {(overdueSignatureSummary.length <= 1 || overdueExpanded) && (
+            <div className="border-t border-amber-200 p-4 pt-3">
+              {overdueSignatureSummary.length === 0 ? (
+                <div className="rounded-xl border border-amber-200 bg-white px-4 py-4 text-sm font-medium text-slate-600">
+                  Nenhum processo enviado há mais de {OVERDUE_SIGNATURE_DAYS} dias aguardando assinatura no momento.
+                </div>
+              ) : isAdminView ? (
+                <div className="rounded-xl border border-amber-200 bg-white shadow-sm">
+                  <div className="divide-y divide-amber-100">
+                    {overdueSignatureSummary.map((entry, index) => (
+                      <button
+                        key={entry.gerente}
+                        type="button"
+                        onClick={() => applyOverdueSignatureFilter(entry.gerente)}
+                        className={cls(
+                          "flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-amber-50",
+                          overdueSignatureOnly && gerenteFilter === entry.gerente ? "bg-amber-50" : "bg-white"
+                        )}
+                      >
+                        <div className="w-12 shrink-0 text-xs font-bold uppercase tracking-wide text-amber-700">
+                          #{index + 1}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="truncate text-sm font-bold text-slate-900">{entry.gerente}</div>
+                          <div className="text-xs text-slate-600">
+                            {entry.quantidade} aguardando assinatura • Mais antigo: {entry.maisAntigoDias} dias
+                          </div>
+                        </div>
+                        <div className="shrink-0 rounded-lg border border-amber-300 bg-amber-100 px-3 py-1 text-lg font-extrabold text-amber-950 shadow-sm">
+                          {entry.quantidade}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                  <div className="border-t border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-950">
+                    Total aguardando assinatura no geral: <span className="font-extrabold">{awaitingSignatureTotal}</span> processo(s)
+                  </div>
+                </div>
+              ) : (
+                overdueSignatureSummary.map((entry) => (
                   <button
                     key={entry.gerente}
                     type="button"
                     onClick={() => applyOverdueSignatureFilter(entry.gerente)}
                     className={cls(
-                      "flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-amber-50",
-                      overdueSignatureOnly && gerenteFilter === entry.gerente ? "bg-amber-50" : "bg-white"
+                      "w-full rounded-xl border bg-white px-4 py-3 text-left shadow-sm transition hover:border-amber-300 hover:bg-amber-50",
+                      overdueSignatureOnly ? "border-amber-400 ring-2 ring-amber-300" : "border-amber-200"
                     )}
                   >
-                    <div className="w-12 shrink-0 text-xs font-bold uppercase tracking-wide text-amber-700">
-                      #{index + 1}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="truncate text-sm font-bold text-slate-900">{entry.gerente}</div>
-                      <div className="text-xs text-slate-600">
-                        {entry.quantidade} aguardando assinatura • {entry.percentualEnviados}% dos enviados • Mais antigo: {entry.maisAntigoDias} dias
+                    <div className="flex items-center gap-3">
+                      <div className="min-w-0 flex-1">
+                        <div className="truncate text-sm font-bold text-slate-900">{entry.gerente}</div>
+                        <div className="text-xs text-slate-600">Você tem {entry.quantidade} aguardando assinatura • Mais antigo: {entry.maisAntigoDias} dias</div>
                       </div>
-                      <div className="mt-1 text-xs font-semibold text-slate-700">
-                        Valor da causa: {fmtBRL(entry.valorCausaTotal)} • Acordo provável: {fmtBRL(entry.acordoProvavelTotal)}
+                      <div className="shrink-0 rounded-lg border border-amber-300 bg-amber-100 px-3 py-1 text-lg font-extrabold text-amber-950 shadow-sm">
+                        {entry.quantidade}
                       </div>
-                    </div>
-                    <div className="shrink-0 rounded-lg border border-amber-300 bg-amber-100 px-3 py-1 text-lg font-extrabold text-amber-950 shadow-sm">
-                      {entry.quantidade}
                     </div>
                   </button>
-                ))}
-              </div>
+                ))
+              )}
             </div>
-          ) : (
-            overdueSignatureSummaryWithShare.map((entry) => (
-              <button
-                key={entry.gerente}
-                type="button"
-                onClick={() => applyOverdueSignatureFilter(entry.gerente)}
-                className={cls(
-                  "w-full rounded-xl border bg-white px-4 py-3 text-left shadow-sm transition hover:border-amber-300 hover:bg-amber-50",
-                  overdueSignatureOnly ? "border-amber-400 ring-2 ring-amber-300" : "border-amber-200"
-                )}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="min-w-0 flex-1">
-                    <div className="truncate text-sm font-bold text-slate-900">{entry.gerente}</div>
-                    <div className="text-xs text-slate-600">Você tem {entry.quantidade} aguardando assinatura • {entry.percentualEnviados}% dos enviados • Mais antigo: {entry.maisAntigoDias} dias</div>
-                    <div className="mt-1 text-xs font-semibold text-slate-700">Valor da causa: {fmtBRL(entry.valorCausaTotal)} • Acordo provável: {fmtBRL(entry.acordoProvavelTotal)}</div>
-                  </div>
-                  <div className="shrink-0 rounded-lg border border-amber-300 bg-amber-100 px-3 py-1 text-lg font-extrabold text-amber-950 shadow-sm">
-                    {entry.quantidade}
-                  </div>
-                </div>
-              </button>
-            ))
           )}
         </section>
         {/* Resumo compacto desktop */}
@@ -1918,15 +2006,20 @@ export default function GerencialProcessosPage() {
           <div className="flex items-center gap-4 text-slate-700">
             <span><strong>{total}</strong> processo(s)</span>
             <span className="text-slate-500">•</span>
+            <span className="text-slate-700 font-medium">
+              {`Total causas: ${fmtBRL(totals.sumValorCausa)}`}
+            </span>
+            <span className="text-indigo-700 font-medium">
+              {totals.hasValorCausa ? `Causas em andamento: ${fmtBRL(totals.sumValorCausaEmAndamento)}` : "Causas em andamento: —"}
+            </span>
             <span className="text-purple-700 font-medium">
               {totals.hasValorCausa ? `Acordo Provável: ${fmtBRL(totals.sumAcordoProvavel)}` : "Acordo Provável: —"}
             </span>
             <span className="text-orange-700 font-medium">
               {totals.hasValorCausa ? `Expectativa Honorários: ${fmtBRL(totals.sumExpectativaHonorarios)}` : "Exp. Honorários: —"}
             </span>
-            <span className="text-slate-500">•</span>
-            <span className="text-indigo-700 font-medium">
-              {totals.hasValorCausa ? `Causas: ${fmtBRL(totals.sumValorCausa)}` : "Causas: —"}
+            <span className="text-emerald-700 font-medium">
+              {totals.hasAcordos ? `Acordos realizados: ${fmtBRL(totals.sumValorAcordos)}` : "Acordos realizados: —"}
             </span>
           </div>
           <div className="flex items-center gap-2">
@@ -1946,13 +2039,7 @@ export default function GerencialProcessosPage() {
               <span className="hidden sm:inline">Relatório</span>
               <span className="sm:hidden">📊</span>
             </Link>
-            <Link
-              href="/ml-dashboard"
-              className="hidden md:inline-flex items-center gap-1 rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-blue-700"
-              title="Ver estatísticas do Machine Learning"
-            >
-              🤖 <span>ML Dashboard</span>
-            </Link>
+
             <button
               onClick={exportCSV}
               className="inline-flex items-center gap-1 rounded-lg bg-slate-900 px-3 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-slate-800"
@@ -1975,14 +2062,20 @@ export default function GerencialProcessosPage() {
             Resultados filtrados: <span className="font-semibold">{total}</span> processo(s)
           </div>
           <div className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
+            <span className="rounded-full border-2 border-slate-300 bg-slate-50 px-3 py-2 text-xs sm:text-sm font-bold text-slate-800">
+              {`Total causas: ${fmtBRL(totals.sumValorCausa)}`}
+            </span>
+            <span className="rounded-full border-2 border-blue-300 bg-blue-50 px-3 py-2 text-xs sm:text-sm font-bold text-blue-800">
+              {totals.hasValorCausa ? `Causas em andamento: ${fmtBRL(totals.sumValorCausaEmAndamento)}` : "Causas em andamento: —"}
+            </span>
             <span className="rounded-full border-2 border-purple-300 bg-purple-50 px-3 py-2 text-xs sm:text-sm font-bold text-purple-800">
               {totals.hasValorCausa ? `Acordo Provável: ${fmtBRL(totals.sumAcordoProvavel)}` : "Acordo Provável: —"}
             </span>
             <span className="rounded-full border-2 border-orange-300 bg-orange-50 px-3 py-2 text-xs sm:text-sm font-bold text-orange-800">
               {totals.hasValorCausa ? `Exp. Honorários: ${fmtBRL(totals.sumExpectativaHonorarios)}` : "Exp. Honorários: —"}
             </span>
-            <span className="rounded-full border-2 border-blue-300 bg-blue-50 px-3 py-2 text-xs sm:text-sm font-bold text-blue-800">
-              {totals.hasValorCausa ? `Causas: ${fmtBRL(totals.sumValorCausa)}` : "Causas: —"}
+            <span className="rounded-full border-2 border-emerald-300 bg-emerald-50 px-3 py-2 text-xs sm:text-sm font-bold text-emerald-800">
+              {totals.hasAcordos ? `Acordos realizados: ${fmtBRL(totals.sumValorAcordos)}` : "Acordos realizados: —"}
             </span>
           </div>
         </div>
@@ -2054,6 +2147,7 @@ export default function GerencialProcessosPage() {
                   <col className="w-[140px]" /> {/* LÍQUIDO HOJE */}
                   <col className="w-[150px]" /> {/* LÍQUIDO FUTURO */}
                   <col className="min-w-[180px]" /> {/* ADVOGADO */}
+                  <col className="w-[160px]" /> {/* COMISSÕES */}
                   <col className="min-w-40" /> {/* GERENTE */}
                   <col className="w-[130px]" /> {/* CRIADO EM */}
                   <col className="w-[120px]" /> {/* AÇÕES */}
@@ -2083,6 +2177,7 @@ export default function GerencialProcessosPage() {
                       { key: "liquido_hoje", label: "Líquido Hoje", w: "w-[140px]", align: "text-right" },
                       { key: "liquido_futuro", label: "Líquido Futuro", w: "w-[150px]", align: "text-right" },
                       { key: "advogado_nome", label: "Advogado", w: "min-w-[180px]", align: "text-left" },
+                      { key: "comissao_gerente", label: "Comissões", w: "w-[160px]", align: "text-right" },
                       { key: "gerente_nome", label: "Gerente", w: "min-w-[160px]", align: "text-left" },
                       { key: "criado_em", label: "Criado em", w: "w-[130px]", align: "text-center" },
                       { key: "acoes", label: "Ações", w: "w-[120px]", align: "text-center" },
@@ -2104,12 +2199,12 @@ export default function GerencialProcessosPage() {
                 <tbody>
                   {loading && (
                     <tr>
-                      <td colSpan={25} className="px-4 py-10 text-center text-slate-500">Carregando processos…</td>
+                      <td colSpan={26} className="px-4 py-10 text-center text-slate-500">Carregando processos…</td>
                     </tr>
                   )}
                   {!loading && visibleProcesses.length === 0 && (
                     <tr>
-                      <td colSpan={25} className="px-4 py-10 text-center text-slate-500">Nenhum processo encontrado.</td>
+                      <td colSpan={26} className="px-4 py-10 text-center text-slate-500">Nenhum processo encontrado.</td>
                     </tr>
                   )}
                   {!loading && visibleProcesses.map((it) => {
@@ -2120,7 +2215,6 @@ export default function GerencialProcessosPage() {
                     const pillCls = resultadoPillClass(resLabel);
                     const numeroProc = (it.numero_processo ?? it.numeroProcesso ?? it.processo_numero ?? "").toString().trim();
                     const haProcesso = numeroProc && numeroProc !== "None" && numeroProc !== "";
-                    const numeroProvisorio = hasProvisionalNumeroProcesso(it);
                     // const timeline = computeProcessTimeline(it, new Date()); // ❌ REMOVIDO - usa fase_atual agora
                     const comarcaUF = displayComarcaUF(it); // 🔵 COMARCA/UF
                     const comarcaNome = displayComarcaNome(it);
@@ -2231,7 +2325,7 @@ export default function GerencialProcessosPage() {
 
                         {/* Número do processo — negrito + COMARCA/UF abaixo */}
                         <td className="px-2.5 py-1.5 whitespace-nowrap">
-                          <span className={cls("font-bold", numeroProvisorio ? getProvisionalNumeroProcessoTextClass(it) : "text-slate-900")}>{formatarNumeroProcesso(numeroProc) || "—"}</span>
+                          <span className="font-bold text-slate-900">{formatarNumeroProcesso(numeroProc) || "—"}</span>
                           {/* 🔵 Comarca sob o número do processo */}
                           {comarcaNome && (
                             <div className="mt-0.5 text-[11px] text-slate-600 truncate" title={comarcaNome}>
@@ -2270,14 +2364,14 @@ export default function GerencialProcessosPage() {
                           {it.valor_causa ? fmtBRL(it.valor_causa) : "—"}
                         </td>
 
-                        {/* 🆕 Acordo Provável (70% do Valor da Causa) */}
+                        {/* 🆕 Acordo Provável (70% do Valor da Causa) — oculto para quem já tem Acordo */}
                         <td className="px-2.5 py-1.5 text-right tabular-nums whitespace-nowrap bg-purple-50">
-                          {it.valor_causa ? fmtBRL(it.valor_causa * 0.7) : "—"}
+                          {getResultadoLabel(it) === "Acordo" ? <span className="text-slate-400 text-xs">Acordado</span> : it.valor_causa ? fmtBRL(it.valor_causa * 0.7) : "—"}
                         </td>
 
-                        {/* 🆕 Expectativa de Honorários (30% do Acordo Provável) */}
+                        {/* 🆕 Expectativa de Honorários — oculto para quem já tem Acordo */}
                         <td className="px-2.5 py-1.5 text-right tabular-nums whitespace-nowrap bg-orange-50">
-                          {it.valor_causa ? fmtBRL(it.valor_causa * 0.7 * 0.3) : "—"}
+                          {getResultadoLabel(it) === "Acordo" ? <span className="text-slate-400 text-xs">Acordado</span> : (() => { const v = calcExpectativaHonorarios(it); return v !== null ? fmtBRL(v) : "—"; })()}
                         </td>
 
                         {/* Valor Hoje */}
@@ -2310,11 +2404,23 @@ export default function GerencialProcessosPage() {
                           {fmtBRL((it.liquido_futuro ?? (Number((it.valor_futuro ?? it.valor_corrigido_futuro) || 0) - (Number((it.honorarios_futuro_total ?? (Number(it.honorarios_futuro_adv || 0) + Number(it.honorarios_futuro_emp || 0)))) || 0))))}
                         </td>
 
-                        {/* Advogado / Gerente */}
+                        {/* Advogado / Comissões / Gerente */}
                         <td className="px-2.5 py-1">
                           <div className="truncate max-w-[200px]" title={displayAdvogadoName(it)}>
                             {displayAdvogadoName(it) || "—"}
                           </div>
+                        </td>
+                        <td className="px-2.5 py-1.5 text-right tabular-nums whitespace-nowrap">
+                          {(() => {
+                            const isAcordo = getResultadoLabel(it) === "Acordo";
+                            const v = calcComissaoTodos(it);
+                            if (v === null) return <span className="text-slate-400">—</span>;
+                            return (
+                              <span className={isAcordo ? "font-bold text-blue-700" : "text-slate-900"}>
+                                {fmtBRL(v)}
+                              </span>
+                            );
+                          })()}
                         </td>
                         <td className="px-2.5 py-1">
                           <div className="truncate max-w-[200px]" title={displayGerenteName(it) || (it.gerente_id ? `#${it.gerente_id}` : "")}>
@@ -2377,8 +2483,12 @@ export default function GerencialProcessosPage() {
                     <td className="px-2.5 py-1.5 text-right font-semibold">{fmtBRL(totals.liqHojeSum)}</td>
                     {/* Coluna 15: Líquido Futuro */}
                     <td className="px-2.5 py-1.5 text-right font-semibold">{fmtBRL(totals.liqFutSum)}</td>
-                    {/* Colunas 16-19: Advogado, Gerente, Criado em, Ações */}
-                    <td colSpan={4}></td>
+                    {/* Coluna 23: Advogado */}
+                    <td></td>
+                    {/* Coluna 24: Comissões */}
+                    <td className="px-2.5 py-1.5 text-right font-semibold tabular-nums">{fmtBRL(totals.sumComissaoGerente)}</td>
+                    {/* Colunas 25-27: Gerente, Criado em, Ações */}
+                    <td colSpan={3}></td>
                   </tr>
                 </tfoot>
               </table>

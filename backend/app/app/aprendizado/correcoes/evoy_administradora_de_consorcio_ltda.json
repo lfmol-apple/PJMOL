@@ -1,0 +1,14 @@
+{
+  "estado": [
+    {
+      "original": "MG",
+      "corrigido": "MINAS GERAIS",
+      "contexto": {
+        "grupo": "002001",
+        "cota": "1593-01",
+        "administradora": "EVOY ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-04-16T12:52:02.268704"
+    }
+  ]
+}

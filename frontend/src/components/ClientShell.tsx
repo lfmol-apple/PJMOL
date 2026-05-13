@@ -7,9 +7,20 @@ import SessionLoginNotifier from "@/components/SessionLoginNotifier";
 import { getSessionPayload, logoutCurrentSession, postSessionPresence } from "@/app/lib/sessionPresence";
 
 // IDs que devem fazer login novamente 1x por dia
-const FORCE_LOGIN_IDS = new Set([6, 7, 10]); // Breno, Marcel, Luana
+const FORCE_LOGIN_IDS = new Set([6, 7, 10, 11]); // Breno, Marcel, Luana, Marco Antônio
 
 const API_BASE = (process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000").replace(/\/$/, "");
+
+function readCookie(name: string): string {
+  if (typeof document === "undefined") return "";
+  const match = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`));
+  return match ? decodeURIComponent(match[1]) : "";
+}
+
+function writeCookie(name: string, value: string): void {
+  if (typeof document === "undefined") return;
+  document.cookie = `${name}=${encodeURIComponent(value)}; Path=/; SameSite=Lax`;
+}
 
 export default function ClientShell({ children }: { children: React.ReactNode }) {
   // Força login diário para alguns IDs
@@ -23,12 +34,13 @@ export default function ClientShell({ children }: { children: React.ReactNode })
 
       const today = new Date().toISOString().split("T")[0];
       const key = `pjmol_force_login_${uid}`;
-      const last = localStorage.getItem(key) || "";
+        const last = localStorage.getItem(key) || readCookie(key) || "";
 
       if (last === today) return; // já forçou login hoje
 
-      // grava que hoje já foi forçado, para não repetir no mesmo dia
+        // grava em cookie também, porque o logout limpa o localStorage
       localStorage.setItem(key, today);
+        writeCookie(key, today);
 
       // limpa sessão atual e redireciona para login
       logoutCurrentSession();

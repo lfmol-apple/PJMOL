@@ -1,6 +1,6 @@
 import json
 import os
-from typing import Iterable, List, Optional
+from typing import Iterable, List
 
 from pywebpush import WebPushException, webpush
 from sqlalchemy.orm import Session
@@ -10,7 +10,7 @@ from app.models.push_subscription import PushSubscription
 MONITOR_IDS = {5, 8, 11}
 
 
-def _format_currency(value: Optional[float]) -> str:
+def _format_currency(value: float | None) -> str:
     if value is None:
         return "Nao informado"
     formatted = f"{value:,.2f}"
@@ -95,8 +95,8 @@ def notify_monitors_about_new_process(
     extrato_id: int,
     nome_cliente: str,
     administradora: str,
-    valor_causa: Optional[float],
-    gerente_nome: Optional[str],
+    valor_causa: float | None,
+    gerente_nome: str | None,
 ) -> dict:
     gerente = (gerente_nome or "Nao informado").strip() or "Nao informado"
     valor_formatado = _format_currency(valor_causa)

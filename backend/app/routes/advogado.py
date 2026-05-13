@@ -366,6 +366,152 @@ def listar_advogados(db: Session = Depends(get_db)):
         for adv in advogados
     ]
 
+
+# ========= Criar advogado a partir do template padrão do escritório =========
+class CriarAdvogadoComTemplateIn(BaseModel):
+    nome_completo: str
+    oab: str
+    email: str
+    telefone: str = ""
+    usuario: str
+    senha: str
+    api_key_zapsign: str
+    webhook_path_token: Optional[str] = None
+    genero: str = "M"   # "M" masculino / "F" feminino
+
+
+
+
+PADRAO_CONTRATO   = os.path.join(MODELOS_DIR, '_padrao', 'modelo_contrato_padrao.docx')
+PADRAO_PROCURACAO = os.path.join(MODELOS_DIR, '_padrao', 'modelo_procuracao_padrao.docx')
+
+
+def _gerar_tokens(adv, genero: str) -> dict:
+    """Gera o mapa de tokens → valores para preencher o template padrão."""
+    feminino = genero.strip().upper() == "F"
+
+    nome = (adv.nome_completo or "").strip().upper()
+
+    digits = re.sub(r"\D", "", adv.oab or "")
+    letters = "".join(c for c in (adv.oab or "") if c.isalpha())[:2].upper()
+    oab_proc     = f"OAB/{letters} {digits[:-3]}.{digits[-3:]}" if len(digits) > 3 else f"OAB/{letters} {digits}"
+    oab_contrato = f"OAB/{letters} {digits}"
+
+    d = re.sub(r"\D", "", adv.telefone or "")
+    if len(d) == 11:
+        tel = f"({d[:2]}) {d[2:7]}-{d[7:]}"
+    elif len(d) == 10:
+        tel = f"({d[:2]}) {d[2:6]}-{d[6:]}"
+    else:
+        tel = d
+
+    return {
+        "__ADVOGADO_NOME__":    nome,
+        "__ADV_OAB_CONTRATO__": oab_contrato,
+        "__ADV_OAB_PROC__":     oab_proc,
+        "__ADVOGADO_TELEFONE__": tel,
+        "__DR_DRA__":           "Dra" if feminino else "Dr",
+        "__O_A_ART__":          "a"   if feminino else "o",
+        "__CONTRATADO_A__":     "CONTRATADA" if feminino else "CONTRATADO",
+        "__DENOMINADO_A__":     "denominada" if feminino else "denominado",
+        "__INSCRITO_A__":       "inscrita"   if feminino else "inscrito",
+        "__PROCURADOR_A__":     "procuradora" if feminino else "procurador",
+    }
+
+
+def _aplicar_tokens_no_paragrafo(par, tokens: dict):
+    for run in par.runs:
+        for tok, val in tokens.items():
+            if tok in (run.text or ""):
+                run.text = run.text.replace(tok, val)
+    full = par.text
+    if any(tok in full for tok in tokens):
+        novo = full
+        for tok, val in tokens.items():
+            novo = novo.replace(tok, val)
+        if par.runs:
+            par.runs[0].text = novo
+            for run in par.runs[1:]:
+                run.text = ""
+
+
+def _aplicar_tokens_template(caminho_docx: str, tokens: dict):
+    doc = Document(caminho_docx)
+    for par in doc.paragraphs:
+        _aplicar_tokens_no_paragrafo(par, tokens)
+    for tbl in doc.tables:
+        for row in tbl.rows:
+            for cell in row.cells:
+                for par in cell.paragraphs:
+                    _aplicar_tokens_no_paragrafo(par, tokens)
+    doc.save(caminho_docx)
+
+
+
+@router.post("/advogados/com-template/", status_code=status.HTTP_201_CREATED)
+def criar_advogado_com_template(
+    dados: CriarAdvogadoComTemplateIn,
+    db: Session = Depends(get_db),
+):
+    # Verificar templates padrão
+    for tp in (PADRAO_CONTRATO, PADRAO_PROCURACAO):
+        if not os.path.isfile(tp):
+            raise HTTPException(status_code=500, detail=f"Template padrão não encontrado: {tp}")
+
+    usuario_norm = dados.usuario.strip().lower()
+    oab_norm = dados.oab.strip().upper()
+    email_norm = dados.email.strip().lower()
+
+    if db.query(Advogado).filter(Advogado.usuario == usuario_norm).first():
+        raise HTTPException(status_code=400, detail="Usuário já existe")
+
+    if db.query(Advogado).filter(Advogado.oab == oab_norm).first():
+        raise HTTPException(status_code=409, detail="Já existe advogado com esta OAB")
+
+    novo_advogado = Advogado(
+        nome_completo=dados.nome_completo.strip().upper(),
+        oab=oab_norm,
+        email=email_norm,
+        telefone=only_digits(dados.telefone),
+        usuario=usuario_norm,
+        senha_hash=gerar_hash_senha(dados.senha),
+        api_key_zapsign=dados.api_key_zapsign.strip(),
+        webhook_path_token=(dados.webhook_path_token or "").strip() or "5145ee69d9202235aeaeb29b2f7bd6a1",
+    )
+    db.add(novo_advogado)
+    db.commit()
+    db.refresh(novo_advogado)
+
+    try:
+        pasta_novo = os.path.join(MODELOS_DIR, novo_advogado.usuario)
+        os.makedirs(pasta_novo, exist_ok=True)
+
+        caminho_novo_contrato = os.path.join(pasta_novo, f"modelo_contrato_{novo_advogado.usuario}.docx")
+        caminho_nova_procuracao = os.path.join(pasta_novo, f"modelo_procuracao_{novo_advogado.usuario}.docx")
+
+        shutil.copy2(PADRAO_CONTRATO, caminho_novo_contrato)
+        shutil.copy2(PADRAO_PROCURACAO, caminho_nova_procuracao)
+
+        tokens = _gerar_tokens(novo_advogado, dados.genero)
+        _aplicar_tokens_template(caminho_novo_contrato, tokens)
+        _aplicar_tokens_template(caminho_nova_procuracao, tokens)
+    except Exception as exc:
+        db.delete(novo_advogado)
+        db.commit()
+        raise HTTPException(status_code=500, detail=f"Falha ao gerar templates: {exc}")
+
+    return {
+        "mensagem": f"Advogado '{novo_advogado.nome_completo}' cadastrado com sucesso.",
+        "id": novo_advogado.id,
+        "nome_completo": novo_advogado.nome_completo,
+        "usuario": novo_advogado.usuario,
+        "oab": novo_advogado.oab,
+        "email": novo_advogado.email,
+        "telefone": novo_advogado.telefone,
+        "api_key_zapsign": novo_advogado.api_key_zapsign,
+    }
+
+
 @router.get("/advogados/{advogado_id}")
 def get_advogado_por_id(advogado_id: int, db: Session = Depends(get_db)):
     advogado = db.query(Advogado).filter(Advogado.id == advogado_id).first()
@@ -547,3 +693,4 @@ def set_numero_processo_interno(
         "numero_processo_set_at": extras.get("numero_processo_set_at"),
         "numero_processo_last_set_at": extras.get("numero_processo_last_set_at"),
     }
+

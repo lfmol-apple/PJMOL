@@ -27,7 +27,7 @@ class Extrato(Base):
 
     # Dono do registro
     usuario_id = Column(Integer, ForeignKey("usuarios.id", ondelete="CASCADE"), nullable=False)
-    usuario = relationship("Usuario", back_populates="extratos")
+    usuario = relationship("Usuario", back_populates="extratos", foreign_keys=[usuario_id])
 
     # ------------------ Identificação / cliente ------------------
     grupo = Column(String, nullable=False)
@@ -122,6 +122,10 @@ class Extrato(Base):
     valor_credito = Column(Float, nullable=True)
     valor_sentenca = Column(Float, nullable=True)
     valor_acordo = Column(Float, nullable=True)  # ✅ novo (armazenar o valor do acordo)
+    valor_acordo_inserido_em = Column(DateTime(timezone=True), nullable=True)
+    valor_acordo_inserido_por_usuario_id = Column(Integer, ForeignKey("usuarios.id", ondelete="SET NULL"), nullable=True)
+    resultado_acordo_em = Column(DateTime(timezone=True), nullable=True)  # quando resultado_processo foi trocado para "acordo" pela 1ª vez
+    resultado_acordo_por_usuario_id = Column(Integer, ForeignKey("usuarios.id", ondelete="SET NULL"), nullable=True)
     ganho_sucumbencia = Column(Float, nullable=True)
     perda_sucumbencia = Column(Float, nullable=True)
     prejuizo = Column(Float, nullable=True)

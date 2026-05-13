@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Manrope, Source_Sans_3 } from "next/font/google";
-import { ArrowLeft, Calendar, User2, Filter } from "lucide-react";
+import { ArrowLeft, Calendar, User2, Filter, RefreshCw } from "lucide-react";
 import { canSeeAll, getLoggedUser, getToken } from "@/app/lib/auth";
 
 const headingFont = Manrope({ subsets: ["latin"], weight: ["600", "700", "800"] });
@@ -164,6 +164,7 @@ export default function ProducaoMensalPage() {
     }
   };
 
+
   useEffect(() => {
     if (!canSeeAll(user?.perfil)) {
       setLoading(false);
@@ -207,7 +208,7 @@ export default function ProducaoMensalPage() {
                 <div className="mb-1.5 flex items-center gap-2"><Calendar className="h-4 w-4" /> Data final</div>
                 <input type="date" value={dataFinal} onChange={(e) => setDataFinal(e.target.value)} className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm text-slate-900 sm:text-base" />
               </label>
-              <button onClick={fetchReport} className={`${headingFont.className} inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-amber-300 px-5 text-sm font-bold text-slate-950 hover:bg-amber-400 sm:w-auto sm:text-base`}>
+<button onClick={fetchReport} className={`${headingFont.className} inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-amber-300 px-5 text-sm font-bold text-slate-950 hover:bg-amber-400 sm:w-auto sm:text-base`}>
                 <Filter className="h-4 w-4" /> Gerar na tela
               </button>
             </div>
@@ -269,6 +270,24 @@ export default function ProducaoMensalPage() {
                     </div>
                   </div>
                 </div>
+              </div>
+            </section>
+
+            <section className="rounded-2xl border border-emerald-200 bg-emerald-50 p-5 shadow-sm">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <div className={`${headingFont.className} text-xs font-bold uppercase tracking-[0.18em] text-emerald-700`}>Extrato de Fechamento</div>
+                  <h2 className={`${headingFont.className} mt-1 text-xl font-extrabold tracking-tight text-slate-950 sm:text-2xl`}>Comissões por data de acordo</h2>
+                  <p className="mt-1 text-sm font-semibold text-slate-600">
+                    O extrato de fechamento foi movido para uma página dedicada. Selecione acordos individualmente, filtre por responsável e calcule o valor exato a pagar.
+                  </p>
+                </div>
+                <Link
+                  href="/gerencial/comissoes"
+                  className={`${headingFont.className} inline-flex shrink-0 items-center gap-2 rounded-xl bg-emerald-700 px-5 py-3 text-sm font-bold text-white shadow-sm hover:bg-emerald-800`}
+                >
+                  💰 Abrir Extrato de Fechamento
+                </Link>
               </div>
             </section>
 

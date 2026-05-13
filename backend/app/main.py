@@ -60,6 +60,7 @@ from app.core.scheduler import install_scheduler, recalcular_todos_extratos, REC
 from app.routes import webhook_zapsign
 from app.routes import uploads_clean
 from app.routes import relatorios_producao
+from app.routes import analytics_campanha as analytics_campanha_route
 from app.routes.advogado_public import router as advogado_public_router
 from app.routes.extratos_storage import router as extratos_storage_router
 from app.routes import extratos_download
@@ -160,6 +161,20 @@ async def startup_timezone_correction():
             _conn.commit()
     except Exception:
         pass  # coluna já existe
+
+    # 🔧 Migração: auditoria do valor de acordo para relatórios de comissão
+    try:
+        with engine.connect() as _conn:
+            _conn.execute(text("ALTER TABLE extratos ADD COLUMN valor_acordo_inserido_em DATETIME"))
+            _conn.commit()
+    except Exception:
+        pass
+    try:
+        with engine.connect() as _conn:
+            _conn.execute(text("ALTER TABLE extratos ADD COLUMN valor_acordo_inserido_por_usuario_id INTEGER"))
+            _conn.commit()
+    except Exception:
+        pass
 
     # 🎯 Auto-atualização de fases (substitui sistema de timers)
     try:
@@ -309,6 +324,7 @@ install_scheduler(app)
 app.include_router(webhook_zapsign.router)
 app.include_router(uploads_clean.router)
 app.include_router(relatorios_producao.router)
+app.include_router(analytics_campanha_route.router)
 app.include_router(advogado_public_router)
 app.include_router(extratos_storage_router)
 app.include_router(extratos_download.router)

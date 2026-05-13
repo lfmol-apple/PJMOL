@@ -39,6 +39,216 @@
         "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
       },
       "timestamp": "2026-04-09T17:31:16.760160"
+    },
+    {
+      "original": "POÁ",
+      "corrigido": "Poá",
+      "contexto": {
+        "grupo": "000705",
+        "cota": "1494-00",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-04-13T21:08:00.754066"
+    },
+    {
+      "original": "UBERLÂNDIA",
+      "corrigido": "Uberlândia",
+      "contexto": {
+        "grupo": "000705",
+        "cota": "0454-05",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-04-22T14:55:41.373997"
+    },
+    {
+      "original": "UBERLÂNDIA",
+      "corrigido": "Uberlândia",
+      "contexto": {
+        "grupo": "000705",
+        "cota": "0454-05",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-04-22T14:55:44.892612"
+    },
+    {
+      "original": "MUCAJAÍ",
+      "corrigido": "Mucajaí",
+      "contexto": {
+        "grupo": "001046",
+        "cota": "0273-01",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-04-23T17:39:36.536790"
+    },
+    {
+      "original": "MUCAJAÍ",
+      "corrigido": "Mucajaí",
+      "contexto": {
+        "grupo": "001046",
+        "cota": "0314-01",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-04-23T18:26:03.313229"
+    },
+    {
+      "original": "MUCAJAÍ",
+      "corrigido": "Mucajaí",
+      "contexto": {
+        "grupo": "001046",
+        "cota": "0314-01",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-04-23T18:26:07.905911"
+    },
+    {
+      "original": "UBERLÂNDIA",
+      "corrigido": "Uberlândia",
+      "contexto": {
+        "grupo": "001001",
+        "cota": "2209-01",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-04-24T14:41:25.323152"
+    },
+    {
+      "original": "UBERLÂNDIA",
+      "corrigido": "Uberlândia",
+      "contexto": {
+        "grupo": "001001",
+        "cota": "2209-01",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-04-24T14:41:29.007421"
+    },
+    {
+      "original": "FRANCA",
+      "corrigido": "Franca",
+      "contexto": {
+        "grupo": "001004",
+        "cota": "7198-01",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-04-24T18:08:08.826671"
+    },
+    {
+      "original": "LUZIÂNIA",
+      "corrigido": "Luziânia",
+      "contexto": {
+        "grupo": "000541",
+        "cota": "0936-00",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-04-27T18:18:23.894016"
+    },
+    {
+      "original": "MAGÉ",
+      "corrigido": "Magé",
+      "contexto": {
+        "grupo": "000535",
+        "cota": "1469-00",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-04-29T13:58:47.207195"
+    },
+    {
+      "original": "MAGÉ",
+      "corrigido": "Magé",
+      "contexto": {
+        "grupo": "000535",
+        "cota": "1469-00",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-04-29T13:58:50.868403"
+    },
+    {
+      "original": "CARIACICA",
+      "corrigido": "Cariacica",
+      "contexto": {
+        "grupo": "000706",
+        "cota": "0254-00",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-04-29T17:16:48.697834"
+    },
+    {
+      "original": "CARIACICA",
+      "corrigido": "Cariacica",
+      "contexto": {
+        "grupo": "000706",
+        "cota": "0254-00",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-04-29T17:16:48.874289"
+    },
+    {
+      "original": "CONSELHEIRO LAFAIETE",
+      "corrigido": "Conselheiro Lafaiete",
+      "contexto": {
+        "grupo": "000516",
+        "cota": "1026-05",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-05-05T13:30:51.260398"
+    },
+    {
+      "original": "SÃO JOSÉ",
+      "corrigido": "São José",
+      "contexto": {
+        "grupo": "000707",
+        "cota": "0489-02",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-05-05T15:52:47.092044"
+    },
+    {
+      "original": "SÃO LEOPOLDO",
+      "corrigido": "São Leopoldo",
+      "contexto": {
+        "grupo": "000707",
+        "cota": "0373-03",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-05-07T20:09:29.475997"
+    },
+    {
+      "original": "VILA VELHA",
+      "corrigido": "Vila Velha",
+      "contexto": {
+        "grupo": "000706",
+        "cota": "5930-00",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-05-07T21:27:23.129487"
+    },
+    {
+      "original": "PRESIDENTE PRUDENTE",
+      "corrigido": "Presidente Prudente",
+      "contexto": {
+        "grupo": "000539",
+        "cota": "0056-00",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-05-10T15:51:38.832714"
+    },
+    {
+      "original": "JUIZ DE FORA",
+      "corrigido": "Juiz de Fora",
+      "contexto": {
+        "grupo": "000538",
+        "cota": "1541-00",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-05-11T13:37:35.761863"
+    },
+    {
+      "original": "JUIZ DE FORA",
+      "corrigido": "Juiz de Fora",
+      "contexto": {
+        "grupo": "000538",
+        "cota": "1541-00",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-05-11T13:37:40.299385"
     }
   ]
 }

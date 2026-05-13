@@ -568,6 +568,8 @@ class ExtratoIn(BaseModel):
     tipo_pagamento: Optional[str] = None
     valor_sentenca: Optional[float] = None
     valor_acordo: Optional[float] = None  # ✅ novo: aceitar valor do acordo
+    valor_acordo_inserido_em: Optional[datetime] = None
+    valor_acordo_inserido_por_usuario_id: Optional[int] = None
 
     ganho_sucumbencia: Optional[float] = None
     perda_sucumbencia: Optional[float] = None
@@ -655,6 +657,8 @@ class ExtratoOut(ExtratoIn):
     advogado_id: Optional[int] = None
     gerente_nome: Optional[str] = None  # 🔵
     valor_acordo: Optional[float] = None  # ✅ garantir que saia no response
+    valor_acordo_inserido_em: Optional[datetime] = None
+    valor_acordo_inserido_por_usuario_id: Optional[int] = None
     from_filesystem: Optional[Dict[str, Any]] = None
     from_db: Optional[Dict[str, Any]] = None
 
@@ -678,6 +682,19 @@ def _norm(s: Optional[str]) -> Optional[str]:
     if s in {"manager"}:
         return "gerente"
     return s
+
+
+def _is_admin_usuario(user: Optional[Usuario]) -> bool:
+    if user is None:
+        return False
+    perfil = str(getattr(user, "perfil", "") or "").strip().lower()
+    return bool(getattr(user, "is_admin", False)) or perfil == "admin"
+
+
+def _get_request_usuario(db: Session, usuario_id: Optional[int]) -> Optional[Usuario]:
+    if usuario_id is None:
+        return None
+    return db.query(Usuario).filter(Usuario.id == usuario_id).first()
 
 
 def get_perfil_header(
@@ -846,6 +863,8 @@ _PROTECTED_ALWAYS: Set[str] = {
     "zapsign_token",
     "zapsign_bundle_id",
     "zapsign_status",
+    "valor_acordo_inserido_em",
+    "valor_acordo_inserido_por_usuario_id",
 }
 
 
@@ -887,6 +906,13 @@ def create_extrato(
     # Define status inicial como "salvo" se não foi especificado
     if "status_documento" not in safe_fields or not safe_fields["status_documento"]:
         safe_fields["status_documento"] = "salvo"
+    if safe_fields.get("valor_acordo") is not None:
+        safe_fields["valor_acordo_inserido_em"] = now_utc_for_sqlite()
+        safe_fields["valor_acordo_inserido_por_usuario_id"] = usuario_id
+    resultado_raw = str(safe_fields.get("resultado_processo") or "").strip().lower()
+    if resultado_raw == "acordo":
+        safe_fields["resultado_acordo_em"] = now_utc_for_sqlite()
+        safe_fields["resultado_acordo_por_usuario_id"] = usuario_id
 
     extrato = Extrato(**safe_fields)
 
@@ -952,9 +978,13 @@ def list_extratos(
     offset: int = Query(0, ge=0),
 ):
     # ⚡ OTIMIZAÇÃO: Query direta sem decorações extras que causam N+1 queries
+    request_user = _get_request_usuario(db, usuario_id_opt)
+    is_admin_request = _is_admin_usuario(request_user)
     q = db.query(Extrato).options(selectinload(Extrato.usuario))
-    if perfil == "gerente" and usuario_id_opt:
+    if not is_admin_request and usuario_id_opt:
         q = q.filter(Extrato.usuario_id == usuario_id_opt)
+    elif not is_admin_request:
+        raise HTTPException(status_code=403, detail="Informe um usuário válido para listar processos.")
     q = q.order_by(Extrato.id.desc()).limit(limit).offset(offset)
     rows = q.all()
 
@@ -1120,6 +1150,15 @@ def update_extrato(
     # Evitar alteração indevida de FK se, por alguma razão, escapar aqui
     safe_updates.pop("advogado_id", None)
 
+    old_valor_acordo = getattr(ex, "valor_acordo", None)
+    old_resultado = str(getattr(ex, "resultado_processo") or "").strip().lower()
+    valor_acordo_changed = False
+    if "valor_acordo" in safe_updates:
+        new_valor_acordo = safe_updates.get("valor_acordo")
+        old_num = float(old_valor_acordo) if old_valor_acordo is not None else None
+        new_num = float(new_valor_acordo) if new_valor_acordo is not None else None
+        valor_acordo_changed = old_num != new_num
+
     # 🔧 CORREÇÃO DO "EFEITO COLA": Se vem do gerencial, não atualizar advogado
     referer = request.headers.get("referer", "")
     is_from_gerencial = "gerencial/processos" in referer or "mode=adv" in str(request.url)
@@ -1185,6 +1224,25 @@ def update_extrato(
     if numero_processo_changed:
         print(f"[DEBUG] Extrato {ex.id}: numero_processo mudou, criando timestamp...")
         _set_numero_processo_timestamp(ex, db)
+
+    if valor_acordo_changed:
+        if getattr(ex, "valor_acordo", None) is not None:
+            ex.valor_acordo_inserido_em = now_utc_for_sqlite()
+            ex.valor_acordo_inserido_por_usuario_id = usuario_id_opt
+        else:
+            ex.valor_acordo_inserido_em = None
+            ex.valor_acordo_inserido_por_usuario_id = None
+
+    # Registrar quando resultado_processo muda para "acordo" pela primeira vez
+    new_resultado = str(getattr(ex, "resultado_processo") or "").strip().lower()
+    if new_resultado == "acordo" and old_resultado != "acordo":
+        if getattr(ex, "resultado_acordo_em", None) is None:
+            ex.resultado_acordo_em = now_utc_for_sqlite()
+            ex.resultado_acordo_por_usuario_id = usuario_id_opt
+    elif new_resultado != "acordo" and old_resultado == "acordo":
+        # reverteu o resultado — apaga o timestamp
+        ex.resultado_acordo_em = None
+        ex.resultado_acordo_por_usuario_id = None
     
     # Se está apenas salvando (não enviando para assinatura), registra data/hora atual
     # Mas se depois enviar para assinatura, a API do ZapSign vai sobrescrever este valor
@@ -1238,6 +1296,7 @@ def update_extrato(
 )
 def delete_extrato(
     extrato_id: int,
+    request: Request,
     db: Session = Depends(get_db),
     perfil: Optional[str] = Depends(get_perfil_header),   # "admin" | "gerente" | None
     usuario_id_opt: Optional[int] = Depends(maybe_usuario_id),
@@ -1246,17 +1305,28 @@ def delete_extrato(
     import logging
     
     logger = logging.getLogger(__name__)
+
+    referer = request.headers.get("referer", "")
+    is_from_gerencial = "gerencial/processos" in referer or "mode=adv" in str(request.url)
+
+    if is_from_gerencial:
+        perfil = "advogado"
     
-    # Query base
-    q = db.query(Extrato).filter(Extrato.id == extrato_id)
-    
-    # Se não é admin, precisa filtrar pelo usuário
-    if perfil != "admin" and usuario_id_opt:
-        q = q.filter(Extrato.usuario_id == usuario_id_opt)
-    elif perfil != "admin" and not usuario_id_opt:
-        raise HTTPException(status_code=403, detail="Apenas admins podem deletar sem especificar usuário")
-    
-    ex = q.first()
+    ex: Optional[Extrato] = None
+
+    if perfil in {"admin", "gerente"}:
+        ex = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+
+    if ex is None and usuario_id_opt is not None:
+        ex = (
+            db.query(Extrato)
+            .filter(Extrato.id == extrato_id, Extrato.usuario_id == usuario_id_opt)
+            .first()
+        )
+
+    if ex is None and perfil == "advogado":
+        ex = db.query(Extrato).filter(Extrato.id == extrato_id).first()
+
     if not ex:
         raise HTTPException(status_code=404, detail="Extrato não encontrado.")
     

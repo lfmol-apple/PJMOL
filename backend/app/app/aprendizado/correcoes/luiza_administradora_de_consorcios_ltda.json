@@ -9,6 +9,66 @@
         "administradora": "LUIZA ADMINISTRADORA DE CONSORCIOS LTDA"
       },
       "timestamp": "2026-04-06T14:29:13.167648"
+    },
+    {
+      "original": "SANTO ANTÔNIO DE POSSE",
+      "corrigido": "Santo Antônio de Posse",
+      "contexto": {
+        "grupo": "005286",
+        "cota": "1186-00",
+        "administradora": "LUIZA ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-04-21T13:28:48.099075"
+    },
+    {
+      "original": "PEREIRA BARRETO",
+      "corrigido": "Pereira Barreto",
+      "contexto": {
+        "grupo": "006025",
+        "cota": "0707-00",
+        "administradora": "LUIZA ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-04-28T14:12:43.526614"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "005275",
+        "cota": "0201-00",
+        "administradora": "LUIZA ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-04T21:06:26.120614"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "005275",
+        "cota": "0201-00",
+        "administradora": "LUIZA ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-04T22:53:39.875720"
+    },
+    {
+      "original": "JARDIM CIDADE",
+      "corrigido": "Tres Pontas ",
+      "contexto": {
+        "grupo": "005278",
+        "cota": "0327-01",
+        "administradora": "LUIZA ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-05T18:17:44.770783"
+    },
+    {
+      "original": "TRÊS CORAÇÕES",
+      "corrigido": "Três Corações",
+      "contexto": {
+        "grupo": "006025",
+        "cota": "0884",
+        "administradora": "LUIZA ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-12T19:47:11.012790"
     }
   ]
 }

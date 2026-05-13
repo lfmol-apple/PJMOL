@@ -100,13 +100,13 @@ const REQUIRED_LABEL_CLASS = "block text-sm font-medium text-slate-700 after:ml-
 type Papel = "admin" | "gerente" | "usuario" | "advogado";
 
 interface Advogado {
-  id?: number;
+  id: number;
   nome_completo: string;
   usuario: string;
-  oab?: string;
+  oab: string;
   email?: string;
   telefone?: string;
-  ativo?: boolean; // Campo para controlar se o advogado está ativo
+  ativo?: boolean;
 }
 function roleFromUsuario(u?: string | null): Papel {
   const user = normalizeUser(u || "");
