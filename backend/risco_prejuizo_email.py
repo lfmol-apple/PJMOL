@@ -285,12 +285,14 @@ def main():
 
     rows = get_overdue_extratos()
     if not rows:
-        print("[info] Nenhum extrato em risco. Email não enviado.")
+        print("[info] Nenhum extrato em risco. Emails não enviados.")
         return
 
     total = sum(float(r.get("valor_causa") or 0) for r in rows)
-    html = build_html_admin(rows)
-    subject = f"🔴 PJMOL — Risco de Prejuízo: {len(rows)} extratos sem assinatura ({fmt_brl(total)})"
+
+    # ── 1) Admins: visão consolidada com todos os processos agrupados ──────────
+    html_adm = build_html_admin(rows)
+    subj_adm = f"🔴 PJMOL — Risco de Prejuízo: {len(rows)} extratos sem assinatura ({fmt_brl(total)})"
 
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
@@ -299,11 +301,45 @@ def main():
     conn.close()
 
     if args.dry_run:
-        print(f"[dry-run] Para: {admin_emails} | {len(rows)} extratos | {fmt_brl(total)}")
-        return
+        print(f"[dry-run] ADMIN → {admin_emails} | {len(rows)} extratos | {fmt_brl(total)}")
+    else:
+        ok = send_email(subject=subj_adm, recipients=admin_emails, body_html=html_adm)
+        print(f"[{'OK' if ok else 'ERRO'}] ADMIN → {admin_emails} — {len(rows)} extratos, {fmt_brl(total)}")
 
-    ok = send_email(subject=subject, recipients=admin_emails, body_html=html)
-    print(f"[{'OK' if ok else 'ERRO'}] Enviado para {admin_emails} — {len(rows)} extratos, {fmt_brl(total)}")
+    # ── 2) Gerentes: cada um recebe só os seus processos ──────────────────────
+    from collections import defaultdict
+    por_usuario: dict = defaultdict(list)
+    for r in rows:
+        uid = r.get("usuario_id")
+        if uid in ADMIN_IDS:   # admins já receberam o consolidado
+            continue
+        por_usuario[uid].append(r)
+
+    conn2 = sqlite3.connect(DB_PATH)
+    conn2.row_factory = sqlite3.Row
+    cur2 = conn2.cursor()
+
+    for uid, g_rows in por_usuario.items():
+        cur2.execute("SELECT nome, email FROM usuarios WHERE id = ?", (uid,))
+        user = cur2.fetchone()
+        if not user or not user["email"]:
+            print(f"[aviso] usuario_id={uid} sem email, pulando")
+            continue
+
+        nome  = user["nome"]
+        email = user["email"]
+        g_total = sum(float(r.get("valor_causa") or 0) for r in g_rows)
+        html_g  = build_html_gerente(nome, g_rows)
+        subj_g  = f"🔴 Risco de Prejuízo: {len(g_rows)} extrato{'s' if len(g_rows)!=1 else ''} aguardando assinatura ({fmt_brl(g_total)})"
+
+        if args.dry_run:
+            print(f"[dry-run] GERENTE {nome} <{email}> — {len(g_rows)} extratos, {fmt_brl(g_total)}")
+            continue
+
+        ok = send_email(subject=subj_g, recipients=email, body_html=html_g)
+        print(f"[{'OK' if ok else 'ERRO'}] GERENTE {nome} <{email}> — {len(g_rows)} extratos")
+
+    conn2.close()
 
 if __name__ == "__main__":
     main()
