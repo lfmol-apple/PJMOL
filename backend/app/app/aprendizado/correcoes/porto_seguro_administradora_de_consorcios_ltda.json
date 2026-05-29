@@ -441,6 +441,366 @@
         "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
       },
       "timestamp": "2026-05-05T18:35:09.424084"
+    },
+    {
+      "original": "BALNEÁRIO CAMBORIÚ",
+      "corrigido": "Balneário Camboriú",
+      "contexto": {
+        "grupo": "I0334",
+        "cota": "0782-01",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-06T15:22:12.689174"
+    },
+    {
+      "original": "NOVA LIMA",
+      "corrigido": "Nova Lima",
+      "contexto": {
+        "grupo": "I0309",
+        "cota": "0206-00",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-06T19:39:30.674330"
+    },
+    {
+      "original": "NOVA LIMA",
+      "corrigido": "Nova Lima",
+      "contexto": {
+        "grupo": "I0309",
+        "cota": "0206-00",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-06T19:46:28.615594"
+    },
+    {
+      "original": "NOVA LIMA",
+      "corrigido": "Nova Lima",
+      "contexto": {
+        "grupo": "I0309",
+        "cota": "0206-00",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-06T19:46:33.342269"
+    },
+    {
+      "original": "NOVA LIMA",
+      "corrigido": "Nova Lima",
+      "contexto": {
+        "grupo": "I0306",
+        "cota": "0725-00",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-06T21:14:07.096782"
+    },
+    {
+      "original": "NOVA LIMA",
+      "corrigido": "Nova Lima",
+      "contexto": {
+        "grupo": "VP022",
+        "cota": "0049-00",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-06T21:17:53.384313"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "I0394",
+        "cota": "0239-00",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-07T14:35:38.145201"
+    },
+    {
+      "original": "JUNDIAÍ",
+      "corrigido": "Jundiaí",
+      "contexto": {
+        "grupo": "CA020",
+        "cota": "0150-00",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-08T13:30:03.235407"
+    },
+    {
+      "original": "PIRAQUARA UR",
+      "corrigido": "Piraquara",
+      "contexto": {
+        "grupo": "VP023",
+        "cota": "0498-00",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-08T14:45:52.920402"
+    },
+    {
+      "original": "GUARULHOS",
+      "corrigido": "Guarulhos",
+      "contexto": {
+        "grupo": "I0337",
+        "cota": "0575-01",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-09T12:06:13.064245"
+    },
+    {
+      "original": "GUARULHOS",
+      "corrigido": "Guarulhos",
+      "contexto": {
+        "grupo": "I0337",
+        "cota": "0575-01",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-09T12:24:33.372335"
+    },
+    {
+      "original": "SÃO JOÃO DE MERITI",
+      "corrigido": "São João de Meriti",
+      "contexto": {
+        "grupo": "I0310",
+        "cota": "0046-02",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-11T12:58:38.041722"
+    },
+    {
+      "original": "SÃO JOÃO DE MERITI",
+      "corrigido": "São João de Meriti",
+      "contexto": {
+        "grupo": "I0310",
+        "cota": "0046-02",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-11T12:58:44.143001"
+    },
+    {
+      "original": "DUQUE DE CAXIAS",
+      "corrigido": "Duque de Caxias",
+      "contexto": {
+        "grupo": "I0257",
+        "cota": "0186-01",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-11T13:00:27.334902"
+    },
+    {
+      "original": "SERRA NEGRA",
+      "corrigido": "Serra Negra",
+      "contexto": {
+        "grupo": "I0263",
+        "cota": "0513-01",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-11T14:39:34.384147"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "I0269",
+        "cota": "0167-00",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-12T13:53:09.526654"
+    },
+    {
+      "original": "CONTAGEM",
+      "corrigido": "Contagem",
+      "contexto": {
+        "grupo": "AF234",
+        "cota": "0104-01",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-12T16:15:32.042522"
+    },
+    {
+      "original": "BELO HORIZONTE",
+      "corrigido": "Belo Horizonte",
+      "contexto": {
+        "grupo": "I0361",
+        "cota": "0334-00",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-12T20:09:02.648347"
+    },
+    {
+      "original": "ITAJAÍ",
+      "corrigido": "Itajaí",
+      "contexto": {
+        "grupo": "I0380",
+        "cota": "0488-00",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-13T11:01:59.486555"
+    },
+    {
+      "original": "ITAJAÍ",
+      "corrigido": "Itajaí",
+      "contexto": {
+        "grupo": "I0380",
+        "cota": "0488-00",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-13T11:01:59.743556"
+    },
+    {
+      "original": "SÃO BERNARDO DO CAMPO",
+      "corrigido": "São Bernardo do Campo",
+      "contexto": {
+        "grupo": "I0218",
+        "cota": "0406-01",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-13T19:30:01.980076"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "I0333",
+        "cota": "0569-00",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-14T14:56:04.957468"
+    },
+    {
+      "original": "SOCORRO",
+      "corrigido": "Socorro",
+      "contexto": {
+        "grupo": "I0296",
+        "cota": "0821-02",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-15T13:11:37.972842"
+    },
+    {
+      "original": "SOCORRO",
+      "corrigido": "Socorro",
+      "contexto": {
+        "grupo": "I0296",
+        "cota": "0821-02",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-15T13:23:43.531834"
+    },
+    {
+      "original": "RIO DE JANEIRO",
+      "corrigido": "Rio de Janeiro",
+      "contexto": {
+        "grupo": "I0231",
+        "cota": "0246-00",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-18T15:59:21.791053"
+    },
+    {
+      "original": "RIO DE JANEIRO",
+      "corrigido": "Rio de Janeiro",
+      "contexto": {
+        "grupo": "I0231",
+        "cota": "0246-00",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-18T15:59:21.799930"
+    },
+    {
+      "original": "RIO DE JANEIRO",
+      "corrigido": "Rio de Janeiro",
+      "contexto": {
+        "grupo": "I0317",
+        "cota": "0225-00",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-20T21:12:04.269481"
+    },
+    {
+      "original": "BELO HORIZONTE",
+      "corrigido": "Belo Horizonte",
+      "contexto": {
+        "grupo": "I0280",
+        "cota": "0715-00",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-21T14:05:11.420006"
+    },
+    {
+      "original": "BELO HORIZONTE",
+      "corrigido": "Belo Horizonte",
+      "contexto": {
+        "grupo": "I0361",
+        "cota": "0334-00",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-21T16:27:22.301530"
+    },
+    {
+      "original": "BELO HORIZONTE",
+      "corrigido": "Belo Horizonte",
+      "contexto": {
+        "grupo": "I0361",
+        "cota": "0334-00",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-21T16:27:27.470689"
+    },
+    {
+      "original": "RIO VERDE",
+      "corrigido": "Rio Verde",
+      "contexto": {
+        "grupo": "I0245",
+        "cota": "0292-02",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-21T23:05:18.864672"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "I0491",
+        "cota": "0082-00",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-25T16:17:40.097963"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "I0491",
+        "cota": "0082-00",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-25T16:17:45.398627"
+    },
+    {
+      "original": "FORMIGA",
+      "corrigido": "Formiga",
+      "contexto": {
+        "grupo": "I0230",
+        "cota": "0090-01",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-25T17:08:52.051046"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "I0418",
+        "cota": "0314-01",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-25T19:06:31.408917"
+    },
+    {
+      "original": "SERRA",
+      "corrigido": "Serra",
+      "contexto": {
+        "grupo": "I0345",
+        "cota": "0659-00",
+        "administradora": "PORTO SEGURO ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-26T15:09:59.499332"
     }
   ],
   "numero_contrato": [

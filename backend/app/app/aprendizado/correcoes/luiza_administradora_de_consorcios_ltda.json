@@ -59,6 +59,56 @@
         "administradora": "LUIZA ADMINISTRADORA DE CONSORCIOS LTDA"
       },
       "timestamp": "2026-05-05T18:17:44.770783"
+    },
+    {
+      "original": "TRÊS CORAÇÕES",
+      "corrigido": "Três Corações",
+      "contexto": {
+        "grupo": "006025",
+        "cota": "0884",
+        "administradora": "LUIZA ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-12T19:47:11.012790"
+    },
+    {
+      "original": "SALVADOR",
+      "corrigido": "Salvador",
+      "contexto": {
+        "grupo": "006033",
+        "cota": "0151",
+        "administradora": "LUIZA ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-14T10:26:18.402859"
+    },
+    {
+      "original": "SALVADOR",
+      "corrigido": "Salvador",
+      "contexto": {
+        "grupo": "006033",
+        "cota": "0151",
+        "administradora": "LUIZA ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-14T10:26:18.507799"
+    },
+    {
+      "original": "SALVADOR",
+      "corrigido": "Salvador",
+      "contexto": {
+        "grupo": "006033",
+        "cota": "0151",
+        "administradora": "LUIZA ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-14T10:26:18.545135"
+    },
+    {
+      "original": "SOROCABA",
+      "corrigido": "Sorocaba",
+      "contexto": {
+        "grupo": "006032",
+        "cota": "1534-00",
+        "administradora": "LUIZA ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-25T20:49:01.066502"
     }
   ]
 }

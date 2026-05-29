@@ -1,0 +1,24 @@
+{
+  "cidade": [
+    {
+      "original": "SALVADOR",
+      "corrigido": "Salvador",
+      "contexto": {
+        "grupo": "009828",
+        "cota": "0690-01",
+        "administradora": "BANCO RCI BRASIL S.A"
+      },
+      "timestamp": "2026-05-20T13:26:00.012523"
+    },
+    {
+      "original": "SALVADOR",
+      "corrigido": "Salvador",
+      "contexto": {
+        "grupo": "009828",
+        "cota": "0690-01",
+        "administradora": "BANCO RCI BRASIL S.A"
+      },
+      "timestamp": "2026-05-20T13:26:05.709220"
+    }
+  ]
+}

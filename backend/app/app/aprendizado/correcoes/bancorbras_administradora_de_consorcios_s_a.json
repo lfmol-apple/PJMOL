@@ -1,0 +1,24 @@
+{
+  "cidade": [
+    {
+      "original": "SALVADOR",
+      "corrigido": "Salvador",
+      "contexto": {
+        "grupo": "001501",
+        "cota": "0172",
+        "administradora": "BANCORBRAS ADMINISTRADORA DE CONSORCIOS S/A"
+      },
+      "timestamp": "2026-05-18T20:33:57.210777"
+    },
+    {
+      "original": "SALVADOR",
+      "corrigido": "Salvador",
+      "contexto": {
+        "grupo": "001501",
+        "cota": "0172",
+        "administradora": "BANCORBRAS ADMINISTRADORA DE CONSORCIOS S/A"
+      },
+      "timestamp": "2026-05-18T20:34:01.753754"
+    }
+  ]
+}

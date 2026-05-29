@@ -748,6 +748,1980 @@
         "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
       },
       "timestamp": "2026-05-05T21:41:18.923941"
+    },
+    {
+      "original": "SANTA VITÓRIA",
+      "corrigido": "Santa Vitória",
+      "contexto": {
+        "grupo": "007255",
+        "cota": "3210-02",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-06T12:16:21.935534"
+    },
+    {
+      "original": "VILHENA",
+      "corrigido": "Vilhena",
+      "contexto": {
+        "grupo": "007077",
+        "cota": "0767-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-06T13:06:25.355595"
+    },
+    {
+      "original": "LIMEIRA",
+      "corrigido": "Limeira",
+      "contexto": {
+        "grupo": "007249",
+        "cota": "1846-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-06T13:13:23.532906"
+    },
+    {
+      "original": "LIMEIRA",
+      "corrigido": "Limeira",
+      "contexto": {
+        "grupo": "007249",
+        "cota": "1846-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-06T13:35:45.188860"
+    },
+    {
+      "original": "FARROUPILHA",
+      "corrigido": "Farroupilha",
+      "contexto": {
+        "grupo": "007249",
+        "cota": "4649-02",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-06T15:55:38.618358"
+    },
+    {
+      "original": "TAPURAH",
+      "corrigido": "Tapurah",
+      "contexto": {
+        "grupo": "007265",
+        "cota": "3356-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-06T18:47:06.219538"
+    },
+    {
+      "original": "SÃO GABRIEL DA PALHA",
+      "corrigido": "São Gabriel da Palha",
+      "contexto": {
+        "grupo": "000746",
+        "cota": "0159-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-06T20:42:26.387110"
+    },
+    {
+      "original": "CAMPO GRANDE",
+      "corrigido": "Campo Grande",
+      "contexto": {
+        "grupo": "007041",
+        "cota": "0234-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-06T20:52:12.883256"
+    },
+    {
+      "original": "BRASÍLIA",
+      "corrigido": "Brasília",
+      "contexto": {
+        "grupo": "009925",
+        "cota": "3781-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-07T13:45:17.133982"
+    },
+    {
+      "original": "SÃO JOSÉ DO RIO PRETO",
+      "corrigido": "São José do Rio Preto",
+      "contexto": {
+        "grupo": "007264",
+        "cota": "0592-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-07T16:49:26.439663"
+    },
+    {
+      "original": "PONTA GROSSA",
+      "corrigido": "Ponta Grossa",
+      "contexto": {
+        "grupo": "000744 - 000786",
+        "cota": "0156-04, 0628-06",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-07T18:06:36.478169"
+    },
+    {
+      "original": "PELOTAS",
+      "corrigido": "Pelotas",
+      "contexto": {
+        "grupo": "007257",
+        "cota": "3851-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-07T19:23:23.976142"
+    },
+    {
+      "original": "CAMPINAS",
+      "corrigido": "Campinas",
+      "contexto": {
+        "grupo": "007035",
+        "cota": "0108-03",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-08T14:27:18.037658"
+    },
+    {
+      "original": "GUARARAPES UF",
+      "corrigido": "Guararapes",
+      "contexto": {
+        "grupo": "000797",
+        "cota": "0344-09",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-08T15:27:51.853066"
+    },
+    {
+      "original": "GUARARAPES UF",
+      "corrigido": "Guararapes",
+      "contexto": {
+        "grupo": "000797",
+        "cota": "0344-09",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-08T15:27:55.115294"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "009957",
+        "cota": "2703-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-09T12:00:55.256759"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "009957",
+        "cota": "2703-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-09T12:00:55.283439"
+    },
+    {
+      "original": "SERRA",
+      "corrigido": "Serra",
+      "contexto": {
+        "grupo": "007257",
+        "cota": "3531-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-11T14:50:48.373296"
+    },
+    {
+      "original": "CANAÃ DOS CARAJÁS UF",
+      "corrigido": "CANAÃ DOS CARAJÁS",
+      "contexto": {
+        "grupo": "009940",
+        "cota": "0042-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-11T16:00:16.747271"
+    },
+    {
+      "original": "CANAÃ DOS CARAJÁS UF",
+      "corrigido": "CANAÃ DOS CARAJÁS",
+      "contexto": {
+        "grupo": "009940",
+        "cota": "0042-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-11T16:00:16.874496"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "007031",
+        "cota": "0224-04",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-11T17:49:26.011132"
+    },
+    {
+      "original": "MIRASSOL",
+      "corrigido": "Mirassol",
+      "contexto": {
+        "grupo": "009934",
+        "cota": "1999-06",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-11T18:50:00.384121"
+    },
+    {
+      "original": "VENÂNCIO AIRES",
+      "corrigido": "Venâncio Aires",
+      "contexto": {
+        "grupo": "007258",
+        "cota": "3257-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-11T19:11:29.733239"
+    },
+    {
+      "original": "MACEIÓ",
+      "corrigido": "Maceió",
+      "contexto": {
+        "grupo": "186",
+        "cota": "Cobran",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-11T20:05:52.029069"
+    },
+    {
+      "original": "GUARULHOS",
+      "corrigido": "Guarulhos",
+      "contexto": {
+        "grupo": "007072",
+        "cota": "0005-07",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-11T20:29:36.551272"
+    },
+    {
+      "original": "SALVADOR",
+      "corrigido": "Salvador",
+      "contexto": {
+        "grupo": "007260",
+        "cota": "3994-00, 2107-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-11T21:17:08.958203"
+    },
+    {
+      "original": "CAMPO GRANDE",
+      "corrigido": "Campo Grande",
+      "contexto": {
+        "grupo": "009671",
+        "cota": "0869-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-11T22:19:40.673100"
+    },
+    {
+      "original": "INDAIATUBA",
+      "corrigido": "Indaiatuba",
+      "contexto": {
+        "grupo": "000742",
+        "cota": "0876-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-11T22:27:37.831314"
+    },
+    {
+      "original": "CORBÉLIA",
+      "corrigido": "Corbélia",
+      "contexto": {
+        "grupo": "007259",
+        "cota": "2794-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-12T13:01:18.002655"
+    },
+    {
+      "original": "CORBÉLIA",
+      "corrigido": "Corbélia",
+      "contexto": {
+        "grupo": "007259",
+        "cota": "2794-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-12T13:01:24.065577"
+    },
+    {
+      "original": "CORBÉLIA",
+      "corrigido": "Corbélia",
+      "contexto": {
+        "grupo": "007259",
+        "cota": "1525-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-12T13:05:12.303214"
+    },
+    {
+      "original": "CORBÉLIA",
+      "corrigido": "Corbélia",
+      "contexto": {
+        "grupo": "007259",
+        "cota": "1525-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-12T13:05:16.228633"
+    },
+    {
+      "original": "SÃO BERNARDO DO CAMPO",
+      "corrigido": "Santos",
+      "contexto": {
+        "grupo": "007064",
+        "cota": "0334-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-12T13:57:32.454617"
+    },
+    {
+      "original": "SANTOS",
+      "corrigido": "Santos",
+      "contexto": {
+        "grupo": "007256",
+        "cota": "2281-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-12T14:33:44.924466"
+    },
+    {
+      "original": "CUIABÁ",
+      "corrigido": "Cuiabá",
+      "contexto": {
+        "grupo": "007260",
+        "cota": "1519-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-12T14:57:03.417412"
+    },
+    {
+      "original": "FORTALEZA",
+      "corrigido": "Fortaleza",
+      "contexto": {
+        "grupo": "009675",
+        "cota": "0786-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-12T16:33:30.063959"
+    },
+    {
+      "original": "SANTO ANDRÉ",
+      "corrigido": "Santo André",
+      "contexto": {
+        "grupo": "007249",
+        "cota": "1074-02",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-12T16:55:05.880315"
+    },
+    {
+      "original": "BELO HORIZONTE",
+      "corrigido": "Belo Horizonte",
+      "contexto": {
+        "grupo": "007264",
+        "cota": "3083-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-12T18:17:13.934452"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "007086",
+        "cota": "0724-03",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-12T19:26:36.611433"
+    },
+    {
+      "original": "PORTO ALEGRE",
+      "corrigido": "Porto Alegre",
+      "contexto": {
+        "grupo": "007264",
+        "cota": "2357-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-12T20:28:34.767907"
+    },
+    {
+      "original": "GUAPIAÇU",
+      "corrigido": "Guapiaçu",
+      "contexto": {
+        "grupo": "009655",
+        "cota": "0140-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-12T20:30:24.994324"
+    },
+    {
+      "original": "BELÉM",
+      "corrigido": "Belém",
+      "contexto": {
+        "grupo": "000746",
+        "cota": "0473-02",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-12T20:33:56.456319"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "007255",
+        "cota": "4587-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-12T21:08:11.675792"
+    },
+    {
+      "original": "RIBEIRAO UF",
+      "corrigido": "RIBEIRÃO",
+      "contexto": {
+        "grupo": "007032",
+        "cota": "0141-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-13T15:03:24.946333"
+    },
+    {
+      "original": "BRASÍLIA",
+      "corrigido": "Brasília",
+      "contexto": {
+        "grupo": "007271",
+        "cota": "16/10/2045",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-13T16:32:35.420383"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "007252",
+        "cota": "0647-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-13T17:48:19.723346"
+    },
+    {
+      "original": "PIRIPIRI",
+      "corrigido": "Piripiri",
+      "contexto": {
+        "grupo": "007273",
+        "cota": "3809-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-13T23:07:08.261783"
+    },
+    {
+      "original": "PIRIPIRI",
+      "corrigido": "Piripiri",
+      "contexto": {
+        "grupo": "007273",
+        "cota": "3809-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-13T23:07:08.270324"
+    },
+    {
+      "original": "PIRIPIRI",
+      "corrigido": "Piripiri",
+      "contexto": {
+        "grupo": "007273",
+        "cota": "3809-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-13T23:07:08.271993"
+    },
+    {
+      "original": "PIRIPIRI",
+      "corrigido": "Piripiri",
+      "contexto": {
+        "grupo": "007273",
+        "cota": "1258-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-13T23:19:55.420430"
+    },
+    {
+      "original": "PIRIPIRI",
+      "corrigido": "Piripiri",
+      "contexto": {
+        "grupo": "007273",
+        "cota": "1258-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-13T23:19:55.435027"
+    },
+    {
+      "original": "PIRIPIRI",
+      "corrigido": "Piripiri",
+      "contexto": {
+        "grupo": "007273",
+        "cota": "1258-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-13T23:19:55.455500"
+    },
+    {
+      "original": "CATU",
+      "corrigido": "Catu",
+      "contexto": {
+        "grupo": "009926",
+        "cota": "4426-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-14T12:56:42.519467"
+    },
+    {
+      "original": "CATU",
+      "corrigido": "Catu",
+      "contexto": {
+        "grupo": "009926",
+        "cota": "4426-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-14T12:56:48.278908"
+    },
+    {
+      "original": "CATU",
+      "corrigido": "Catu",
+      "contexto": {
+        "grupo": "009926",
+        "cota": "4426-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-14T12:56:52.241504"
+    },
+    {
+      "original": "ÁGUAS FRIAS",
+      "corrigido": "Águas Frias",
+      "contexto": {
+        "grupo": "007023",
+        "cota": "0521-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-14T13:00:12.500788"
+    },
+    {
+      "original": "CATU",
+      "corrigido": "Catu",
+      "contexto": {
+        "grupo": "009926",
+        "cota": "4426-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-14T13:01:31.700274"
+    },
+    {
+      "original": "CATU",
+      "corrigido": "Catu",
+      "contexto": {
+        "grupo": "009926",
+        "cota": "2392-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-14T13:04:05.009744"
+    },
+    {
+      "original": "CATU",
+      "corrigido": "Catu",
+      "contexto": {
+        "grupo": "009926",
+        "cota": "2392-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-14T13:04:09.576858"
+    },
+    {
+      "original": "ASSIS CHATEAUBRIAND",
+      "corrigido": "Assis Chateaubriand",
+      "contexto": {
+        "grupo": "007266",
+        "cota": "2422-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-14T13:20:00.706834"
+    },
+    {
+      "original": "RIO GRANDE",
+      "corrigido": "Rio Grande",
+      "contexto": {
+        "grupo": "007265",
+        "cota": "2378-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-14T14:00:16.276962"
+    },
+    {
+      "original": "ESPINOSA",
+      "corrigido": "Espinosa",
+      "contexto": {
+        "grupo": "007264",
+        "cota": "20/12/2045",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-14T14:43:20.593180"
+    },
+    {
+      "original": "MACEIÓ",
+      "corrigido": "Maceió",
+      "contexto": {
+        "grupo": "007260",
+        "cota": "2448-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-14T15:00:40.231439"
+    },
+    {
+      "original": "OSASCO",
+      "corrigido": "Osasco",
+      "contexto": {
+        "grupo": "007031",
+        "cota": "0399-08",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-14T16:02:23.946335"
+    },
+    {
+      "original": "SÃO GONÇALO DO AMARANTE",
+      "corrigido": "São Gonçalo do Amarante",
+      "contexto": {
+        "grupo": "007266",
+        "cota": "2993-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-14T18:22:11.477408"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "007049",
+        "cota": "0103-04",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-14T18:26:22.722232"
+    },
+    {
+      "original": "DIVINÓPOLIS",
+      "corrigido": "Divinópolis",
+      "contexto": {
+        "grupo": "009926",
+        "cota": "2681-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-14T18:49:59.483957"
+    },
+    {
+      "original": "FORTALEZA",
+      "corrigido": "Fortaleza",
+      "contexto": {
+        "grupo": "007265",
+        "cota": "0686-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-14T19:09:19.817412"
+    },
+    {
+      "original": "FORTALEZA",
+      "corrigido": "Fortaleza",
+      "contexto": {
+        "grupo": "007248",
+        "cota": "4351-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-14T19:20:56.015442"
+    },
+    {
+      "original": "FORTALEZA",
+      "corrigido": "Fortaleza",
+      "contexto": {
+        "grupo": "007248",
+        "cota": "4351-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-14T19:20:56.019588"
+    },
+    {
+      "original": "FORTALEZA",
+      "corrigido": "Fortaleza",
+      "contexto": {
+        "grupo": "007248",
+        "cota": "4351-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-14T19:20:56.021621"
+    },
+    {
+      "original": "CUIABÁ",
+      "corrigido": "Cuiabá",
+      "contexto": {
+        "grupo": "007260",
+        "cota": "1107-02",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-14T20:42:27.465124"
+    },
+    {
+      "original": "CUIABÁ",
+      "corrigido": "Cuiabá",
+      "contexto": {
+        "grupo": "007253",
+        "cota": "1140-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-14T20:44:23.409934"
+    },
+    {
+      "original": "ANÁPOLIS",
+      "corrigido": "Anápolis",
+      "contexto": {
+        "grupo": "009940",
+        "cota": "2333-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-14T21:18:59.460522"
+    },
+    {
+      "original": "SOCORRO",
+      "corrigido": "Socorro",
+      "contexto": {
+        "grupo": "007264",
+        "cota": "2167-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-15T12:53:02.394393"
+    },
+    {
+      "original": "SOCORRO",
+      "corrigido": "Socorro",
+      "contexto": {
+        "grupo": "007264",
+        "cota": "2167-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-15T13:30:00.670080"
+    },
+    {
+      "original": "ITAITINGA",
+      "corrigido": "Itaitinga",
+      "contexto": {
+        "grupo": "009925",
+        "cota": "2071-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-15T13:53:24.316799"
+    },
+    {
+      "original": "SALVADOR",
+      "corrigido": "Salvador",
+      "contexto": {
+        "grupo": "007253",
+        "cota": "1405-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-15T17:12:18.342789"
+    },
+    {
+      "original": "BRAGANÇA PAULISTA",
+      "corrigido": "Bragança Paulista",
+      "contexto": {
+        "grupo": "007264",
+        "cota": "3665-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-15T17:29:36.675819"
+    },
+    {
+      "original": "CUBATÃO",
+      "corrigido": "Cubatão",
+      "contexto": {
+        "grupo": "007027",
+        "cota": "0533-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-15T17:34:59.391788"
+    },
+    {
+      "original": "SETE LAGOAS",
+      "corrigido": "Sete Lagoas",
+      "contexto": {
+        "grupo": "007260",
+        "cota": "3169-02",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-15T20:06:18.577966"
+    },
+    {
+      "original": "DIADEMA",
+      "corrigido": "Diadema",
+      "contexto": {
+        "grupo": "007255",
+        "cota": "4902-02",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-18T13:26:50.072924"
+    },
+    {
+      "original": "UBERLÂNDIA",
+      "corrigido": "Uberlândia",
+      "contexto": {
+        "grupo": "009938",
+        "cota": "1646-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-18T13:38:28.499785"
+    },
+    {
+      "original": "UBERLÂNDIA",
+      "corrigido": "Uberlândia",
+      "contexto": {
+        "grupo": "009938",
+        "cota": "1646-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-18T13:38:33.098625"
+    },
+    {
+      "original": "CAMBORIÚ",
+      "corrigido": "Camboriú",
+      "contexto": {
+        "grupo": "009954",
+        "cota": "0471-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-18T14:03:41.305037"
+    },
+    {
+      "original": "AMERICANA",
+      "corrigido": "Americana",
+      "contexto": {
+        "grupo": "007067",
+        "cota": "0019-03",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-18T14:55:17.724788"
+    },
+    {
+      "original": "TOLEDO",
+      "corrigido": "Toledo",
+      "contexto": {
+        "grupo": "000751",
+        "cota": "0606-04",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-18T16:45:27.769011"
+    },
+    {
+      "original": "PENHA",
+      "corrigido": "Penha",
+      "contexto": {
+        "grupo": "007243",
+        "cota": "0858-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-18T17:59:19.745748"
+    },
+    {
+      "original": "BRASÍLIA",
+      "corrigido": "Brasília",
+      "contexto": {
+        "grupo": "007253",
+        "cota": "3707-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-18T18:48:59.049479"
+    },
+    {
+      "original": "BRASÍLIA",
+      "corrigido": "Brasília",
+      "contexto": {
+        "grupo": "007253",
+        "cota": "3707-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-18T18:49:04.310724"
+    },
+    {
+      "original": "LAVRAS DA MANGABEIRA",
+      "corrigido": "Lavras da Mangabeira",
+      "contexto": {
+        "grupo": "007255",
+        "cota": "0393-02",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-18T19:51:57.343096"
+    },
+    {
+      "original": "BELO HORIZONTE",
+      "corrigido": "Belo Horizonte",
+      "contexto": {
+        "grupo": "007098",
+        "cota": "0686-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-18T20:11:28.836232"
+    },
+    {
+      "original": "BELO HORIZONTE",
+      "corrigido": "Belo Horizonte",
+      "contexto": {
+        "grupo": "007098",
+        "cota": "0426-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-18T20:15:05.900427"
+    },
+    {
+      "original": "HORTOLÂNDIA",
+      "corrigido": "Hortolândia",
+      "contexto": {
+        "grupo": "007260",
+        "cota": "3885-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-18T20:18:45.230481"
+    },
+    {
+      "original": "DIADEMA",
+      "corrigido": "Diadema",
+      "contexto": {
+        "grupo": "000791",
+        "cota": "0049-05",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-18T20:39:59.086856"
+    },
+    {
+      "original": "RIO GRANDE DA SERRA",
+      "corrigido": "Rio Grande da Serra",
+      "contexto": {
+        "grupo": "007252",
+        "cota": "0727-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-18T22:26:55.935465"
+    },
+    {
+      "original": "ILHÉUS",
+      "corrigido": "Ilhéus",
+      "contexto": {
+        "grupo": "009940",
+        "cota": "2421-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-19T14:02:21.201862"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "007077",
+        "cota": "0881-02",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-19T14:37:50.385032"
+    },
+    {
+      "original": "BELO HORIZONTE",
+      "corrigido": "Belo Horizonte",
+      "contexto": {
+        "grupo": "007098",
+        "cota": "0337-02",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-19T15:15:41.666127"
+    },
+    {
+      "original": "BELO HORIZONTE",
+      "corrigido": "Belo Horizonte",
+      "contexto": {
+        "grupo": "007266",
+        "cota": "0553-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-19T15:19:32.242664"
+    },
+    {
+      "original": "IPATINGA",
+      "corrigido": "Ipatinga",
+      "contexto": {
+        "grupo": "009940",
+        "cota": "4751-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-19T15:22:17.649646"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "007253",
+        "cota": "0576-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-19T16:24:50.031984"
+    },
+    {
+      "original": "ARAÇATUBA",
+      "corrigido": "Araçatuba",
+      "contexto": {
+        "grupo": "007060",
+        "cota": "0427-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-19T16:30:24.766664"
+    },
+    {
+      "original": "ARAÇATUBA",
+      "corrigido": "Araçatuba",
+      "contexto": {
+        "grupo": "007060",
+        "cota": "0427-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-19T16:33:21.390556"
+    },
+    {
+      "original": "VENDA NOVA DO IMIGRANTE",
+      "corrigido": "Venda Nova do Imigrante",
+      "contexto": {
+        "grupo": "007271",
+        "cota": "2423-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-19T18:06:08.404267"
+    },
+    {
+      "original": "SANANDUVA",
+      "corrigido": "Sananduva",
+      "contexto": {
+        "grupo": "007264",
+        "cota": "3353-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-19T18:26:25.903970"
+    },
+    {
+      "original": "FRANCISCO BELTRÃO",
+      "corrigido": "Francisco Beltrão",
+      "contexto": {
+        "grupo": "007243",
+        "cota": "0247-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-19T18:38:31.074190"
+    },
+    {
+      "original": "JAGUARIÚNA",
+      "corrigido": "Jaguariúna",
+      "contexto": {
+        "grupo": "007259",
+        "cota": "0137-02",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-19T18:56:19.502255"
+    },
+    {
+      "original": "EUSÉBIO",
+      "corrigido": "Eusébio",
+      "contexto": {
+        "grupo": "009934",
+        "cota": "3293-03,1193-03, 0638-03",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-19T19:19:17.380242"
+    },
+    {
+      "original": "GOIÂNIA",
+      "corrigido": "Goiânia",
+      "contexto": {
+        "grupo": "009935",
+        "cota": "4181-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-19T19:21:20.488932"
+    },
+    {
+      "original": "GOIÂNIA",
+      "corrigido": "Goiânia",
+      "contexto": {
+        "grupo": "009935",
+        "cota": "4181-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-19T19:21:20.495124"
+    },
+    {
+      "original": "TERESINA",
+      "corrigido": "Teresina",
+      "contexto": {
+        "grupo": "007028",
+        "cota": "0057-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-19T19:32:23.666068"
+    },
+    {
+      "original": "TERESINA",
+      "corrigido": "Teresina",
+      "contexto": {
+        "grupo": "007028",
+        "cota": "0057-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-19T19:32:28.137622"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "000749",
+        "cota": "0353-07",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-19T19:48:26.433082"
+    },
+    {
+      "original": "ALTEROSA",
+      "corrigido": "Alterosa",
+      "contexto": {
+        "grupo": "007248",
+        "cota": "4461-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-19T19:51:28.899620"
+    },
+    {
+      "original": "RIO LARGO",
+      "corrigido": "Rio Largo",
+      "contexto": {
+        "grupo": "007260",
+        "cota": "2939-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-19T21:57:09.618736"
+    },
+    {
+      "original": "RIO LARGO",
+      "corrigido": "Rio Largo",
+      "contexto": {
+        "grupo": "007260",
+        "cota": "2939-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-19T21:57:13.589677"
+    },
+    {
+      "original": "PONTA GROSSA",
+      "corrigido": "Ponta Grossa",
+      "contexto": {
+        "grupo": "009654",
+        "cota": "0759-05",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-19T23:04:19.943657"
+    },
+    {
+      "original": "OLIVEIRA",
+      "corrigido": "Oliveira",
+      "contexto": {
+        "grupo": "007033",
+        "cota": "0023-03",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-20T14:22:38.293701"
+    },
+    {
+      "original": "BRASÍLIA",
+      "corrigido": "Brasília",
+      "contexto": {
+        "grupo": "009954",
+        "cota": "1615-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-20T14:50:32.593849"
+    },
+    {
+      "original": "CAÇADOR",
+      "corrigido": "Caçador",
+      "contexto": {
+        "grupo": "007080",
+        "cota": "0118-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-20T15:52:45.800876"
+    },
+    {
+      "original": "CAPITÓLIO",
+      "corrigido": "Capitólio",
+      "contexto": {
+        "grupo": "007256",
+        "cota": "2463-02",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-20T16:03:41.805842"
+    },
+    {
+      "original": "MANAUS",
+      "corrigido": "Manaus",
+      "contexto": {
+        "grupo": "007271",
+        "cota": "0232-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-20T16:52:43.325515"
+    },
+    {
+      "original": "MANAUS",
+      "corrigido": "Manaus",
+      "contexto": {
+        "grupo": "007271",
+        "cota": "0232-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-20T16:52:51.835296"
+    },
+    {
+      "original": "GUAPIAÇU",
+      "corrigido": "Guapiaçu",
+      "contexto": {
+        "grupo": "007258",
+        "cota": "1042-02",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-20T17:37:45.767525"
+    },
+    {
+      "original": "GOIÂNIA",
+      "corrigido": "Goiânia",
+      "contexto": {
+        "grupo": "009925",
+        "cota": "3056-03",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-20T17:59:27.510009"
+    },
+    {
+      "original": "SANTARÉM",
+      "corrigido": "Santarém",
+      "contexto": {
+        "grupo": "007038",
+        "cota": "0530-02",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-20T18:19:20.613071"
+    },
+    {
+      "original": "SANTARÉM",
+      "corrigido": "Santarém",
+      "contexto": {
+        "grupo": "007038",
+        "cota": "0530-02",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-20T18:19:25.251335"
+    },
+    {
+      "original": "CASTELO",
+      "corrigido": "Castelo",
+      "contexto": {
+        "grupo": "007064",
+        "cota": "0277-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-20T18:29:11.583932"
+    },
+    {
+      "original": "CASTELO",
+      "corrigido": "Castelo",
+      "contexto": {
+        "grupo": "007064",
+        "cota": "0277-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-20T18:29:16.092457"
+    },
+    {
+      "original": "LIMEIRA",
+      "corrigido": "Limeira",
+      "contexto": {
+        "grupo": "009926",
+        "cota": "3669-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-20T18:36:09.593485"
+    },
+    {
+      "original": "NOVA IGUAÇU",
+      "corrigido": "Nova Iguaçu",
+      "contexto": {
+        "grupo": "009956",
+        "cota": "2367-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-20T18:49:18.520977"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "007249",
+        "cota": "2021-02",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-20T18:52:55.883549"
+    },
+    {
+      "original": "BLUMENAU",
+      "corrigido": "Blumenau",
+      "contexto": {
+        "grupo": "007258",
+        "cota": "2134-02",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-20T20:26:29.055073"
+    },
+    {
+      "original": "CROMÍNIA",
+      "corrigido": "Cromínia",
+      "contexto": {
+        "grupo": "007062",
+        "cota": "0160-06",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-20T23:03:18.901792"
+    },
+    {
+      "original": "CUIABÁ",
+      "corrigido": "Cuiabá",
+      "contexto": {
+        "grupo": "007264",
+        "cota": "3107-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-21T10:47:09.196654"
+    },
+    {
+      "original": "CUIABÁ",
+      "corrigido": "Cuiabá",
+      "contexto": {
+        "grupo": "007264",
+        "cota": "3107-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-21T10:47:09.210704"
+    },
+    {
+      "original": "CUIABÁ",
+      "corrigido": "Cuiabá",
+      "contexto": {
+        "grupo": "007264",
+        "cota": "3107-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-21T10:47:09.290602"
+    },
+    {
+      "original": "CUIABÁ",
+      "corrigido": "Cuiabá",
+      "contexto": {
+        "grupo": "007264",
+        "cota": "3107-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-21T10:47:09.299986"
+    },
+    {
+      "original": "CUIABÁ",
+      "corrigido": "Cuiabá",
+      "contexto": {
+        "grupo": "007264",
+        "cota": "3107-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-21T10:47:09.318736"
+    },
+    {
+      "original": "SANTANA DE PARNAÍBA",
+      "corrigido": "Santana de Parnaíba",
+      "contexto": {
+        "grupo": "007070",
+        "cota": "0338-04",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-21T13:47:59.842534"
+    },
+    {
+      "original": "VIANA",
+      "corrigido": "Viana",
+      "contexto": {
+        "grupo": "007261",
+        "cota": "3963-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-21T14:15:06.519158"
+    },
+    {
+      "original": "COLINAS DO TOCANTINS",
+      "corrigido": "Colinas do Tocantins",
+      "contexto": {
+        "grupo": "007249",
+        "cota": "4032-02",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-21T14:29:48.062246"
+    },
+    {
+      "original": "COLINAS DO TOCANTINS",
+      "corrigido": "Colinas do Tocantins",
+      "contexto": {
+        "grupo": "007249",
+        "cota": "4757-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-21T14:35:10.527350"
+    },
+    {
+      "original": "FORMIGA",
+      "corrigido": "Formiga",
+      "contexto": {
+        "grupo": "007249",
+        "cota": "0922-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-21T14:57:31.081926"
+    },
+    {
+      "original": "CARIACICA",
+      "corrigido": "Cariacica",
+      "contexto": {
+        "grupo": "007023",
+        "cota": "0253-02",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-21T16:28:15.952534"
+    },
+    {
+      "original": "VITÓRIA",
+      "corrigido": "Vitória",
+      "contexto": {
+        "grupo": "007063",
+        "cota": "0690-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-21T16:32:11.364651"
+    },
+    {
+      "original": "CURITIBA",
+      "corrigido": "Curitiba",
+      "contexto": {
+        "grupo": "009940",
+        "cota": "4128-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-21T17:36:49.743053"
+    },
+    {
+      "original": "FORTALEZA",
+      "corrigido": "Fortaleza",
+      "contexto": {
+        "grupo": "007248",
+        "cota": "0137-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-21T17:59:45.690591"
+    },
+    {
+      "original": "CAMPO GRANDE",
+      "corrigido": "Campo Grande",
+      "contexto": {
+        "grupo": "007026",
+        "cota": "0339-04",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-21T18:11:56.852203"
+    },
+    {
+      "original": "CAMPO GRANDE",
+      "corrigido": "Campo Grande",
+      "contexto": {
+        "grupo": "007026",
+        "cota": "0339-04",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-21T18:12:01.883627"
+    },
+    {
+      "original": "PALMEIRA DAS MISSÕES",
+      "corrigido": "Palmeira das Missões",
+      "contexto": {
+        "grupo": "007260",
+        "cota": "4852-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-21T18:30:01.606822"
+    },
+    {
+      "original": "ITAÚ DE MINAS",
+      "corrigido": "Itaú de Minas",
+      "contexto": {
+        "grupo": "007264",
+        "cota": "2356-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-21T19:35:53.410296"
+    },
+    {
+      "original": "JUNDIAÍ",
+      "corrigido": "Jundiaí",
+      "contexto": {
+        "grupo": "007244",
+        "cota": "0708-03",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-21T19:44:46.729798"
+    },
+    {
+      "original": "JUNDIAÍ",
+      "corrigido": "Jundiaí",
+      "contexto": {
+        "grupo": "007244",
+        "cota": "0708-03",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-21T19:44:51.524138"
+    },
+    {
+      "original": "FORTALEZA",
+      "corrigido": "Fortaleza",
+      "contexto": {
+        "grupo": "007077",
+        "cota": "0377-02",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-21T22:36:35.885815"
+    },
+    {
+      "original": "NITERÓI",
+      "corrigido": "Niterói",
+      "contexto": {
+        "grupo": "007264",
+        "cota": "3360-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-22T11:19:14.350742"
+    },
+    {
+      "original": "NITERÓI",
+      "corrigido": "Niterói",
+      "contexto": {
+        "grupo": "007264",
+        "cota": "3360-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-22T11:19:14.368798"
+    },
+    {
+      "original": "NITERÓI",
+      "corrigido": "Niterói",
+      "contexto": {
+        "grupo": "007264",
+        "cota": "3360-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-22T11:19:14.372775"
+    },
+    {
+      "original": "NITERÓI",
+      "corrigido": "Niterói",
+      "contexto": {
+        "grupo": "007264",
+        "cota": "3360-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-22T11:32:16.543928"
+    },
+    {
+      "original": "NITERÓI",
+      "corrigido": "Niterói",
+      "contexto": {
+        "grupo": "007264",
+        "cota": "3360-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-22T11:32:21.433325"
+    },
+    {
+      "original": "PALMAS",
+      "corrigido": "Palmas",
+      "contexto": {
+        "grupo": "007031",
+        "cota": "0365-02",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-22T15:57:25.864925"
+    },
+    {
+      "original": "PALMAS",
+      "corrigido": "Palmas",
+      "contexto": {
+        "grupo": "007031",
+        "cota": "0365-02",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-22T15:57:33.825334"
+    },
+    {
+      "original": "SERRA",
+      "corrigido": "Serra",
+      "contexto": {
+        "grupo": "007256",
+        "cota": "4668-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-22T16:00:10.033676"
+    },
+    {
+      "original": "SERRA UF",
+      "corrigido": "SERRA",
+      "contexto": {
+        "grupo": "009934",
+        "cota": "0643-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-22T16:05:45.503512"
+    },
+    {
+      "original": "JAÚ",
+      "corrigido": "Jaú",
+      "contexto": {
+        "grupo": "009651",
+        "cota": "0421-03",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-22T16:30:46.114727"
+    },
+    {
+      "original": "OSASCO",
+      "corrigido": "Osasco",
+      "contexto": {
+        "grupo": "007035",
+        "cota": "0536-04",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-22T17:13:26.650521"
+    },
+    {
+      "original": "CAIEIRAS",
+      "corrigido": "Caieiras",
+      "contexto": {
+        "grupo": "007266",
+        "cota": "2594-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-22T17:40:26.869470"
+    },
+    {
+      "original": "SÃO ROQUE",
+      "corrigido": "São Roque",
+      "contexto": {
+        "grupo": "007260",
+        "cota": "0660-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-22T18:34:59.822960"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "007258",
+        "cota": "4479-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-22T18:39:42.096208"
+    },
+    {
+      "original": "SARZEDO",
+      "corrigido": "Sarzedo",
+      "contexto": {
+        "grupo": "007265",
+        "cota": "1071-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-22T20:26:33.927605"
+    },
+    {
+      "original": "BELO HORIZONTE",
+      "corrigido": "Belo Horizonte",
+      "contexto": {
+        "grupo": "009698",
+        "cota": "0023-02",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-22T20:45:29.527925"
+    },
+    {
+      "original": "FERRAZ DE VASCONCELOS",
+      "corrigido": "Ferraz de Vasconcelos",
+      "contexto": {
+        "grupo": "007043",
+        "cota": "0013-03",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-22T20:46:36.824500"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "007252",
+        "cota": "1652-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-25T13:51:26.074589"
+    },
+    {
+      "original": "TRÊS BARRAS DO PARANÁ UF",
+      "corrigido": "TRÊS BARRAS DO PARANÁ ",
+      "contexto": {
+        "grupo": "009973",
+        "cota": "0035-02",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-25T15:10:36.625279"
+    },
+    {
+      "original": "PORTO ALEGRE",
+      "corrigido": "Porto Alegre",
+      "contexto": {
+        "grupo": "009926",
+        "cota": "2703-02",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-25T15:35:28.760691"
+    },
+    {
+      "original": "PORTO ALEGRE",
+      "corrigido": "Porto Alegre",
+      "contexto": {
+        "grupo": "009926",
+        "cota": "2703-02",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-25T17:12:03.827602"
+    },
+    {
+      "original": "PRESIDENTE PRUDENTE",
+      "corrigido": "Presidente Prudente",
+      "contexto": {
+        "grupo": "007259",
+        "cota": "3596-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-25T17:37:18.730729"
+    },
+    {
+      "original": "CAMPO GRANDE",
+      "corrigido": "Campo Grande",
+      "contexto": {
+        "grupo": "009945",
+        "cota": "0012-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-25T17:44:12.142107"
+    },
+    {
+      "original": "ILHA SOLTEIRA",
+      "corrigido": "Ilha Solteira",
+      "contexto": {
+        "grupo": "007249",
+        "cota": "3975-02",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-25T18:08:04.845843"
+    },
+    {
+      "original": "ILHA SOLTEIRA",
+      "corrigido": "Ilha Solteira",
+      "contexto": {
+        "grupo": "007249",
+        "cota": "3975-02",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-25T18:08:09.132026"
+    },
+    {
+      "original": "CASCAVEL",
+      "corrigido": "Cascavel",
+      "contexto": {
+        "grupo": "007257",
+        "cota": "1736-00, 4795-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-25T18:11:12.188696"
+    },
+    {
+      "original": "LAGOA VERMELHA",
+      "corrigido": "Lagoa Vermelha",
+      "contexto": {
+        "grupo": "009948",
+        "cota": "3588-01, 2543-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-25T20:10:27.778538"
+    },
+    {
+      "original": "VALINHOS",
+      "corrigido": "Valinhos",
+      "contexto": {
+        "grupo": "007252",
+        "cota": "4955-03",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-25T20:34:44.223599"
+    },
+    {
+      "original": "VALINHOS",
+      "corrigido": "Valinhos",
+      "contexto": {
+        "grupo": "007252",
+        "cota": "4955-03",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-25T20:34:48.547633"
+    },
+    {
+      "original": "FRANCA",
+      "corrigido": "Franca",
+      "contexto": {
+        "grupo": "007260",
+        "cota": "1194-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-25T20:55:26.816694"
+    },
+    {
+      "original": "INDAIATUBA",
+      "corrigido": "Indaiatuba",
+      "contexto": {
+        "grupo": "000742",
+        "cota": "0876-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-25T21:07:34.954453"
+    },
+    {
+      "original": "SERRA",
+      "corrigido": "Serra",
+      "contexto": {
+        "grupo": "007261",
+        "cota": "0299-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-26T13:42:59.720062"
+    },
+    {
+      "original": "GUARAPUAVA",
+      "corrigido": "Guarapuava",
+      "contexto": {
+        "grupo": "009677 - 009934",
+        "cota": "0193-03, 2569-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-26T15:23:27.090367"
+    },
+    {
+      "original": "BELO HORIZONTE",
+      "corrigido": "Belo Horizonte",
+      "contexto": {
+        "grupo": "007249",
+        "cota": "0017-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-26T16:14:18.389377"
+    },
+    {
+      "original": "LINHARES",
+      "corrigido": "Linhares",
+      "contexto": {
+        "grupo": "000749",
+        "cota": "0164-08",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-26T17:04:58.969213"
+    },
+    {
+      "original": "COLATINA",
+      "corrigido": "Colatina",
+      "contexto": {
+        "grupo": "009693",
+        "cota": "0373-03",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-26T19:02:18.385775"
+    },
+    {
+      "original": "POÇOS DE CALDAS",
+      "corrigido": "Poços de Caldas",
+      "contexto": {
+        "grupo": "007252",
+        "cota": "0272-01",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-26T19:07:37.809594"
+    },
+    {
+      "original": "SÃO MIGUEL DO OESTE",
+      "corrigido": "São Miguel do Oeste",
+      "contexto": {
+        "grupo": "000746",
+        "cota": "0569-03",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-26T19:10:12.138717"
+    },
+    {
+      "original": "BELO HORIZONTE",
+      "corrigido": "Belo Horizonte",
+      "contexto": {
+        "grupo": "007249",
+        "cota": "0017-00",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-26T19:27:04.672992"
+    }
+  ],
+  "estado": [
+    {
+      "original": "GO",
+      "corrigido": "Go",
+      "contexto": {
+        "grupo": "009672",
+        "cota": "0713-02",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-13T14:12:10.029518"
+    }
+  ],
+  "nome_cliente": [
+    {
+      "original": "Extrato Atualizado",
+      "corrigido": "ROSINALVA MARION",
+      "contexto": {
+        "grupo": "007043",
+        "cota": "0417-06",
+        "administradora": "EMBRACON ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-22T18:00:48.921539"
     }
   ]
 }

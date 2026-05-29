@@ -1,0 +1,36 @@
+{
+  "cidade": [
+    {
+      "original": "SALVADOR",
+      "corrigido": "Salvador",
+      "contexto": {
+        "grupo": "001501",
+        "cota": "0172",
+        "administradora": "ALPHA ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-18T20:25:51.591372"
+    },
+    {
+      "original": "SALVADOR",
+      "corrigido": "Salvador",
+      "contexto": {
+        "grupo": "001501",
+        "cota": "0172",
+        "administradora": "ALPHA ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-18T20:25:55.580544"
+    }
+  ],
+  "cnpj_administradora": [
+    {
+      "original": "90.982.679/0001-54",
+      "corrigido": "02.010.478/0001-28",
+      "contexto": {
+        "grupo": "001501",
+        "cota": "0172",
+        "administradora": "ALPHA ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-18T20:31:47.190228"
+    }
+  ]
+}

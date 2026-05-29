@@ -1,7 +1,7 @@
 {
   "ADEMICON ADMINISTRADORA DE CONSORCIOS S/A": {
     "nome": "ADEMICON ADMINISTRADORA DE CONSORCIOS S/A",
-    "total_extratos_processados": 41,
+    "total_extratos_processados": 42,
     "ultima_atualizacao": "2025-10-30T12:17:43.935837",
     "padroes": {
       "parcelas": [],
@@ -1406,12 +1406,12 @@
   },
   "EMBRACON ADMINISTRADORA DE CONSÓRCIO LTDA": {
     "nome": "EMBRACON ADMINISTRADORA DE CONSÓRCIO LTDA",
-    "total_extratos_processados": 549,
-    "ultima_atualizacao": "2026-04-01T15:38:45.414299",
+    "total_extratos_processados": 551,
+    "ultima_atualizacao": "2026-05-26T13:13:20.777767",
     "layouts": {
       "COL6_COTA_DATA_LONGA_EXTRATO": {
         "assinatura": "COL6_COTA_DATA_LONGA_EXTRATO",
-        "extratos_com_este_layout": 469,
+        "extratos_com_este_layout": 470,
         "padroes": {
           "parcelas": [],
           "valores": [],
@@ -1423,33 +1423,33 @@
             "exemplos": [
               {
                 "num_colunas": 6,
-                "exemplo_linha": "% Normal: 3,5498 0,0000 96,4502 100,0000 Ideal Pago: 3,4066 % Mensal c/ Taxas: 1,3009",
+                "exemplo_linha": "% Normal: 4,2304 0,2995 94,1256 98,6555 Ideal Pago: 5,5854 % Mensal c/ Taxas: 0,6110",
                 "valores_exemplo": [
-                  "3,54",
-                  "0,00",
-                  "96,45",
-                  "100,00",
-                  "3,40"
+                  "4,23",
+                  "0,29",
+                  "94,12",
+                  "98,65",
+                  "5,58"
                 ]
               },
               {
                 "num_colunas": 3,
-                "exemplo_linha": "% Antecipado: 0,0000 0,0000 Diferença: -0,1432",
+                "exemplo_linha": "% Antecipado: 1,3445 1,3445 Diferença: 0,0105",
                 "valores_exemplo": [
-                  "0,00",
-                  "0,00",
-                  "0,14"
+                  "1,34",
+                  "1,34",
+                  "0,01"
                 ]
               },
               {
                 "num_colunas": 6,
-                "exemplo_linha": "TOTAL 3,5498 0,0000 96,4502 100,0000 Ideal Devido: 96,5934 Valor Contrib. Mensal: 3.122,16",
+                "exemplo_linha": "TOTAL 5,5749 0,2995 94,1256 100,0000 Ideal Devido: 94,4146 Valor Contrib. Mensal: 1.619,31",
                 "valores_exemplo": [
-                  "3,54",
-                  "0,00",
-                  "96,45",
+                  "5,57",
+                  "0,29",
+                  "94,12",
                   "100,00",
-                  "96,59"
+                  "94,41"
                 ]
               }
             ]
@@ -1599,7 +1599,7 @@
       },
       "ASSEMBLEIA_COL8_COTA_DATA_LONGA_EXTRATO": {
         "assinatura": "ASSEMBLEIA_COL8_COTA_DATA_LONGA_EXTRATO",
-        "extratos_com_este_layout": 16,
+        "extratos_com_este_layout": 17,
         "padroes": {
           "parcelas": [],
           "valores": [],
@@ -1611,13 +1611,13 @@
             "exemplos": [
               {
                 "num_colunas": 5,
-                "exemplo_linha": "% Normal: 1,1088% 0,1008% 98,7904% 100,0000% Ideal Pago: 1,1088%",
+                "exemplo_linha": "% Normal: 0,6460% 0,1292% 99,2248% 100,0000% Ideal Pago: 0,6460%",
                 "valores_exemplo": [
-                  "1,10",
-                  "0,10",
-                  "98,79",
+                  "0,64",
+                  "0,12",
+                  "99,22",
                   "100,00",
-                  "1,10"
+                  "0,64"
                 ]
               },
               {
@@ -1631,13 +1631,13 @@
               },
               {
                 "num_colunas": 6,
-                "exemplo_linha": "TOTAL 1,1088% 0,1008% 98,7904% 100,0000% Ideal Devido: 98,8912% Valor Contrib. Mensal: R$ 1.824,93",
+                "exemplo_linha": "TOTAL 0,6460% 0,1292% 99,2248% 100,0000% Ideal Devido: 99,3540% Valor Contrib. Mensal: R$ 660,79",
                 "valores_exemplo": [
-                  "1,10",
-                  "0,10",
-                  "98,79",
+                  "0,64",
+                  "0,12",
+                  "99,22",
                   "100,00",
-                  "98,89"
+                  "99,35"
                 ]
               }
             ]

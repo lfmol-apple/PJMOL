@@ -10,5 +10,57 @@
       },
       "timestamp": "2026-04-03T19:02:14.642260"
     }
+  ],
+  "cidade": [
+    {
+      "original": "--------",
+      "corrigido": "CONCEICAO DO MATO DENTRO",
+      "contexto": {
+        "grupo": "00603",
+        "cota": "1045.00",
+        "administradora": "KSK ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-06T15:03:24.153013"
+    },
+    {
+      "original": "--------",
+      "corrigido": "CONCEICAO DO MATO DENTRO",
+      "contexto": {
+        "grupo": "00603",
+        "cota": "1045.00",
+        "administradora": "KSK ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-06T15:03:27.872863"
+    },
+    {
+      "original": "--------",
+      "corrigido": "Caratinga",
+      "contexto": {
+        "grupo": "00704",
+        "cota": "1387.01",
+        "administradora": "KSK ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-12T20:48:35.534409"
+    },
+    {
+      "original": "--------",
+      "corrigido": "Caratinga",
+      "contexto": {
+        "grupo": "00704",
+        "cota": "1387.01",
+        "administradora": "KSK ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-12T20:48:35.672780"
+    },
+    {
+      "original": "--------",
+      "corrigido": "São Mateus",
+      "contexto": {
+        "grupo": "00603",
+        "cota": "1387.00",
+        "administradora": "KSK ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-13T16:05:08.528305"
+    }
   ]
 }

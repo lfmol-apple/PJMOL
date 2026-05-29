@@ -199,6 +199,76 @@
         "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
       },
       "timestamp": "2026-05-05T15:52:47.092044"
+    },
+    {
+      "original": "SÃO LEOPOLDO",
+      "corrigido": "São Leopoldo",
+      "contexto": {
+        "grupo": "000707",
+        "cota": "0373-03",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-05-07T20:09:29.475997"
+    },
+    {
+      "original": "VILA VELHA",
+      "corrigido": "Vila Velha",
+      "contexto": {
+        "grupo": "000706",
+        "cota": "5930-00",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-05-07T21:27:23.129487"
+    },
+    {
+      "original": "PRESIDENTE PRUDENTE",
+      "corrigido": "Presidente Prudente",
+      "contexto": {
+        "grupo": "000539",
+        "cota": "0056-00",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-05-10T15:51:38.832714"
+    },
+    {
+      "original": "JUIZ DE FORA",
+      "corrigido": "Juiz de Fora",
+      "contexto": {
+        "grupo": "000538",
+        "cota": "1541-00",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-05-11T13:37:35.761863"
+    },
+    {
+      "original": "JUIZ DE FORA",
+      "corrigido": "Juiz de Fora",
+      "contexto": {
+        "grupo": "000538",
+        "cota": "1541-00",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-05-11T13:37:40.299385"
+    },
+    {
+      "original": "PONTAL",
+      "corrigido": "Pontal",
+      "contexto": {
+        "grupo": "000618",
+        "cota": "5919-00",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-05-18T13:34:56.850753"
+    },
+    {
+      "original": "SOROCABA",
+      "corrigido": "Sorocaba",
+      "contexto": {
+        "grupo": "000459",
+        "cota": "0921-01",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-05-25T19:31:46.926245"
     }
   ]
 }

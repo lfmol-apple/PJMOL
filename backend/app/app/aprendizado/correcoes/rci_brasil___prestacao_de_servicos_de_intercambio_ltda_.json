@@ -1,0 +1,14 @@
+{
+  "cidade": [
+    {
+      "original": "GUARULHOS",
+      "corrigido": "Guarulhos",
+      "contexto": {
+        "grupo": "009828",
+        "cota": "0038-00",
+        "administradora": "RCI BRASIL - PRESTACAO DE SERVICOS DE INTERCAMBIO LTDA."
+      },
+      "timestamp": "2026-05-26T19:12:15.432927"
+    }
+  ]
+}

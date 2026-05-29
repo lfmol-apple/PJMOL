@@ -109,6 +109,68 @@
         "administradora": "CNP CONSORCIO S.A. ADMINISTRADORA DE CONSORCIOS"
       },
       "timestamp": "2026-04-22T20:32:23.999634"
+    },
+    {
+      "original": "RIBEIRÃO DAS NEVES",
+      "corrigido": "Ribeirão das Neves",
+      "contexto": {
+        "grupo": "001043",
+        "cota": "4151, 7545, 2289",
+        "administradora": "CNP CONSORCIO S.A. ADMINISTRADORA DE CONSORCIOS"
+      },
+      "timestamp": "2026-05-07T21:48:11.572710"
+    },
+    {
+      "original": "RIBEIRÃO DAS NEVES",
+      "corrigido": "Ribeirão das Neves",
+      "contexto": {
+        "grupo": "001043 ",
+        "cota": "2289, 7245, 4151",
+        "administradora": "CNP CONSORCIO S.A. ADMINISTRADORA DE CONSORCIOS"
+      },
+      "timestamp": "2026-05-08T19:51:46.665452"
+    },
+    {
+      "original": "BELO HORIZONTE",
+      "corrigido": "Belo Horizonte",
+      "contexto": {
+        "grupo": "001031",
+        "cota": "0634",
+        "administradora": "CNP CONSORCIO S.A. ADMINISTRADORA DE CONSORCIOS"
+      },
+      "timestamp": "2026-05-15T04:00:14.781537"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "001037",
+        "cota": "7060",
+        "administradora": "CNP CONSORCIO S.A. ADMINISTRADORA DE CONSORCIOS"
+      },
+      "timestamp": "2026-05-15T14:16:22.611296"
+    },
+    {
+      "original": "BETIM",
+      "corrigido": "Betim",
+      "contexto": {
+        "grupo": "001044",
+        "cota": "0509",
+        "administradora": "CNP CONSORCIO S.A. ADMINISTRADORA DE CONSORCIOS"
+      },
+      "timestamp": "2026-05-19T18:49:36.494722"
+    }
+  ],
+  "bairro": [
+    {
+      "original": "CRUZEIRO Cx.postal: Ramal: Telefone:-999516804",
+      "corrigido": "CRUZEIRO ",
+      "contexto": {
+        "grupo": "001038",
+        "cota": "5694",
+        "administradora": "CNP CONSORCIO S.A. ADMINISTRADORA DE CONSORCIOS"
+      },
+      "timestamp": "2026-05-08T20:08:55.324212"
     }
   ]
 }

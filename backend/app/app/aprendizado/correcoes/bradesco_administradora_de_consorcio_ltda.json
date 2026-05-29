@@ -167,6 +167,56 @@
         "administradora": "BRADESCO ADMINISTRADORA DE CONSORCIO LTDA"
       },
       "timestamp": "2026-05-06T00:37:01.627528"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "010678",
+        "cota": "0644-01",
+        "administradora": "BRADESCO ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-06T02:03:14.463541"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "010678",
+        "cota": "0644-01",
+        "administradora": "BRADESCO ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-13T00:24:46.314751"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "010678",
+        "cota": "0644-01",
+        "administradora": "BRADESCO ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-13T12:28:32.775115"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "010678",
+        "cota": "0644-01",
+        "administradora": "BRADESCO ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-26T18:50:21.368778"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "010678",
+        "cota": "0644-01",
+        "administradora": "BRADESCO ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-26T18:50:21.371100"
     }
   ]
 }

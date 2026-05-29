@@ -1,0 +1,34 @@
+{
+  "cidade": [
+    {
+      "original": "DIADEMA",
+      "corrigido": "Diadema",
+      "contexto": {
+        "grupo": "001152",
+        "cota": "2560-01",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSÓRCIO LTDA"
+      },
+      "timestamp": "2026-05-18T13:24:50.009295"
+    },
+    {
+      "original": "DIADEMA",
+      "corrigido": "Diadema",
+      "contexto": {
+        "grupo": "001152",
+        "cota": "2560-01",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSÓRCIO LTDA"
+      },
+      "timestamp": "2026-05-18T13:24:56.303004"
+    },
+    {
+      "original": "DIADEMA",
+      "corrigido": "Diadema",
+      "contexto": {
+        "grupo": "001152",
+        "cota": "2560-01",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSÓRCIO LTDA"
+      },
+      "timestamp": "2026-05-18T13:25:01.175399"
+    }
+  ]
+}

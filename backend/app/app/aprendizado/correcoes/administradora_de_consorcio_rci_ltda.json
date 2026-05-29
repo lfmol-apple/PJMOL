@@ -19,6 +19,16 @@
         "administradora": "ADMINISTRADORA DE CONSORCIO RCI LTDA"
       },
       "timestamp": "2026-05-05T13:21:33.098116"
+    },
+    {
+      "original": "SALVADOR",
+      "corrigido": "Salvador",
+      "contexto": {
+        "grupo": "009828",
+        "cota": "0690-01",
+        "administradora": "ADMINISTRADORA DE CONSORCIO RCI LTDA"
+      },
+      "timestamp": "2026-05-20T14:11:35.399224"
     }
   ]
 }
