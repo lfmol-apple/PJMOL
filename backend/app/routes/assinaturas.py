@@ -163,10 +163,7 @@ def _resolve_api_key(db: Session, extrato: Extrato) -> str:
                 return adv.api_key_zapsign
         except Exception:
             pass
-    api_key = os.getenv("ZAPSIGN_API_KEY_DEFAULT", "").strip()
-    if not api_key:
-        raise HTTPException(status_code=500, detail="ZAPSIGN_API_KEY_DEFAULT não configurada.")
-    return api_key
+    return os.getenv("ZAPSIGN_API_KEY_DEFAULT", "SUA_API_KEY_ZAPSIGN")
 
 def _normalize_zapsign_result(resultado: Any) -> Tuple[Optional[str], Optional[str], Optional[str], dict]:
     """

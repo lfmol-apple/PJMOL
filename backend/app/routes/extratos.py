@@ -580,6 +580,8 @@ class ExtratoIn(BaseModel):
 
     comprovante_renda_url: Optional[str] = None
     comprovante_endereco_url: Optional[str] = None
+    data_recebimento_acordo: Optional[date] = None
+    comprovante_recebimento_acordo_url: Optional[str] = None
     documento_identidade_url: Optional[str] = None
     observacoes: Optional[str] = None
 
@@ -659,6 +661,10 @@ class ExtratoOut(ExtratoIn):
     valor_acordo: Optional[float] = None  # ✅ garantir que saia no response
     valor_acordo_inserido_em: Optional[datetime] = None
     valor_acordo_inserido_por_usuario_id: Optional[int] = None
+    data_recebimento_acordo: Optional[date] = None
+    resultado_acordo_em: Optional[datetime] = None
+    comprovante_recebimento_acordo_url: Optional[str] = None
+    valor_acordo_inserido_por_nome: Optional[str] = None
     from_filesystem: Optional[Dict[str, Any]] = None
     from_db: Optional[Dict[str, Any]] = None
 
@@ -1015,19 +1021,30 @@ def list_extratos(
     return result
 
 
+
+
 @router.get(
     "/meu-total-mes",
-    summary="Total de produção (valor_causa) do usuário no mês atual",
+    summary="Total de producao (valor_causa) e contagem do usuario no mes atual",
 )
 def meu_total_mes(
     db: Session = Depends(get_db),
     usuario_id: int = Depends(get_usuario_id_strict),
+    perfil: Optional[str] = Depends(get_perfil_header),
 ):
+    from app.services.production_report import ADMIN_IDS as _ADMIN_IDS
+    # IDs sem meta: nao entram no calculo da cor do admin
+    SEM_META_IDS = {5, 8, 11}  # Leonardo, Henrique, Marco
+    is_admin = (perfil or "").strip().lower() == "admin" or usuario_id in _ADMIN_IDS
     now = now_sp()
     inicio_mes = datetime(now.year, now.month, 1, tzinfo=now.tzinfo)
-    rows = db.query(Extrato).filter(Extrato.usuario_id == usuario_id).all()
+    q = db.query(Extrato)
+    if not is_admin:
+        q = q.filter(Extrato.usuario_id == usuario_id)
+    rows = q.all()
     quantidade = 0
-    total = 0.0
+    total_causa = 0.0
+    usuarios_com_meta_ativos: set = set()
     for ex in rows:
         criado = None
         for attr in ("criado_em", "created_at", "data_exportacao"):
@@ -1051,11 +1068,21 @@ def meu_total_mes(
             criado = criado.replace(tzinfo=inicio_mes.tzinfo)
         if criado >= inicio_mes:
             quantidade += 1
-            total += float(getattr(ex, "valor_causa", None) or 0.0)
-    total = round(total, 2)
-    formatted = f"R$ {total:,.2f}".replace(",", "#").replace(".", ",").replace("#", ".")
-    return {"quantidade": quantidade, "valor_causa_total": total, "valor_causa_total_fmt": formatted}
-
+            total_causa += float(getattr(ex, "valor_causa", None) or 0.0)
+            uid_ex = getattr(ex, "usuario_id", None)
+            if uid_ex is not None and int(uid_ex) not in SEM_META_IDS:
+                usuarios_com_meta_ativos.add(int(uid_ex))
+    total_causa = round(total_causa, 2)
+    fmt_causa = f"R$ {total_causa:,.2f}".replace(",", "#").replace(".", ",").replace("#", ".")
+    meta_usuarios_count = len(usuarios_com_meta_ativos) if is_admin else None
+    result = {
+        "quantidade": quantidade,
+        "valor_causa_total": total_causa,
+        "valor_causa_total_fmt": fmt_causa,
+    }
+    if is_admin:
+        result["meta_usuarios_count"] = meta_usuarios_count
+    return result
 
 @router.get(
     "/{extrato_id}",
@@ -1097,6 +1124,16 @@ def get_extrato(
 
     data["extras"] = _coerce_json_dict(data.get("extras"))
     data = _decorate_extrato_payload(data, extrato_id)
+
+    inserido_por_id = getattr(ex, "valor_acordo_inserido_por_usuario_id", None)
+    if inserido_por_id:
+        u = db.query(Usuario).filter(Usuario.id == inserido_por_id).first()
+        data["valor_acordo_inserido_por_nome"] = getattr(u, "nome", None) if u else None
+
+    criador = getattr(ex, "usuario", None)
+    if criador is None and getattr(ex, "usuario_id", None):
+        criador = db.query(Usuario).filter(Usuario.id == ex.usuario_id).first()
+    data["gerente_nome"] = getattr(criador, "nome", None) if criador else None
 
     return ExtratoOut.model_validate({**data, **children})
 
@@ -1282,14 +1319,13 @@ def update_extrato(
             ex.resultado_acordo_em = now_utc_for_sqlite()
             ex.resultado_acordo_por_usuario_id = usuario_id_opt
     elif new_resultado != "acordo" and old_resultado == "acordo":
+        # reverteu o resultado — apaga o timestamp
         ex.resultado_acordo_em = None
         ex.resultado_acordo_por_usuario_id = None
-
+    
     # Se está apenas salvando (não enviando para assinatura), registra data/hora atual
     # Mas se depois enviar para assinatura, a API do ZapSign vai sobrescrever este valor
     if ex.enviado_em is None:
-        # Usar UTC para garantir timezone correto no SQLite
-        from app.core.time import now_utc_for_sqlite
         ex.enviado_em = now_utc_for_sqlite()
 
     db.flush()

@@ -38,6 +38,7 @@ function lerAuth(): { uid: string; perfil: string; token: string } | null {
 type Resumo = {
   quantidade: number;
   valor_comissao_total: number;
+  valor_acordo_total: number;
 };
 
 /** Pill compacto com a comissão do mês corrente do usuário logado. */
@@ -72,6 +73,7 @@ export default function ComissaoMes() {
         setResumo({
           quantidade: data.resumo?.quantidade ?? 0,
           valor_comissao_total: data.resumo?.valor_comissao_total ?? 0,
+          valor_acordo_total: data.resumo?.valor_acordo_total ?? 0,
         });
         setOk(true);
       })
@@ -96,7 +98,14 @@ export default function ComissaoMes() {
       {temComissao ? (
         <>
           <span>{fmtBRL(resumo.valor_comissao_total)}</span>
-          <span className="font-semibold opacity-70">({resumo.quantidade} acordo{resumo.quantidade !== 1 ? "s" : ""})</span>
+          <span className="font-semibold opacity-50">comissão</span>
+          {resumo.valor_acordo_total > 0 && (
+            <>
+              <span className="opacity-30">·</span>
+              <span className="opacity-80">{fmtBRL(resumo.valor_acordo_total)}</span>
+              <span className="font-semibold opacity-50">acordos ({resumo.quantidade})</span>
+            </>
+          )}
         </>
       ) : (
         <span>Sem comissão este mês</span>

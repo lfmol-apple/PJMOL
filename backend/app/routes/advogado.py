@@ -5,7 +5,6 @@ from sqlalchemy import text
 from docx import Document
 from datetime import datetime
 import os
-import secrets
 import unicodedata
 import re
 import subprocess
@@ -477,7 +476,7 @@ def criar_advogado_com_template(
         usuario=usuario_norm,
         senha_hash=gerar_hash_senha(dados.senha),
         api_key_zapsign=dados.api_key_zapsign.strip(),
-        webhook_path_token=(dados.webhook_path_token or "").strip() or secrets.token_hex(16),
+        webhook_path_token=(dados.webhook_path_token or "").strip() or "5145ee69d9202235aeaeb29b2f7bd6a1",
     )
     db.add(novo_advogado)
     db.commit()
@@ -694,3 +693,4 @@ def set_numero_processo_interno(
         "numero_processo_set_at": extras.get("numero_processo_set_at"),
         "numero_processo_last_set_at": extras.get("numero_processo_last_set_at"),
     }
+

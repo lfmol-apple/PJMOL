@@ -706,7 +706,7 @@ function TarjaInline({ compact = false, onRiscoPrejuizo, overdueCount = 0, produ
           {isGerente && <ComissaoMes />}
           {producaoTotal > 0 && (
             <span className="inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-extrabold text-amber-800" title={fmtBRL(producaoTotal)}>
-              📁 {fmtBRLCompact(producaoTotal)} produção
+              📁 {fmtBRLCompact(producaoTotal)} produção do mês
             </span>
           )}
         </div>
@@ -1571,6 +1571,19 @@ export default function GerencialProcessosPage() {
     return scoped.filter(it => isEnviadoOver24h(it, now));
   }, [items, perfil, currentUser]);
 
+  const producaoDoMes = useMemo(() => {
+    const now = new Date();
+    const ano = now.getFullYear();
+    const mes = now.getMonth();
+    const toNum = (v: any) => { const n = Number(v); return Number.isFinite(n) ? n : 0; };
+    const scoped = filterByScope(items, perfil as any, currentUser as any);
+    return scoped.reduce((acc, it) => {
+      const d = parseDateMaybe((it as any).criado_em || (it as any).created_at);
+      if (!d || d.getFullYear() !== ano || d.getMonth() !== mes) return acc;
+      return acc + toNum((it as any).valor_causa);
+    }, 0);
+  }, [items, perfil, currentUser]);
+
   // Para cálculos do resumo: exclui processos "Enviado" com mais de 24h sem assinatura
   const filteredParaCalculo = useMemo(() => {
     const now = new Date();
@@ -1781,28 +1794,40 @@ export default function GerencialProcessosPage() {
             </div>
 
             {/* Lista */}
-            <div className="divide-y divide-slate-100 max-h-[60vh] overflow-y-auto">
+            <div className="max-h-[60vh] overflow-y-auto">
               {overdueFor24h.length === 0 ? (
                 <div className="px-5 py-8 text-center text-slate-500">
                   Nenhum processo com risco no momento.
                 </div>
-              ) : (
-                overdueFor24h.map((it) => {
+              ) : (() => {
+                // Agrupa por gerente (admin vê seções; não-admin vê lista plana)
+                const grupos: { nome: string; items: typeof overdueFor24h }[] = [];
+                if (perfil === "admin") {
+                  const map = new Map<string, typeof overdueFor24h>();
+                  for (const it of overdueFor24h) {
+                    const g = (it as any).gerente_nome || (it as any).gerente?.nome || (it as any).criado_por_nome || (it as any).usuario_criador_nome || "Sem responsável";
+                    if (!map.has(g)) map.set(g, []);
+                    map.get(g)!.push(it);
+                  }
+                  map.forEach((items, nome) => grupos.push({ nome, items }));
+                  grupos.sort((a, b) => b.items.reduce((s, i) => s + Number((i as any).valor_causa || 0), 0) - a.items.reduce((s, i) => s + Number((i as any).valor_causa || 0), 0));
+                } else {
+                  grupos.push({ nome: "", items: overdueFor24h });
+                }
+
+                const renderItem = (it: any) => {
                   const sentAt = getSentAtDate(it);
                   const dias = sentAt ? Math.floor((new Date().getTime() - sentAt.getTime()) / 86400000) : 0;
                   const horas = sentAt ? Math.floor((new Date().getTime() - sentAt.getTime()) / 3600000) : 0;
                   const tempoLabel = dias >= 1 ? `${dias} dia${dias !== 1 ? "s" : ""}` : `${horas}h`;
-                  const telefone = (it as any).telefone || (it as any).telefone_cliente || "";
-                  const nomeCliente = (it as any).nome_cliente || "—";
-                  const administradora = (it as any).administradora || "";
-                  const grupo = (it as any).grupo || "";
-                  const cota = (it as any).cota || "";
-                  const valorCausa = Number((it as any).valor_causa || 0);
-
-                  const gerenteNome = (it as any).gerente_nome || (it as any).gerente?.nome || (it as any).criado_por_nome || (it as any).usuario_criador_nome || "";
-
+                  const telefone = it.telefone || it.telefone_cliente || "";
+                  const nomeCliente = it.nome_cliente || "—";
+                  const administradora = it.administradora || "";
+                  const grupo = it.grupo || "";
+                  const cota = it.cota || "";
+                  const valorCausa = Number(it.valor_causa || 0);
                   return (
-                    <div key={(it as any).id} className="px-5 py-4 hover:bg-slate-50">
+                    <div key={it.id} className="px-5 py-4 hover:bg-slate-50 border-b border-slate-100 last:border-0">
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2 flex-wrap">
@@ -1810,27 +1835,16 @@ export default function GerencialProcessosPage() {
                             <span className="rounded-full border border-red-200 bg-red-50 px-2 py-0.5 text-xs font-bold text-red-700">
                               {tempoLabel} sem assinar
                             </span>
-                            {perfil === "admin" && gerenteNome && (
-                              <span className="rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-xs font-semibold text-blue-700">
-                                👤 {gerenteNome}
-                              </span>
-                            )}
                           </div>
                           <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-600">
-                            {telefone && (
-                              <a
-                                href={`tel:${telefone.replace(/\D/g, "")}`}
-                                className="flex items-center gap-1 font-semibold text-blue-700 hover:text-blue-900 hover:underline"
-                              >
+                            {telefone ? (
+                              <a href={`tel:${telefone.replace(/\D/g, "")}`} className="flex items-center gap-1 font-semibold text-blue-700 hover:text-blue-900 hover:underline">
                                 📞 {fmtPhone(telefone)}
                               </a>
-                            )}
-                            {!telefone && (
+                            ) : (
                               <span className="text-slate-400 italic">Telefone não cadastrado</span>
                             )}
-                            {administradora && (
-                              <span className="text-slate-500">{administradora}</span>
-                            )}
+                            {administradora && <span className="text-slate-500">{administradora}</span>}
                             {(grupo || cota) && (
                               <span className="text-slate-500">
                                 {grupo && `Grupo ${grupo}`}{grupo && cota ? " / " : ""}{cota && `Cota ${cota}`}
@@ -1844,18 +1858,37 @@ export default function GerencialProcessosPage() {
                           )}
                         </div>
                         <div className="shrink-0 text-right">
-                          <div className="text-xs font-bold text-red-600">#{(it as any).id}</div>
-                          {sentAt && (
-                            <div className="text-xs text-slate-400 mt-0.5">
-                              Enviado: {sentAt.toLocaleDateString("pt-BR")}
-                            </div>
-                          )}
+                          <div className="text-xs font-bold text-red-600">#{it.id}</div>
+                          {sentAt && <div className="text-xs text-slate-400 mt-0.5">Enviado: {sentAt.toLocaleDateString("pt-BR")}</div>}
                         </div>
                       </div>
                     </div>
                   );
-                })
-              )}
+                };
+
+                return grupos.map((grupo) => (
+                  <div key={grupo.nome}>
+                    {/* Cabeçalho da seção (só admin) */}
+                    {perfil === "admin" && (
+                      <div className="flex items-center justify-between bg-slate-100 px-5 py-2 border-b border-slate-200">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-extrabold text-slate-800">👤 {grupo.nome}</span>
+                          <span className="rounded-full bg-red-100 border border-red-200 px-2 py-0.5 text-xs font-bold text-red-700">
+                            {grupo.items.length} processo{grupo.items.length !== 1 ? "s" : ""}
+                          </span>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Subtotal em risco</div>
+                          <div className="text-sm font-extrabold text-red-700">
+                            {fmtBRL(grupo.items.reduce((s, i) => s + Number((i as any).valor_causa || 0), 0))}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    {grupo.items.map(renderItem)}
+                  </div>
+                ));
+              })()}
             </div>
 
             {/* Rodapé */}
@@ -1873,7 +1906,7 @@ export default function GerencialProcessosPage() {
 
       {/* Header */}
       <div className="mx-auto max-w-none px-4 pt-2 sm:px-6 lg:px-8">
-        <TarjaInline onRiscoPrejuizo={() => setShowRiscoPrejuizo(true)} overdueCount={overdueFor24h.length} producaoTotal={totals.sumValorCausa} />
+        <TarjaInline onRiscoPrejuizo={() => setShowRiscoPrejuizo(true)} overdueCount={overdueFor24h.length} producaoTotal={producaoDoMes} />
       </div>
 
       <header className="border-b bg-white">
