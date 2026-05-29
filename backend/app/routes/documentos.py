@@ -456,7 +456,7 @@ def gerar_documentos(dados: dict, db: Session = Depends(get_db)):
             caminho_procuracao=procuracao_pdf_path,
             api_key=advogado.api_key_zapsign,
             webhook_url=webhook_url,
-            sandbox=True,  # Força modo sandbox para desenvolvimento
+            sandbox=False,  # Produção
         )
 
         if extrato_id:
@@ -565,7 +565,7 @@ def enviar_para_assinatura(dados: dict, db: Session = Depends(get_db)):
             caminho_contrato=caminho_contrato,
             caminho_procuracao=caminho_procuracao,
             api_key=advogado.api_key_zapsign,
-            sandbox=True  # Força modo sandbox para desenvolvimento
+            sandbox=False  # Produção
         )
 
         if extrato_id:

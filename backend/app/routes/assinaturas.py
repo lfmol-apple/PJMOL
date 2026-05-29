@@ -292,7 +292,7 @@ def enviar_para_assinatura(
             webhook_url=webhook_url,
             require_selfie_photo=False,  # ✅ Desativado: não pede mais selfie
             require_document_photo=False,  # ✅ Desativado: não pede mais foto do documento
-            sandbox=True,  # Força modo sandbox para desenvolvimento
+            sandbox=False,  # Produção
             selfie_validation_type="none",
             metadata={"extrato_id": extrato.id},
         )

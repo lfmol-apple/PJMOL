@@ -50,7 +50,7 @@ def enviar_documentos_consolidados_para_assinatura(
     require_selfie_photo: bool = False,  # ✅ Desativado: não pede mais selfie
     require_document_photo: bool = False,  # Alterado: não pede mais foto do documento
     selfie_validation_type: str = "none",
-    sandbox: bool = DEFAULT_ZAPSIGN_SANDBOX,
+    sandbox: bool = False,
     metadata: Optional[Dict[str, str]] = None,
 ) -> Dict:
     """

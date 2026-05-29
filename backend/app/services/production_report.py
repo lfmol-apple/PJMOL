@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from datetime import date, datetime, time
-from typing import Any, Iterable
+from typing import Any, Iterable, Optional
 
 from sqlalchemy.orm import Session, selectinload
 
@@ -14,7 +14,7 @@ from app.utils.mailer import send_email
 
 ADMIN_IDS = {5, 8, 11}
 FIXED_REPORT_RECIPIENTS = {
-    "marcoafariajunior@hotmail.com",
+    "marcofariajunior@hotmail.com",
     "luanadsrocha12@gmail.com",
     "leonardofmol@gmail.com",
     "henriquefmol@gmail.com",
@@ -86,7 +86,7 @@ def _fmt_brl(value: float) -> str:
     return f"R$ {formatted}".replace(",", "#").replace(".", ",").replace("#", ".")
 
 
-def _new_bucket(name: str | None = None) -> dict[str, Any]:
+def _new_bucket(name: Optional[str] = None) -> dict[str, Any]:
     return {
         "nome": name or "",
         "quantidade": 0,
@@ -95,19 +95,10 @@ def _new_bucket(name: str | None = None) -> dict[str, Any]:
     }
 
 
-def _new_acordos_bucket() -> dict[str, Any]:
-    return {"quantidade": 0, "honorarios_total": 0.0}
-
-
 def _accumulate(bucket: dict[str, Any], valor_causa: float, acordo_provavel: float) -> None:
     bucket["quantidade"] += 1
     bucket["valor_causa_total"] += valor_causa
     bucket["acordo_provavel_total"] += acordo_provavel
-
-
-def _accumulate_acordo(bucket: dict[str, Any], honorarios: float) -> None:
-    bucket["quantidade"] += 1
-    bucket["honorarios_total"] += honorarios
 
 
 def _serialize_bucket(bucket: dict[str, Any]) -> dict[str, Any]:
@@ -117,18 +108,6 @@ def _serialize_bucket(bucket: dict[str, Any]) -> dict[str, Any]:
         "acordo_provavel_total": round(bucket["acordo_provavel_total"], 2),
         "valor_causa_total_fmt": _fmt_brl(bucket["valor_causa_total"]),
         "acordo_provavel_total_fmt": _fmt_brl(bucket["acordo_provavel_total"]),
-    }
-
-
-def _serialize_acordos(bucket: dict[str, Any]) -> dict[str, Any]:
-    h = round(bucket["honorarios_total"], 2)
-    comissao = round(h / 12, 2) if h > 0 else 0.0
-    return {
-        "quantidade": bucket["quantidade"],
-        "honorarios_total": h,
-        "honorarios_total_fmt": _fmt_brl(h),
-        "comissao_gerente": comissao,
-        "comissao_gerente_fmt": _fmt_brl(comissao),
     }
 
 
@@ -143,12 +122,12 @@ def _sum_buckets(*buckets: dict[str, Any] | None) -> dict[str, Any]:
     return _serialize_bucket(merged)
 
 
-def _normalize_email(value: Any) -> str | None:
+def _normalize_email(value: Any) -> Optional[str]:
     email = str(value or "").strip().lower()
     return email or None
 
 
-def _append_recipient(target: list[dict[str, Any]], seen: set[str], *, email: Any, nome: str, recipient_id: int | None = None) -> None:
+def _append_recipient(target: list[dict[str, Any]], seen: set[str], *, email: Any, nome: str, recipient_id: Optional[int] = None) -> None:
     normalized = _normalize_email(email)
     if not normalized or normalized in seen:
         return
@@ -156,7 +135,44 @@ def _append_recipient(target: list[dict[str, Any]], seen: set[str], *, email: An
     target.append({"id": recipient_id, "nome": nome, "email": normalized})
 
 
-def build_production_report(db: Session, start_date: date, end_date: date) -> dict[str, Any]:
+def _pick_valor_acordo_date(extrato: Extrato) -> tuple[datetime | None, bool]:
+    # Prioridade 1: data em que resultado_processo foi trocado para "acordo"
+    resultado_em = _as_datetime(getattr(extrato, "resultado_acordo_em", None))
+    if resultado_em is not None:
+        return resultado_em, False
+    # Prioridade 2: data em que o valor do acordo foi inserido (legado)
+    inserted_at = _as_datetime(getattr(extrato, "valor_acordo_inserido_em", None))
+    if inserted_at is not None:
+        return inserted_at, True
+    fallback = _as_datetime(getattr(extrato, "atualizado_em", None)) or _as_datetime(getattr(extrato, "updated_at", None))
+    if fallback is not None:
+        return fallback, True
+    return _pick_extrato_date(extrato), True
+
+
+_MARCO_ID = 11  # Marco Antonio Faria Junior recebe 1/6; os demais recebem 1/12
+
+def _divisor_comissao(inseridor_id: Optional[int]) -> int:
+    return 6 if inseridor_id == _MARCO_ID else 12
+
+
+def _pick_commission_value(extrato: Extrato, valor_acordo: float, inseridor_id: Optional[int] = None) -> float:
+    divisor = _divisor_comissao(inseridor_id)
+    honorarios_total = float(getattr(extrato, "honorarios_hoje_adv", None) or 0.0) + float(getattr(extrato, "honorarios_hoje_emp", None) or 0.0)
+    if honorarios_total > 0:
+        return round(honorarios_total / divisor, 2)
+    honorarios_pct = float(getattr(extrato, "honorarios_percentual", None) or 0.0)
+    if honorarios_pct > 0:
+        return round((valor_acordo * (honorarios_pct / 100.0)) / divisor, 2)
+    return 0.0
+
+
+def build_production_report(
+    db: Session,
+    start_date: date,
+    end_date: date,
+    acordo_inserido_por_usuario_id: Optional[int] = None,
+) -> dict[str, Any]:
     extratos = (
         db.query(Extrato)
         .options(selectinload(Extrato.usuario))
@@ -167,11 +183,17 @@ def build_production_report(db: Session, start_date: date, end_date: date) -> di
     period_end = datetime.combine(end_date, time.max)
 
     geral = _new_bucket("Geral")
-    geral_acordos = _new_acordos_bucket()
     geral_statuses: dict[str, dict[str, Any]] = defaultdict(lambda: _new_bucket())
     geral_administradoras: dict[str, dict[str, Any]] = {}
     gerentes: dict[int, dict[str, Any]] = {}
     active_manager_ids: set[int] = set()
+    comissoes_concluidas = _new_bucket("Concluídas")
+    comissoes_em_andamento = _new_bucket("Em andamento")
+    comissoes_por_inseridor: dict[int, dict[str, Any]] = {}
+    comissoes_registros: list[dict[str, Any]] = []
+
+    usuarios = db.query(Usuario).all()
+    usuarios_by_id = {getattr(user, "id", None): user for user in usuarios}
 
     for extrato in extratos:
         extrato_dt = _pick_extrato_date(extrato)
@@ -187,18 +209,8 @@ def build_production_report(db: Session, start_date: date, end_date: date) -> di
         valor_causa = float(getattr(extrato, "valor_causa", None) or 0.0)
         acordo_provavel = round(valor_causa * 0.7, 2)
 
-        # Acordos efetivos (resultado_processo == "acordo")
-        resultado = (getattr(extrato, "resultado_processo", None) or "").strip().lower()
-        is_acordo = resultado == "acordo"
-        honorarios = (
-            float(getattr(extrato, "honorarios_hoje_adv", None) or 0.0)
-            + float(getattr(extrato, "honorarios_hoje_emp", None) or 0.0)
-        )
-
         _accumulate(geral, valor_causa, acordo_provavel)
         _accumulate(geral_statuses[status], valor_causa, acordo_provavel)
-        if is_acordo and honorarios > 0:
-            _accumulate_acordo(geral_acordos, honorarios)
 
         adm_bucket = geral_administradoras.setdefault(
             administradora,
@@ -216,7 +228,6 @@ def build_production_report(db: Session, start_date: date, end_date: date) -> di
                 "gerente_nome": gerente_nome,
                 "gerente_email": gerente_email,
                 "totais": _new_bucket(gerente_nome),
-                "acordos": _new_acordos_bucket(),
                 "statuses": defaultdict(lambda: _new_bucket()),
                 "administradoras": {},
             }
@@ -225,8 +236,6 @@ def build_production_report(db: Session, start_date: date, end_date: date) -> di
         active_manager_ids.add(gerente_id)
         _accumulate(gerente_bucket["totais"], valor_causa, acordo_provavel)
         _accumulate(gerente_bucket["statuses"][status], valor_causa, acordo_provavel)
-        if is_acordo and honorarios > 0:
-            _accumulate_acordo(gerente_bucket["acordos"], honorarios)
 
         gerente_adm_bucket = gerente_bucket["administradoras"].setdefault(
             administradora,
@@ -238,7 +247,66 @@ def build_production_report(db: Session, start_date: date, end_date: date) -> di
         _accumulate(gerente_adm_bucket, valor_causa, acordo_provavel)
         _accumulate(gerente_adm_bucket["statuses"][status], valor_causa, acordo_provavel)
 
-    usuarios = db.query(Usuario).all()
+    for extrato in extratos:
+        usuario = getattr(extrato, "usuario", None)
+        gerente_id = getattr(extrato, "usuario_id", None)
+        gerente_nome = getattr(usuario, "nome", None) or (f"#{gerente_id}" if gerente_id else "Não informado")
+        valor_causa = float(getattr(extrato, "valor_causa", None) or 0.0)
+        valor_acordo = getattr(extrato, "valor_acordo", None)
+        inseridor_id = getattr(extrato, "valor_acordo_inserido_por_usuario_id", None) or gerente_id
+        inseridor = usuarios_by_id.get(inseridor_id)
+        inseridor_nome = getattr(inseridor, "nome", None) or gerente_nome
+        inseridor_email = getattr(inseridor, "email", None)
+
+        if valor_acordo is None:
+            extrato_dt = _pick_extrato_date(extrato)
+            if extrato_dt is None or extrato_dt < period_start or extrato_dt > period_end:
+                continue
+            if acordo_inserido_por_usuario_id is not None and inseridor_id != acordo_inserido_por_usuario_id:
+                continue
+            expectativa = round(valor_causa * 0.7 * 0.3, 2)
+            _accumulate(comissoes_em_andamento, expectativa, expectativa)
+            continue
+
+        acordo_dt, data_estimada = _pick_valor_acordo_date(extrato)
+        if acordo_dt is None or acordo_dt < period_start or acordo_dt > period_end:
+            continue
+        if acordo_inserido_por_usuario_id is not None and inseridor_id != acordo_inserido_por_usuario_id:
+            continue
+
+        acordo_valor = float(valor_acordo or 0.0)
+        comissao_valor = _pick_commission_value(extrato, acordo_valor, inseridor_id)
+        _accumulate(comissoes_concluidas, comissao_valor, comissao_valor)
+        inseridor_bucket = comissoes_por_inseridor.setdefault(
+            int(inseridor_id or 0),
+            {
+                **_new_bucket(inseridor_nome),
+                "usuario_id": inseridor_id,
+                "usuario_nome": inseridor_nome,
+                "usuario_email": inseridor_email,
+            },
+        )
+        _accumulate(inseridor_bucket, comissao_valor, comissao_valor)
+        comissoes_registros.append(
+            {
+                "extrato_id": getattr(extrato, "id", None),
+                "cliente": getattr(extrato, "nome_cliente", None),
+                "grupo": getattr(extrato, "grupo", None),
+                "cota": getattr(extrato, "cota", None),
+                "gerente_id": gerente_id,
+                "gerente_nome": gerente_nome,
+                "inserido_por_usuario_id": inseridor_id,
+                "inserido_por_nome": inseridor_nome,
+                "inserido_por_email": inseridor_email,
+                "data_valor_acordo": acordo_dt.isoformat(),
+                "data_estimada": data_estimada,
+                "valor_acordo": round(acordo_valor, 2),
+                "valor_acordo_fmt": _fmt_brl(acordo_valor),
+                "valor_comissao": round(comissao_valor, 2),
+                "valor_comissao_fmt": _fmt_brl(comissao_valor),
+            }
+        )
+
     admin_recipients = []
     manager_recipients = []
     admin_seen: set[str] = set()
@@ -254,6 +322,19 @@ def build_production_report(db: Session, start_date: date, end_date: date) -> di
     for email in sorted(FIXED_REPORT_RECIPIENTS):
         _append_recipient(admin_recipients, admin_seen, email=email, nome=email)
 
+    inseridores_disponiveis = []
+    for user in sorted(usuarios, key=lambda item: (getattr(item, "nome", "") or "").lower()):
+        perfil = str(getattr(user, "perfil", "") or "").strip().lower()
+        is_admin = bool(getattr(user, "is_admin", False)) or perfil == "admin" or getattr(user, "id", None) in ADMIN_IDS
+        if is_admin or perfil == "gerente":
+            inseridores_disponiveis.append(
+                {
+                    "usuario_id": getattr(user, "id", None),
+                    "usuario_nome": getattr(user, "nome", None),
+                    "usuario_email": getattr(user, "email", None),
+                }
+            )
+
     serial_gerentes = []
     for gerente in sorted(gerentes.values(), key=lambda item: item["gerente_nome"].lower() if item["gerente_nome"] else ""):
         serial_gerentes.append(
@@ -262,7 +343,6 @@ def build_production_report(db: Session, start_date: date, end_date: date) -> di
                 "gerente_nome": gerente["gerente_nome"],
                 "gerente_email": gerente["gerente_email"],
                 "totais": _serialize_bucket(gerente["totais"]),
-                "acordos": _serialize_acordos(gerente["acordos"]),
                 "statuses": [
                     {"status": status, **_serialize_bucket(bucket)}
                     for status, bucket in sorted(gerente["statuses"].items(), key=lambda item: item[0].lower())
@@ -296,7 +376,6 @@ def build_production_report(db: Session, start_date: date, end_date: date) -> di
             "data_final": end_date.isoformat(),
         },
         "totais": _serialize_bucket(geral),
-        "acordos_geral": _serialize_acordos(geral_acordos),
         "resumo_assinaturas": {
             "enviados": enviados_bucket,
             "aguardando_assinatura": aguardando_assinatura_bucket,
@@ -322,6 +401,21 @@ def build_production_report(db: Session, start_date: date, end_date: date) -> di
         "recipients": {
             "admins": admin_recipients,
             "gerentes": manager_recipients,
+        },
+        "comissoes": {
+            "filtro_inserido_por_usuario_id": acordo_inserido_por_usuario_id,
+            "total": _sum_buckets(comissoes_em_andamento, comissoes_concluidas),
+            "em_andamento": _serialize_bucket(comissoes_em_andamento),
+            "concluidas": _serialize_bucket(comissoes_concluidas),
+            "por_inseridor": [
+                _serialize_bucket(bucket)
+                for _, bucket in sorted(
+                    comissoes_por_inseridor.items(),
+                    key=lambda item: (item[1].get("usuario_nome") or "").lower(),
+                )
+            ],
+            "inseridores_disponiveis": inseridores_disponiveis,
+            "registros": sorted(comissoes_registros, key=lambda item: item["data_valor_acordo"], reverse=True),
         },
     }
 
@@ -356,97 +450,36 @@ def _render_admin_blocks(administradoras: Iterable[dict[str, Any]]) -> str:
 
 
 def render_production_report_email(report: dict[str, Any]) -> str:
+    manager_blocks = []
+    for gerente in report["gerentes"]:
+        manager_blocks.append(
+            "<section style='margin:24px 0;padding:18px;border:1px solid #dbe1ea;border-radius:14px;background:#f8fafc'>"
+            f"<h2 style='margin:0 0 10px;font-size:18px;color:#0f172a'>{gerente['gerente_nome']}</h2>"
+            f"<p style='margin:0 0 12px;color:#334155'>Total do gerente: <strong>{gerente['totais']['quantidade']}</strong> processos | Valor da causa: <strong>{gerente['totais']['valor_causa_total_fmt']}</strong> | Acordo provável: <strong>{gerente['totais']['acordo_provavel_total_fmt']}</strong></p>"
+            f"{_render_admin_blocks(gerente['administradoras'])}"
+            "</section>"
+        )
+
     periodo = report["periodo"]
     totais = report["totais"]
-    acordos_geral = report.get("acordos_geral", _serialize_acordos(_new_acordos_bucket()))
     resumo_assinaturas = report.get("resumo_assinaturas", {})
     enviados = resumo_assinaturas.get("enviados", _serialize_bucket(_new_bucket()))
     aguardando = resumo_assinaturas.get("aguardando_assinatura", _serialize_bucket(_new_bucket()))
     assinados = resumo_assinaturas.get("assinados", _serialize_bucket(_new_bucket()))
     assinados_fora = resumo_assinaturas.get("assinados_fora", _serialize_bucket(_new_bucket()))
-
-    # Blocos por gerente (ordenado por produção total)
-    gerentes_sorted = sorted(
-        report["gerentes"],
-        key=lambda g: float(g["totais"].get("valor_causa_total", 0) or 0),
-        reverse=True,
-    )
-    manager_blocks = []
-    for gerente in gerentes_sorted:
-        ac = gerente.get("acordos", _serialize_acordos(_new_acordos_bucket()))
-        ac_block = (
-            "<div style='margin:12px 0;padding:12px 16px;border:1px solid #bbf7d0;border-radius:10px;background:#f0fdf4'>"
-            "<strong style='color:#166534'>Acordos efetivos no período</strong><br>"
-            f"Quantidade: <strong>{ac['quantidade']}</strong> &nbsp;|&nbsp; "
-            f"Honorários totais: <strong>{ac['honorarios_total_fmt']}</strong> &nbsp;|&nbsp; "
-            f"Comissão do gerente (÷12): <strong style='color:#15803d'>{ac['comissao_gerente_fmt']}</strong>"
-            "</div>"
-        ) if ac["quantidade"] > 0 else ""
-
-        manager_blocks.append(
-            "<section style='margin:24px 0;padding:18px;border:1px solid #dbe1ea;border-radius:14px;background:#f8fafc'>"
-            f"<h2 style='margin:0 0 4px;font-size:18px;color:#0f172a'>{gerente['gerente_nome']}</h2>"
-            f"<p style='margin:0 0 4px;color:#334155'>Processos: <strong>{gerente['totais']['quantidade']}</strong></p>"
-            f"<p style='margin:0 0 4px;color:#334155'>Produção total (valor da causa): <strong>{gerente['totais']['valor_causa_total_fmt']}</strong></p>"
-            f"<p style='margin:0 0 12px;color:#334155'>Acordo provável: <strong>{gerente['totais']['acordo_provavel_total_fmt']}</strong></p>"
-            f"{ac_block}"
-            f"{_render_admin_blocks(gerente['administradoras'])}"
-            "</section>"
-        )
-
-    # Ranking final
-    ranking_rows = "".join(
-        f"<tr style='background:{'#fffbeb' if i % 2 == 0 else '#ffffff'}'>"
-        f"<td style='padding:8px 12px;border:1px solid #fde68a;font-weight:bold'>#{i+1}</td>"
-        f"<td style='padding:8px 12px;border:1px solid #fde68a'>{g['gerente_nome']}</td>"
-        f"<td style='padding:8px 12px;border:1px solid #fde68a;text-align:right'>{g['totais']['quantidade']}</td>"
-        f"<td style='padding:8px 12px;border:1px solid #fde68a;text-align:right'>{g['totais']['valor_causa_total_fmt']}</td>"
-        f"<td style='padding:8px 12px;border:1px solid #fde68a;text-align:right'>{g['totais']['acordo_provavel_total_fmt']}</td>"
-        f"<td style='padding:8px 12px;border:1px solid #fde68a;text-align:right;color:#15803d'>"
-        f"{g.get('acordos', {}).get('comissao_gerente_fmt', 'R$ 0,00')}</td>"
-        "</tr>"
-        for i, g in enumerate(gerentes_sorted)
-    )
-    ranking_block = (
-        "<div style='margin:32px 0 0;padding:20px;border:2px solid #fbbf24;border-radius:14px;background:#fffbeb'>"
-        "<h2 style='margin:0 0 12px;font-size:18px;color:#78350f'>Ranking de Produção</h2>"
-        "<table style='width:100%;border-collapse:collapse;font-size:13px'>"
-        "<thead><tr style='background:#fef3c7'>"
-        "<th style='padding:8px 12px;border:1px solid #fde68a;text-align:left'>#</th>"
-        "<th style='padding:8px 12px;border:1px solid #fde68a;text-align:left'>Gerente</th>"
-        "<th style='padding:8px 12px;border:1px solid #fde68a;text-align:right'>Processos</th>"
-        "<th style='padding:8px 12px;border:1px solid #fde68a;text-align:right'>Produção total</th>"
-        "<th style='padding:8px 12px;border:1px solid #fde68a;text-align:right'>Acordo provável</th>"
-        "<th style='padding:8px 12px;border:1px solid #fde68a;text-align:right'>Comissão gerente</th>"
-        "</tr></thead>"
-        f"<tbody>{ranking_rows}</tbody>"
-        "</table></div>"
-    )
-
     return (
-        "<div style='font-family:Arial,sans-serif;color:#0f172a;max-width:800px'>"
+        "<div style='font-family:Arial,sans-serif;color:#0f172a'>"
         "<h1 style='margin-bottom:8px'>Relatório Mensal de Produção</h1>"
         f"<p style='margin-top:0;color:#475569'>Período: <strong>{periodo['data_inicial']}</strong> a <strong>{periodo['data_final']}</strong></p>"
-        # totais gerais
-        "<div style='margin:16px 0;padding:16px;border:1px solid #dbe1ea;border-radius:14px;background:#f8fafc'>"
-        "<h2 style='margin:0 0 10px;font-size:16px;color:#0f172a'>Totais do período</h2>"
-        f"<p style='margin:0 0 6px;color:#334155'>Processos: <strong>{totais['quantidade']}</strong></p>"
-        f"<p style='margin:0 0 6px;color:#334155'>Produção total: <strong>{totais['valor_causa_total_fmt']}</strong></p>"
-        f"<p style='margin:0 0 6px;color:#334155'>Acordo provável: <strong>{totais['acordo_provavel_total_fmt']}</strong></p>"
-        f"<p style='margin:0;color:#166534'>Acordos efetivos — honorários totais: <strong>{acordos_geral['honorarios_total_fmt']}</strong> | Comissões totais: <strong>{acordos_geral['comissao_gerente_fmt']}</strong></p>"
-        "</div>"
-        # resumo assinaturas
+        f"<p style='color:#334155'>Total geral: <strong>{totais['quantidade']}</strong> processos | Valor da causa: <strong>{totais['valor_causa_total_fmt']}</strong> | Acordo provável: <strong>{totais['acordo_provavel_total_fmt']}</strong></p>"
         "<div style='margin:16px 0;padding:16px;border:1px solid #dbe1ea;border-radius:14px;background:#ffffff'>"
         "<h2 style='margin:0 0 12px;font-size:16px;color:#0f172a'>Resumo de envio e assinatura</h2>"
-        f"<p style='margin:0 0 6px;color:#334155'><strong>Enviados:</strong> {enviados['quantidade']} | {enviados['valor_causa_total_fmt']} | Acordo provável: {enviados['acordo_provavel_total_fmt']}</p>"
-        f"<p style='margin:0 0 6px;color:#334155'><strong>Aguardando assinatura:</strong> {aguardando['quantidade']} | {aguardando['valor_causa_total_fmt']} | Acordo provável: {aguardando['acordo_provavel_total_fmt']}</p>"
-        f"<p style='margin:0 0 6px;color:#334155'><strong>Assinados:</strong> {assinados['quantidade']} | {assinados['valor_causa_total_fmt']} | Acordo provável: {assinados['acordo_provavel_total_fmt']}</p>"
-        f"<p style='margin:0;color:#334155'><strong>Assinados fora:</strong> {assinados_fora['quantidade']} | {assinados_fora['valor_causa_total_fmt']} | Acordo provável: {assinados_fora['acordo_provavel_total_fmt']}</p>"
+        f"<p style='margin:0 0 8px;color:#334155'><strong>Enviados:</strong> {enviados['quantidade']} | Valor da causa: {enviados['valor_causa_total_fmt']} | Acordo provável: {enviados['acordo_provavel_total_fmt']}</p>"
+        f"<p style='margin:0 0 8px;color:#334155'><strong>Aguardando assinatura:</strong> {aguardando['quantidade']} | Valor da causa: {aguardando['valor_causa_total_fmt']} | Acordo provável: {aguardando['acordo_provavel_total_fmt']}</p>"
+        f"<p style='margin:0 0 8px;color:#334155'><strong>Assinados:</strong> {assinados['quantidade']} | Valor da causa: {assinados['valor_causa_total_fmt']} | Acordo provável: {assinados['acordo_provavel_total_fmt']}</p>"
+        f"<p style='margin:0;color:#334155'><strong>Assinados fora:</strong> {assinados_fora['quantidade']} | Valor da causa: {assinados_fora['valor_causa_total_fmt']} | Acordo provável: {assinados_fora['acordo_provavel_total_fmt']}</p>"
         "</div>"
-        # blocos individuais por gerente
         f"{''.join(manager_blocks) or '<p>Nenhum processo no período informado.</p>'}"
-        # ranking no final
-        f"{ranking_block if gerentes_sorted else ''}"
         "</div>"
     )
 
@@ -477,3 +510,120 @@ def send_current_month_production_report() -> dict[str, Any]:
         return send_monthly_production_report(db, start_date, end_date)
     finally:
         db.close()
+
+
+def build_commission_report(
+    db: Session,
+    start_date: date,
+    end_date: date,
+    usuario_id: Optional[int] = None,
+    is_admin: bool = False,
+) -> dict[str, Any]:
+    """
+    Returns closed-deal commissions filtered by data_valor_acordo.
+    usuario_id restricts to a single user (used for gerentes).
+    is_admin=True unlocks the per-user breakdown.
+    """
+    period_start = datetime.combine(start_date, time.min)
+    period_end = datetime.combine(end_date, time.max)
+
+    extratos = (
+        db.query(Extrato)
+        .options(selectinload(Extrato.usuario))
+        .filter(Extrato.valor_acordo.isnot(None))
+        .all()
+    )
+
+    usuarios = db.query(Usuario).all()
+    usuarios_by_id = {getattr(u, "id", None): u for u in usuarios}
+
+    total_comissao = 0.0
+    total_acordo = 0.0
+    quantidade = 0
+    por_usuario: dict[int, dict[str, Any]] = {}
+    registros: list[dict[str, Any]] = []
+
+    for extrato in extratos:
+        acordo_dt, data_estimada = _pick_valor_acordo_date(extrato)
+        if acordo_dt is None or acordo_dt < period_start or acordo_dt > period_end:
+            continue
+
+        owner_id = getattr(extrato, "usuario_id", None)
+        # Titular da comissão = quem trocou resultado para "acordo"; fallback para quem inseriu o valor
+        inseridor_id = (
+            getattr(extrato, "resultado_acordo_por_usuario_id", None)
+            or getattr(extrato, "valor_acordo_inserido_por_usuario_id", None)
+            or owner_id
+        )
+
+        if usuario_id is not None and inseridor_id != usuario_id:
+            continue
+
+        usuario_obj = getattr(extrato, "usuario", None)
+        gerente_nome = getattr(usuario_obj, "nome", None) or (f"#{owner_id}" if owner_id else "Não informado")
+        inseridor_obj = usuarios_by_id.get(inseridor_id)
+        inseridor_nome = getattr(inseridor_obj, "nome", None) or gerente_nome
+        inseridor_email = getattr(inseridor_obj, "email", None)
+
+        acordo_valor = float(getattr(extrato, "valor_acordo", 0) or 0)
+        comissao_valor = _pick_commission_value(extrato, acordo_valor, inseridor_id)
+
+        total_comissao += comissao_valor
+        total_acordo += acordo_valor
+        quantidade += 1
+
+        if inseridor_id not in por_usuario:
+            por_usuario[inseridor_id] = {
+                "usuario_id": inseridor_id,
+                "usuario_nome": inseridor_nome,
+                "usuario_email": inseridor_email,
+                "quantidade": 0,
+                "valor_acordo_total": 0.0,
+                "valor_comissao_total": 0.0,
+            }
+        por_usuario[inseridor_id]["quantidade"] += 1
+        por_usuario[inseridor_id]["valor_acordo_total"] = round(por_usuario[inseridor_id]["valor_acordo_total"] + acordo_valor, 2)
+        por_usuario[inseridor_id]["valor_comissao_total"] = round(por_usuario[inseridor_id]["valor_comissao_total"] + comissao_valor, 2)
+
+        registros.append({
+            "extrato_id": getattr(extrato, "id", None),
+            "cliente": getattr(extrato, "nome_cliente", None),
+            "grupo": getattr(extrato, "grupo", None),
+            "cota": getattr(extrato, "cota", None),
+            "administradora": getattr(extrato, "administradora", None),
+            "gerente_id": owner_id,
+            "gerente_nome": gerente_nome,
+            "inserido_por_usuario_id": inseridor_id,
+            "inserido_por_nome": inseridor_nome,
+            "data_valor_acordo": acordo_dt.isoformat(),
+            "data_estimada": data_estimada,
+            "valor_acordo": round(acordo_valor, 2),
+            "valor_acordo_fmt": _fmt_brl(acordo_valor),
+            "valor_comissao": round(comissao_valor, 2),
+            "valor_comissao_fmt": _fmt_brl(comissao_valor),
+            "percentual": round((comissao_valor / acordo_valor * 100) if acordo_valor > 0 else 0, 2),
+        })
+
+    registros.sort(key=lambda r: r["data_valor_acordo"], reverse=True)
+
+    result: dict[str, Any] = {
+        "periodo": {"data_inicial": start_date.isoformat(), "data_final": end_date.isoformat()},
+        "resumo": {
+            "quantidade": quantidade,
+            "valor_acordo_total": round(total_acordo, 2),
+            "valor_acordo_total_fmt": _fmt_brl(total_acordo),
+            "valor_comissao_total": round(total_comissao, 2),
+            "valor_comissao_total_fmt": _fmt_brl(total_comissao),
+            "percentual_medio": round((total_comissao / total_acordo * 100) if total_acordo > 0 else 0, 2),
+        },
+        "registros": registros,
+    }
+
+    if is_admin:
+        result["por_usuario"] = sorted(
+            por_usuario.values(),
+            key=lambda u: u["valor_comissao_total"],
+            reverse=True,
+        )
+
+    return result

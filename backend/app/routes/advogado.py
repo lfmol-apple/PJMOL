@@ -237,7 +237,7 @@ def gerar_documentos(dados: dict, db: Session = Depends(get_db)):
             caminho_procuracao=caminho_procuracao,
             api_key=advogado.api_key_zapsign,
             webhook_url=webhook_url,
-            sandbox=True,  # Força modo sandbox para desenvolvimento
+            sandbox=False,  # Produção
         )
 
         return {
