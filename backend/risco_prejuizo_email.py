@@ -11,7 +11,8 @@ sys.path.insert(0, "/var/www/pjmol/backend")
 sys.path.insert(0, "/var/www/pjmol/backend/app")
 
 DB_PATH = "/var/www/pjmol/backend/app/database.db"
-ADMIN_IDS = {5, 8, 11}  # Leonardo, Henrique
+ADMIN_IDS = {5, 8, 11}      # Leonardo, Henrique, Marco — excluídos do loop de gerentes
+DESTINATARIOS_IDS = {5, 7, 8, 10, 11, 12}  # + Marcel, Luana, Rodrigo recebem o consolidado
 
 def fmt_brl(v):
     v = float(v or 0)
@@ -296,7 +297,8 @@ def main():
 
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
-    cur.execute("SELECT email FROM usuarios WHERE id IN (5,8,11) AND email IS NOT NULL AND email != ''")
+    ids_str = ",".join(str(i) for i in sorted(DESTINATARIOS_IDS))
+    cur.execute(f"SELECT email FROM usuarios WHERE id IN ({ids_str}) AND email IS NOT NULL AND email != ''")
     admin_emails = [r[0] for r in cur.fetchall()]
     conn.close()
 
