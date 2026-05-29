@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """
-Envia relatório diário de risco de prejuízo:
-  --tipo gerentes  → email individual por gerente (10h)
-  --tipo admin     → email consolidado para admins (9:10h)
+Envia relatório diário de risco de prejuízo para admins às 9:10h.
+Agrupado por responsável, com subtotal por seção.
 """
 import sys, os, sqlite3, argparse
 from datetime import datetime, timezone, timedelta
@@ -216,98 +215,95 @@ def build_html_gerente(nome, rows):
 </body></html>"""
 
 def build_html_admin(rows):
+    from collections import defaultdict, OrderedDict
     total = sum(float(r.get("valor_causa") or 0) for r in rows)
-    cards = "".join(html_card_admin(r) for r in rows)
+
+    # Agrupa por gerente, ordenado pelo maior subtotal
+    grupos: dict = defaultdict(list)
+    for r in rows:
+        gerente = r.get("gerente_nome") or r.get("usuario_nome") or "Sem responsável"
+        grupos[gerente].append(r)
+    grupos_sorted = sorted(
+        grupos.items(),
+        key=lambda kv: sum(float(r.get("valor_causa") or 0) for r in kv[1]),
+        reverse=True,
+    )
+
+    secoes_html = ""
+    for gerente, g_rows in grupos_sorted:
+        subtotal = sum(float(r.get("valor_causa") or 0) for r in g_rows)
+        cards = "".join(html_card_admin(r) for r in g_rows)
+        secoes_html += f"""
+<table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px">
+  <tr>
+    <td style="background:#1e293b;border-radius:8px 8px 0 0;padding:10px 16px">
+      <table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <td style="color:white;font-size:14px;font-weight:700">&#128100; {gerente}
+            <span style="background:#dc2626;color:white;padding:2px 8px;border-radius:10px;font-size:11px;margin-left:8px">{len(g_rows)} processo{"s" if len(g_rows)!=1 else ""}</span>
+          </td>
+          <td style="text-align:right">
+            <span style="font-size:11px;color:#94a3b8">Subtotal em risco</span><br>
+            <span style="font-size:15px;font-weight:900;color:#fbbf24">{fmt_brl(subtotal)}</span>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:12px 0 0">
+      {cards}
+    </td>
+  </tr>
+</table>"""
+
     return f"""<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;color:#1e293b;max-width:680px;margin:0 auto;padding:20px">
 <div style="background:#7c2d12;border-radius:12px;padding:20px 24px;margin-bottom:20px">
-  <h1 style="color:white;margin:0;font-size:20px">🔴 Relatório Consolidado — Risco de Prejuízo</h1>
-  <p style="color:#fdba74;margin:6px 0 0">{len(rows)} extrato{"s" if len(rows)!=1 else ""} sem assinatura há mais de 24h — visão geral</p>
+  <h1 style="color:white;margin:0;font-size:20px">&#128308; Risco de Prejuízo — PJMOL</h1>
+  <p style="color:#fdba74;margin:6px 0 0">{len(rows)} extrato{"s" if len(rows)!=1 else ""} sem assinatura há mais de 24h</p>
 </div>
-<div style="background:#fff7ed;border:1px solid #fdba74;border-radius:8px;padding:14px 18px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center">
-  <span style="font-size:13px;color:#7c2d12;font-weight:600">Total geral em risco</span>
-  <span style="font-size:22px;font-weight:900;color:#c2410c">{fmt_brl(total)}</span>
-</div>
-{cards}
-<p style="margin-top:24px;font-size:11px;color:#94a3b8;text-align:center">PJMOL — Relatório automático consolidado • {datetime.now().strftime("%d/%m/%Y %H:%M")}</p>
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#fff7ed;border:1px solid #fdba74;border-radius:8px;margin-bottom:24px">
+  <tr>
+    <td style="padding:14px 18px;font-size:13px;color:#7c2d12;font-weight:600">Total geral em risco</td>
+    <td style="padding:14px 18px;text-align:right;font-size:22px;font-weight:900;color:#c2410c">{fmt_brl(total)}</td>
+  </tr>
+</table>
+{secoes_html}
+<p style="margin-top:24px;font-size:11px;color:#94a3b8;text-align:center">PJMOL — Relatório automático diário • {datetime.now().strftime("%d/%m/%Y %H:%M")}</p>
 </body></html>"""
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--tipo", choices=["admin", "gerentes"], required=True)
-    parser.add_argument("--dry-run", action="store_true", help="Apenas imprime sem enviar")
+    parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
 
     try:
         from app.utils.mailer import send_email
     except ImportError:
-        print("[erro] Não foi possível importar mailer. Verifique o path.")
+        print("[erro] Não foi possível importar mailer.")
         sys.exit(1)
 
     rows = get_overdue_extratos()
-    hoje = datetime.now().strftime("%d/%m/%Y")
+    if not rows:
+        print("[info] Nenhum extrato em risco. Email não enviado.")
+        return
 
-    if args.tipo == "admin":
-        if not rows:
-            print("[info] Nenhum extrato em risco. Email admin não enviado.")
-            return
+    total = sum(float(r.get("valor_causa") or 0) for r in rows)
+    html = build_html_admin(rows)
+    subject = f"🔴 PJMOL — Risco de Prejuízo: {len(rows)} extratos sem assinatura ({fmt_brl(total)})"
 
-        html = build_html_admin(rows)
-        subject = f"🔴 PJMOL — Risco de Prejuízo: {len(rows)} extratos sem assinatura ({fmt_brl(sum(float(r.get('valor_causa') or 0) for r in rows))})"
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute("SELECT email FROM usuarios WHERE id IN (5,8,11) AND email IS NOT NULL AND email != ''")
+    admin_emails = [r[0] for r in cur.fetchall()]
+    conn.close()
 
-        # Admins: Leonardo e Henrique
-        conn = sqlite3.connect(DB_PATH)
-        cur = conn.cursor()
-        cur.execute("SELECT email FROM usuarios WHERE id IN (5,8,11) AND email IS NOT NULL AND email != ''")
-        admin_emails = [r[0] for r in cur.fetchall()]
-        conn.close()
+    if args.dry_run:
+        print(f"[dry-run] Para: {admin_emails} | {len(rows)} extratos | {fmt_brl(total)}")
+        return
 
-        if args.dry_run:
-            print(f"[dry-run] Admin — Para: {admin_emails}, Assunto: {subject}")
-            return
-
-        ok = send_email(subject=subject, recipients=admin_emails, body_html=html)
-        print(f"[{'OK' if ok else 'ERRO'}] Admin email enviado para {admin_emails}")
-
-    elif args.tipo == "gerentes":
-        if not rows:
-            print("[info] Nenhum extrato em risco. Emails gerentes não enviados.")
-            return
-
-        # Agrupa por usuario_id
-        from collections import defaultdict
-        por_usuario = defaultdict(list)
-        for r in rows:
-            uid = r.get("usuario_id")
-            # Excluir admins (5, 8) do loop de gerentes — eles recebem o consolidado
-            if uid in ADMIN_IDS:
-                continue
-            por_usuario[uid].append(r)
-
-        conn = sqlite3.connect(DB_PATH)
-        conn.row_factory = sqlite3.Row
-        cur = conn.cursor()
-
-        for uid, user_rows in por_usuario.items():
-            cur.execute("SELECT nome, email FROM usuarios WHERE id = ?", (uid,))
-            user = cur.fetchone()
-            if not user or not user["email"]:
-                print(f"[aviso] usuario_id={uid} sem email, pulando")
-                continue
-
-            nome = user["nome"]
-            email = user["email"]
-            total = sum(float(r.get("valor_causa") or 0) for r in user_rows)
-            html = build_html_gerente(nome, user_rows)
-            subject = f"🔴 Risco de Prejuízo: {len(user_rows)} extrato{'s' if len(user_rows)!=1 else ''} aguardando sua assinatura ({fmt_brl(total)})"
-
-            if args.dry_run:
-                print(f"[dry-run] Gerente {nome} <{email}> — {len(user_rows)} extratos, {fmt_brl(total)}")
-                continue
-
-            ok = send_email(subject=subject, recipients=email, body_html=html)
-            print(f"[{'OK' if ok else 'ERRO'}] {nome} <{email}> — {len(user_rows)} extratos")
-
-        conn.close()
+    ok = send_email(subject=subject, recipients=admin_emails, body_html=html)
+    print(f"[{'OK' if ok else 'ERRO'}] Enviado para {admin_emails} — {len(rows)} extratos, {fmt_brl(total)}")
 
 if __name__ == "__main__":
     main()
