@@ -6,6 +6,7 @@ import { ArrowLeft, TrendingUp, Target, Award, BarChart3, Calendar, Trophy } fro
 import { getLoggedUser, getToken, filterByScope, canSeeAll, normalizeRole } from "@/app/lib/auth";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000/api";
+const ACCESS_DENIED_MESSAGE = "Este acesso não diz respeito ao seu desempenho. É de uso exclusivo dos administradores do negócio.";
 
 // Função para formatar valor em BRL
 function fmtBRL(valor: number): string {
@@ -122,6 +123,7 @@ export default function DashboardRelatorioPage() {
   const [loading, setLoading] = useState(true);
   const [processos, setProcessos] = useState<any[]>([]);
   const [usuario, setUsuario] = useState<any>(null);
+  const [accessDenied, setAccessDenied] = useState(false);
   const [dataInicial, setDataInicial] = useState<string>(''); // Data inicial do filtro
   const [dataFinal, setDataFinal] = useState<string>(''); // Data final do filtro
 
@@ -133,17 +135,29 @@ export default function DashboardRelatorioPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true);
-        
         // Buscar usuário logado
         const userLogado = getLoggedUser();
+        
+        // Verificar se é admin
+        if (normalizeRole(userLogado.perfil) !== "admin") {
+          setUsuario(userLogado);
+          setAccessDenied(true);
+          setProcessos([]);
+          setLoading(false);
+          return;
+        }
+        
+        setLoading(true);
+        setAccessDenied(false);
         setUsuario(userLogado);
 
         // Buscar processos
         const token = getToken();
         const headers = {
           'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'X-Perfil': String(userLogado?.perfil || ''),
+          ...(userLogado?.id != null ? { 'X-Usuario-Id': String(userLogado.id) } : {})
         };
 
         const response = await fetch(`${API_BASE}/extratos`, {
@@ -273,6 +287,28 @@ export default function DashboardRelatorioPage() {
       </div>
     );
   }
+
+  if (accessDenied) {
+    return (
+      <div className="min-h-screen bg-slate-50">
+        <div className="bg-white border-b border-slate-200">
+          <div className="max-w-4xl mx-auto px-4 py-4">
+            <Link href="/gerencial/processos" className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 text-sm font-semibold">
+              <ArrowLeft className="h-4 w-4" />
+              <span>Voltar</span>
+            </Link>
+          </div>
+        </div>
+        <main className="max-w-4xl mx-auto px-4 py-8">
+          <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+            <h1 className="text-xl font-bold text-slate-900">Acesso restrito</h1>
+            <p className="mt-3 text-base font-semibold leading-7 text-slate-700">{ACCESS_DENIED_MESSAGE}</p>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Header */}

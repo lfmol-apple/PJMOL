@@ -8,4 +8,5 @@ module.exports = {
     extend: {},
   },
   plugins: [],
+  safelist: ['lg:flex', 'lg:hidden'],
 };

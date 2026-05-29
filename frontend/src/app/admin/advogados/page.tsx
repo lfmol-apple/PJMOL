@@ -7,6 +7,28 @@ import { PatternFormat } from "react-number-format";
 
 const API_BASE = "/api";
 
+const DEFAULT_API_KEY_ZAPSIGN = "068da606-d352-4630-8b35-6cb194faa674d7419744-ab96-468f-9fbd-66b3872d9ab0";
+const DEFAULT_WEBHOOK_PATH_TOKEN = "5145ee69d9202235aeaeb29b2f7bd6a1";
+
+const MODELOS = [
+  {
+    id: "julio",
+    label: "01 — Modelo Júlio",
+    descricao: "Escritório Júlio Camargos (Santos/SP)",
+    email: "advocacia@juliocamargos.com",
+    telefone: "13991711215",
+    cor: "blue",
+  },
+  {
+    id: "miguel",
+    label: "02 — Modelo Miguel",
+    descricao: "Escritório Júlio Camargos (Santos/SP)",
+    email: "advocacia@juliocamargos.com",
+    telefone: "13991711215",
+    cor: "purple",
+  },
+] as const;
+
 interface Advogado {
   id: number;
   nome_completo: string;
@@ -78,6 +100,7 @@ export default function AdminAdvogados() {
   const [usuarioManual, setUsuarioManual] = useState(false);
   const [formLoading, setFormLoading] = useState(false);
   const [formErro, setFormErro] = useState("");
+  const [modeloSelecionado, setModeloSelecionado] = useState<string | null>(null);
 
   const carregarAdvogados = async () => {
     setErro("");
@@ -99,6 +122,14 @@ export default function AdminAdvogados() {
     setForm(FORM_VAZIO);
     setUsuarioManual(false);
     setFormErro("");
+    setModeloSelecionado(null);
+  };
+
+  const aplicarModelo = (id: string) => {
+    const m = MODELOS.find(m => m.id === id);
+    if (!m) return;
+    setModeloSelecionado(id);
+    setForm(prev => ({ ...prev, email: m.email, telefone: m.telefone }));
   };
 
   // Ao digitar nome, auto-preenche usuario com primeiro nome (se não foi editado manualmente)
@@ -124,8 +155,8 @@ export default function AdminAdvogados() {
         email: form.email.trim().toLowerCase(),
         telefone: form.telefone,
         senha: form.senha,
-        api_key_zapsign: "",
-        webhook_path_token: "",
+        api_key_zapsign: DEFAULT_API_KEY_ZAPSIGN,
+        webhook_path_token: DEFAULT_WEBHOOK_PATH_TOKEN,
         genero: form.genero,
       };
 
@@ -195,6 +226,31 @@ export default function AdminAdvogados() {
           <p className="text-sm text-gray-500 mb-4">
             O usuário é preenchido automaticamente com o primeiro nome. API ZapSign e Webhook aplicados pelo padrão do escritório.
           </p>
+
+          {/* Seleção de modelo */}
+          <div className="mb-5">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Usar modelo de escritório</p>
+            <div className="flex gap-3">
+              {MODELOS.map((m) => {
+                const ativo = modeloSelecionado === m.id;
+                const cores = m.cor === "blue"
+                  ? { base: "border-blue-300 bg-blue-50 text-blue-800", ativo: "border-blue-600 bg-blue-100 ring-2 ring-blue-400" }
+                  : { base: "border-purple-300 bg-purple-50 text-purple-800", ativo: "border-purple-600 bg-purple-100 ring-2 ring-purple-400" };
+                return (
+                  <button
+                    key={m.id}
+                    type="button"
+                    onClick={() => aplicarModelo(m.id)}
+                    className={`flex-1 rounded-lg border-2 px-4 py-3 text-left transition-all ${ativo ? cores.ativo : cores.base} hover:opacity-90`}
+                  >
+                    <div className="font-bold text-sm">{m.label}</div>
+                    <div className="text-xs opacity-70 mt-0.5">{m.descricao}</div>
+                    {ativo && <div className="text-[10px] mt-1 font-semibold">✓ Selecionado — email e telefone preenchidos</div>}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
           <form onSubmit={handleCriarAdvogado} className="space-y-4">
 

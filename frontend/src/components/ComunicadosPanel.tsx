@@ -176,9 +176,9 @@ export default function ComunicadosPanel() {
 
   useEffect(() => {
     if (open && listRef.current) {
-      listRef.current.scrollTop = listRef.current.scrollHeight;
+      listRef.current.scrollTop = 0; // mais recente no topo
     }
-  }, [open, comunicados]);
+  }, [open]);
 
   // ── Reagir a novas regras criadas em outras abas (mesmo usuário) ────────
   useEffect(() => {
@@ -228,7 +228,7 @@ export default function ComunicadosPanel() {
             localStorage.setItem("pjmol_comunicado_last_created", String(Date.now()));
           }
         } catch {}
-        if (listRef.current) listRef.current.scrollTop = listRef.current.scrollHeight;
+        if (listRef.current) listRef.current.scrollTop = 0; // mais recente no topo
       }
     } finally {
       setEnviando(false);

@@ -753,6 +753,17 @@ function montarEndereco(base: AnyObj): string | undefined {
           
           toast.dismiss();
           toast.success("✅ Extrato salvo com sucesso!");
+          try {
+            const r = await axios.get(`${API_BASE}/extratos/meu-total-mes`, {
+              headers: { "X-Usuario-Id": String(getUsuarioIdAtual()) },
+            });
+            const { quantidade, valor_causa_total_fmt } = r.data;
+            toast(`📊 Sua produção no mês: ${valor_causa_total_fmt} (${quantidade} processo${quantidade !== 1 ? "s" : ""})`, {
+              duration: 7000,
+              position: "bottom-right",
+              style: { background: "#1e3a5f", color: "#fff", fontWeight: "600" },
+            });
+          } catch {}
         } catch (err: any) {
           toast.dismiss();
           if (err?.response?.status === 409) {
@@ -866,6 +877,17 @@ function montarEndereco(base: AnyObj): string | undefined {
           if (typeof window !== "undefined") {
             window.dispatchEvent(new CustomEvent("pjmol-extrato-created", { detail: { extratoId: novoId } }));
           }
+          try {
+            const r = await axios.get(`${API_BASE}/extratos/meu-total-mes`, {
+              headers: { "X-Usuario-Id": String(getUsuarioIdAtual()) },
+            });
+            const { quantidade, valor_causa_total_fmt } = r.data;
+            toast(`📊 Sua produção no mês: ${valor_causa_total_fmt} (${quantidade} processo${quantidade !== 1 ? "s" : ""})`, {
+              duration: 7000,
+              position: "bottom-right",
+              style: { background: "#1e3a5f", color: "#fff", fontWeight: "600" },
+            });
+          } catch {}
         } catch (err: any) {
           toast.dismiss();
           if (err?.response?.status === 409) {

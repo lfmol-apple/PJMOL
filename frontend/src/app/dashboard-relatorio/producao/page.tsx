@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Manrope, Source_Sans_3 } from "next/font/google";
-import { ArrowLeft, Calendar, User2, Filter } from "lucide-react";
+import { ArrowLeft, Calendar, User2, Filter, RefreshCw } from "lucide-react";
 import { canSeeAll, getLoggedUser, getToken } from "@/app/lib/auth";
 
 const headingFont = Manrope({ subsets: ["latin"], weight: ["600", "700", "800"] });
@@ -29,6 +29,13 @@ function fmtBRL(valor: number | string): string {
   return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(n);
 }
 
+function fmtBRLCompact(valor: number | string): string {
+  const n = Number(valor || 0);
+  if (Math.abs(n) >= 1_000_000) return `R$ ${(n / 1_000_000).toLocaleString("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}M`;
+  if (Math.abs(n) >= 1_000) return `R$ ${(n / 1_000).toLocaleString("pt-BR", { minimumFractionDigits: 0, maximumFractionDigits: 1 })}K`;
+  return fmtBRL(n);
+}
+
 type StatusRow = {
   status: string;
   quantidade: number;
@@ -46,14 +53,6 @@ type AdministradoraRow = {
   statuses: StatusRow[];
 };
 
-type AcordosRow = {
-  quantidade: number;
-  honorarios_total: number;
-  honorarios_total_fmt: string;
-  comissao_gerente: number;
-  comissao_gerente_fmt: string;
-};
-
 type GerenteRow = {
   gerente_id: number;
   gerente_nome: string;
@@ -63,7 +62,6 @@ type GerenteRow = {
     valor_causa_total: number;
     acordo_provavel_total: number;
   };
-  acordos: AcordosRow;
   statuses: StatusRow[];
   administradoras: AdministradoraRow[];
 };
@@ -71,7 +69,6 @@ type GerenteRow = {
 type ReportPayload = {
   periodo: { data_inicial: string; data_final: string };
   totais: { quantidade: number; valor_causa_total: number; acordo_provavel_total: number };
-  acordos_geral: AcordosRow;
   resumo_assinaturas: {
     enviados: { quantidade: number; valor_causa_total: number; acordo_provavel_total: number };
     aguardando_assinatura: { quantidade: number; valor_causa_total: number; acordo_provavel_total: number };
@@ -174,6 +171,7 @@ export default function ProducaoMensalPage() {
     }
   };
 
+
   useEffect(() => {
     if (!canSeeAll(user?.perfil)) {
       setLoading(false);
@@ -217,7 +215,7 @@ export default function ProducaoMensalPage() {
                 <div className="mb-1.5 flex items-center gap-2"><Calendar className="h-4 w-4" /> Data final</div>
                 <input type="date" value={dataFinal} onChange={(e) => setDataFinal(e.target.value)} className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm text-slate-900 sm:text-base" />
               </label>
-              <button onClick={fetchReport} className={`${headingFont.className} inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-amber-300 px-5 text-sm font-bold text-slate-950 hover:bg-amber-400 sm:w-auto sm:text-base`}>
+<button onClick={fetchReport} className={`${headingFont.className} inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-amber-300 px-5 text-sm font-bold text-slate-950 hover:bg-amber-400 sm:w-auto sm:text-base`}>
                 <Filter className="h-4 w-4" /> Gerar na tela
               </button>
             </div>
@@ -234,16 +232,82 @@ export default function ProducaoMensalPage() {
 
         {!loading && report && (
           <div className="space-y-6">
+            <section className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:rounded-[28px] sm:p-6">
+              <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
+                <div className="xl:max-w-xl">
+                  <div className={`${headingFont.className} text-sm font-bold uppercase tracking-[0.18em] text-slate-500`}>Resumo do período</div>
+                  <h2 className={`${headingFont.className} mt-2 text-xl font-extrabold tracking-tight text-slate-950 sm:text-3xl`}>Total geral e ranking de produção</h2>
+                  <p className="mt-2 text-sm font-semibold text-slate-700 sm:text-base">Os gerentes abaixo estão ordenados da maior para a menor produção no período filtrado.</p>
 
-            {/* ── Cards individuais por gerente ───────────────────────────── */}
+                  <div className="mt-5 grid grid-cols-3 gap-2 sm:gap-3">
+                    <div className="rounded-xl sm:rounded-2xl border border-slate-200 bg-slate-50 p-2.5 sm:p-4">
+                      <div className={`${headingFont.className} text-[10px] sm:text-sm font-bold uppercase tracking-wide text-slate-600`}>Processos</div>
+                      <div className={`${headingFont.className} mt-1 sm:mt-2 text-3xl sm:text-4xl font-extrabold text-slate-950`}>{report.totais.quantidade}</div>
+                    </div>
+                    <div className="rounded-xl sm:rounded-2xl border border-emerald-200 bg-emerald-50 p-2.5 sm:p-4" title={fmtBRL(report.totais.valor_causa_total)}>
+                      <div className={`${headingFont.className} text-[10px] sm:text-sm font-bold uppercase tracking-wide text-emerald-800`}>Produção</div>
+                      <div className={`${headingFont.className} mt-1 sm:mt-2 text-base sm:text-3xl font-extrabold leading-tight text-emerald-950`}>
+                        {fmtBRLCompact(report.totais.valor_causa_total)}
+                      </div>
+                    </div>
+                    <div className="rounded-xl sm:rounded-2xl border border-sky-200 bg-sky-50 p-2.5 sm:p-4" title={fmtBRL(report.totais.acordo_provavel_total)}>
+                      <div className={`${headingFont.className} text-[10px] sm:text-sm font-bold uppercase tracking-wide text-sky-800`}>Acordo prov.</div>
+                      <div className={`${headingFont.className} mt-1 sm:mt-2 text-base sm:text-3xl font-extrabold leading-tight text-sky-950`}>
+                        {fmtBRLCompact(report.totais.acordo_provavel_total)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="xl:w-[420px] xl:min-w-[420px]">
+                  <div className="rounded-3xl border border-amber-200 bg-linear-to-br from-amber-50 via-orange-50 to-white p-4 shadow-sm">
+                    <div className={`${headingFont.className} text-base font-bold uppercase tracking-[0.14em] text-amber-900`}>Ranking de produção</div>
+                    <div className="mt-3 divide-y divide-amber-100 overflow-hidden rounded-2xl border border-amber-100 bg-white">
+                      {gerenteCards.map((gerente, index) => (
+                        <div key={`ranking-${gerente.gerente_id}`} className="flex items-center gap-3 px-3 py-3 sm:px-4">
+                          <div className={`${headingFont.className} flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-amber-100 text-xs font-extrabold text-amber-950 sm:h-10 sm:w-10 sm:text-sm`}>
+                            #{index + 1}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="truncate text-sm font-bold text-slate-950 sm:text-base">{gerente.gerente_nome}</div>
+                            <div className="text-xs font-semibold text-slate-600 sm:text-sm">{gerente.totais.quantidade} processo(s)</div>
+                          </div>
+                          <div className="text-right">
+                            <div className={`${headingFont.className} text-sm font-extrabold text-emerald-950 sm:text-base`}>{fmtBRL(gerente.totais.valor_causa_total)}</div>
+                            <div className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Produção</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section className="rounded-2xl border border-emerald-200 bg-emerald-50 p-5 shadow-sm">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <div className={`${headingFont.className} text-xs font-bold uppercase tracking-[0.18em] text-emerald-700`}>Extrato de Fechamento</div>
+                  <h2 className={`${headingFont.className} mt-1 text-xl font-extrabold tracking-tight text-slate-950 sm:text-2xl`}>Comissões por data de acordo</h2>
+                  <p className="mt-1 text-sm font-semibold text-slate-600">
+                    O extrato de fechamento foi movido para uma página dedicada. Selecione acordos individualmente, filtre por responsável e calcule o valor exato a pagar.
+                  </p>
+                </div>
+                <Link
+                  href="/gerencial/comissoes"
+                  className={`${headingFont.className} inline-flex shrink-0 items-center gap-2 rounded-xl bg-emerald-700 px-5 py-3 text-sm font-bold text-white shadow-sm hover:bg-emerald-800`}
+                >
+                  💰 Abrir Extrato de Fechamento
+                </Link>
+              </div>
+            </section>
+
             {gerenteCards.map((gerente) => (
               <section key={gerente.gerente_id} className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm sm:rounded-[28px]">
                 <div className="bg-linear-to-r from-amber-100 via-orange-50 to-white px-4 py-4 sm:px-6 sm:py-5">
                   <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                     <div>
-                      <div className={`${headingFont.className} flex items-center gap-2 text-xl font-extrabold tracking-tight text-slate-950 sm:text-3xl`}>
-                        <User2 className="h-5 w-5 text-amber-700 sm:h-6 sm:w-6" /> {gerente.gerente_nome}
-                      </div>
+                      <div className={`${headingFont.className} flex items-center gap-2 text-xl font-extrabold tracking-tight text-slate-950 sm:text-3xl`}><User2 className="h-5 w-5 text-amber-700 sm:h-6 sm:w-6" /> {gerente.gerente_nome}</div>
                       {gerente.gerente_email && <div className="mt-1 text-sm font-semibold text-slate-700 sm:text-base">{gerente.gerente_email}</div>}
                     </div>
                     <div className={`${headingFont.className} w-fit rounded-full border border-amber-200 bg-amber-100 px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-amber-950 sm:px-4 sm:py-1.5 sm:text-sm`}>
@@ -251,14 +315,13 @@ export default function ProducaoMensalPage() {
                     </div>
                   </div>
 
-                  {/* Totais principais */}
                   <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 xl:grid-cols-4">
                     <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
                       <div className={`${headingFont.className} text-sm font-bold uppercase tracking-[0.12em] text-slate-600`}>Processos no período</div>
                       <div className={`${headingFont.className} mt-2 text-3xl font-extrabold text-slate-950 sm:text-4xl`}>{gerente.totais.quantidade}</div>
                     </div>
                     <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 shadow-sm">
-                      <div className={`${headingFont.className} text-sm font-bold uppercase tracking-[0.12em] text-emerald-800`}>Produção total</div>
+                      <div className={`${headingFont.className} text-sm font-bold uppercase tracking-[0.12em] text-emerald-800`}>Valor da causa</div>
                       <div className={`${headingFont.className} mt-2 text-2xl font-extrabold leading-tight text-emerald-950 sm:text-3xl`}>{fmtBRL(gerente.totais.valor_causa_total)}</div>
                     </div>
                     <div className="rounded-2xl border border-sky-200 bg-sky-50 p-4 shadow-sm">
@@ -285,38 +348,23 @@ export default function ProducaoMensalPage() {
                       <div className={`${headingFont.className} mt-2 text-3xl font-extrabold text-cyan-950 sm:text-4xl`}>{gerente.assinadosFora.quantidade}</div>
                       <div className="mt-2 text-sm font-semibold text-cyan-900 sm:text-base">Valor: {fmtBRL(gerente.assinadosFora.valor_causa_total)}</div>
                     </div>
-
-                    {/* Acordos efetivos */}
-                    {gerente.acordos && gerente.acordos.quantidade > 0 && (
-                      <div className="rounded-2xl border border-green-300 bg-green-50 p-4 shadow-sm min-[420px]:col-span-2 xl:col-span-1">
-                        <div className={`${headingFont.className} text-sm font-bold uppercase tracking-[0.12em] text-green-800`}>Acordos efetivos</div>
-                        <div className={`${headingFont.className} mt-2 text-3xl font-extrabold text-green-950 sm:text-4xl`}>{gerente.acordos.quantidade}</div>
-                        <div className="mt-2 text-sm font-semibold text-green-900 sm:text-base">Honorários: {fmtBRL(gerente.acordos.honorarios_total)}</div>
-                      </div>
-                    )}
-
-                    {/* Comissão gerente */}
-                    {gerente.acordos && gerente.acordos.quantidade > 0 && (
-                      <div className="rounded-2xl border border-violet-300 bg-violet-50 p-4 shadow-sm min-[420px]:col-span-2 xl:col-span-1">
-                        <div className={`${headingFont.className} text-sm font-bold uppercase tracking-[0.12em] text-violet-800`}>Comissão gerente</div>
-                        <div className={`${headingFont.className} mt-2 text-2xl font-extrabold leading-tight text-violet-950 sm:text-3xl`}>{fmtBRL(gerente.acordos.comissao_gerente)}</div>
-                        <div className="mt-2 text-sm font-semibold text-violet-900 sm:text-base">÷12 sobre honorários</div>
-                      </div>
-                    )}
                   </div>
                 </div>
 
                 <div className="grid gap-4 bg-slate-50 p-4 sm:p-6 md:grid-cols-2">
                   <div className="rounded-3xl border border-amber-200 bg-linear-to-br from-amber-50 to-orange-100 p-5 shadow-sm">
-                    <div className={`${headingFont.className} text-base font-bold text-amber-950`}>Enviados</div>
+                    <div className={`${headingFont.className} text-base font-bold text-amber-950`}>Resumo de envio e assinatura</div>
+                    <div className={`${headingFont.className} mt-3 text-xl font-extrabold text-slate-950 sm:text-2xl`}>Enviados</div>
                     <div className="mt-3 space-y-1.5 text-sm font-semibold leading-6 text-slate-800 sm:text-base">
                       <div>Quantidade: <strong>{gerente.enviados.quantidade}</strong></div>
                       <div>Valor da causa: <strong>{fmtBRL(gerente.enviados.valor_causa_total)}</strong></div>
                       <div>Acordo provável: <strong>{fmtBRL(gerente.enviados.acordo_provavel_total)}</strong></div>
                     </div>
                   </div>
+
                   <div className="rounded-3xl border border-orange-200 bg-linear-to-br from-orange-50 to-rose-100 p-5 shadow-sm">
                     <div className={`${headingFont.className} text-base font-bold text-orange-950`}>Aguardando assinatura</div>
+                    <div className={`${headingFont.className} mt-3 text-xl font-extrabold text-slate-950 sm:text-2xl`}>Desses enviados, aguardando assinatura</div>
                     <div className="mt-3 space-y-1.5 text-sm font-semibold leading-6 text-slate-800 sm:text-base">
                       <div>Quantidade: <strong>{gerente.aguardandoAssinatura.quantidade}</strong></div>
                       <div>Valor da causa: <strong>{fmtBRL(gerente.aguardandoAssinatura.valor_causa_total)}</strong></div>
@@ -332,88 +380,6 @@ export default function ProducaoMensalPage() {
                 Nenhum gerente com produção no período informado.
               </div>
             )}
-
-            {/* ── Total geral + Ranking (rodapé) ──────────────────────────── */}
-            {gerenteCards.length > 0 && (
-              <section className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:rounded-[28px] sm:p-6">
-                <div className={`${headingFont.className} text-sm font-bold uppercase tracking-[0.18em] text-slate-500`}>Resumo do período</div>
-                <h2 className={`${headingFont.className} mt-2 text-xl font-extrabold tracking-tight text-slate-950 sm:text-3xl`}>Total geral e ranking de produção</h2>
-
-                {/* Totais gerais */}
-                <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                    <div className={`${headingFont.className} text-sm font-bold uppercase tracking-[0.12em] text-slate-600`}>Processos</div>
-                    <div className={`${headingFont.className} mt-2 text-4xl font-extrabold text-slate-950`}>{report.totais.quantidade}</div>
-                  </div>
-                  <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4">
-                    <div className={`${headingFont.className} text-sm font-bold uppercase tracking-[0.12em] text-emerald-800`}>Produção total</div>
-                    <div className={`${headingFont.className} mt-2 text-3xl font-extrabold leading-tight text-emerald-950`}>{fmtBRL(report.totais.valor_causa_total)}</div>
-                  </div>
-                  <div className="rounded-2xl border border-sky-200 bg-sky-50 p-4">
-                    <div className={`${headingFont.className} text-sm font-bold uppercase tracking-[0.12em] text-sky-800`}>Acordo provável</div>
-                    <div className={`${headingFont.className} mt-2 text-3xl font-extrabold leading-tight text-sky-950`}>{fmtBRL(report.totais.acordo_provavel_total)}</div>
-                  </div>
-                  {report.acordos_geral && report.acordos_geral.quantidade > 0 && (
-                    <div className="rounded-2xl border border-green-300 bg-green-50 p-4">
-                      <div className={`${headingFont.className} text-sm font-bold uppercase tracking-[0.12em] text-green-800`}>Acordos efetivos</div>
-                      <div className={`${headingFont.className} mt-2 text-4xl font-extrabold text-green-950`}>{report.acordos_geral.quantidade}</div>
-                      <div className="mt-1 text-sm font-semibold text-green-900">Honorários: {fmtBRL(report.acordos_geral.honorarios_total)}</div>
-                    </div>
-                  )}
-                  <div className="rounded-2xl border border-violet-300 bg-violet-50 p-4">
-                    <div className={`${headingFont.className} text-sm font-bold uppercase tracking-[0.12em] text-violet-800`}>Comissão gerente</div>
-                    <div className={`${headingFont.className} mt-2 text-3xl font-extrabold leading-tight text-violet-950`}>{fmtBRL(report.acordos_geral?.comissao_gerente || 0)}</div>
-                    <div className="mt-1 text-sm font-semibold text-violet-900">Total do período</div>
-                  </div>
-                </div>
-
-                {/* Ranking */}
-                <div className="mt-6 rounded-3xl border border-amber-200 bg-linear-to-br from-amber-50 via-orange-50 to-white p-4 shadow-sm">
-                  <div className={`${headingFont.className} text-base font-bold uppercase tracking-[0.14em] text-amber-900`}>Ranking de produção</div>
-                  <p className="mt-1 text-sm font-semibold text-slate-600">Ordenado pela maior produção total no período.</p>
-                  <div className="mt-3 overflow-x-auto rounded-2xl border border-amber-100 bg-white">
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="border-b border-amber-100 bg-amber-50">
-                          <th className={`${headingFont.className} px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-amber-900`}>#</th>
-                          <th className={`${headingFont.className} px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-amber-900`}>Gerente</th>
-                          <th className={`${headingFont.className} px-4 py-3 text-right text-xs font-bold uppercase tracking-wide text-amber-900`}>Processos</th>
-                          <th className={`${headingFont.className} px-4 py-3 text-right text-xs font-bold uppercase tracking-wide text-amber-900`}>Produção total</th>
-                          <th className={`${headingFont.className} px-4 py-3 text-right text-xs font-bold uppercase tracking-wide text-amber-900`}>Acordo provável</th>
-                          <th className={`${headingFont.className} px-4 py-3 text-right text-xs font-bold uppercase tracking-wide text-green-800`}>Comissão gerente</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-amber-50">
-                        {gerenteCards.map((gerente, index) => (
-                          <tr key={`ranking-${gerente.gerente_id}`} className={index % 2 === 0 ? "bg-white" : "bg-amber-50/40"}>
-                            <td className={`${headingFont.className} px-4 py-3 font-extrabold text-amber-700`}>#{index + 1}</td>
-                            <td className="px-4 py-3 font-bold text-slate-950">{gerente.gerente_nome}</td>
-                            <td className="px-4 py-3 text-right font-semibold text-slate-700">{gerente.totais.quantidade}</td>
-                            <td className={`${headingFont.className} px-4 py-3 text-right font-extrabold text-emerald-900`}>{fmtBRL(gerente.totais.valor_causa_total)}</td>
-                            <td className="px-4 py-3 text-right font-semibold text-sky-900">{fmtBRL(gerente.totais.acordo_provavel_total)}</td>
-                            <td className={`${headingFont.className} px-4 py-3 text-right font-extrabold text-green-800`}>
-                              {fmtBRL(gerente.acordos?.comissao_gerente || 0)}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                      <tfoot>
-                        <tr className="border-t-2 border-amber-200 bg-amber-100/70">
-                          <td className={`${headingFont.className} px-4 py-3 font-extrabold text-amber-900`} colSpan={2}>Total</td>
-                          <td className="px-4 py-3 text-right font-extrabold text-slate-900">{report.totais.quantidade}</td>
-                          <td className={`${headingFont.className} px-4 py-3 text-right font-extrabold text-emerald-950`}>{fmtBRL(report.totais.valor_causa_total)}</td>
-                          <td className="px-4 py-3 text-right font-extrabold text-sky-950">{fmtBRL(report.totais.acordo_provavel_total)}</td>
-                          <td className={`${headingFont.className} px-4 py-3 text-right font-extrabold text-green-900`}>
-                            {fmtBRL(report.acordos_geral?.comissao_gerente || 0)}
-                          </td>
-                        </tr>
-                      </tfoot>
-                    </table>
-                  </div>
-                </div>
-              </section>
-            )}
-
           </div>
         )}
       </div>

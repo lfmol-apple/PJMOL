@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { AlertModalContent } from "@/components/DailyAlertModal";
 import { logoutCurrentSession } from "@/app/lib/sessionPresence";
 
 function read(k: string): string | null {
@@ -16,8 +15,6 @@ export default function TarjaUsuario() {
   const [nome, setNome] = useState<string>("");
   const [perfil, setPerfil] = useState<string>("");
   const [usuarioId, setUsuarioId] = useState<number | null>(null);
-  const [showDesempenho, setShowDesempenho] = useState(false);
-
   useEffect(() => {
     const nomeAdv = read("nomeAdvogado") || "";
     const oab = read("oabAdvogado") || "";
@@ -61,33 +58,6 @@ export default function TarjaUsuario() {
           </Link>
         )}
 
-        {/* Botão "Meu Desempenho" — para gerentes */}
-        {perfil === "gerente" && (
-          <button
-            onClick={() => setShowDesempenho(true)}
-            className="px-3 py-1.5 rounded-lg bg-blue-700 text-white text-sm font-semibold hover:bg-blue-600 flex items-center gap-1"
-          >
-            📊 Meu Desempenho
-          </button>
-        )}
-
-        {/* Botão "Disparar Alerta" — somente Leonardo (ID 5) */}
-        {isLeonardo && (
-          <button
-            onClick={() => {
-              // Abre uma aba em cada gerente que estiver logado via URL forceAlert
-              // Para o próprio computador, abre em nova aba; notificação push não existe no browser sem PWA
-              const url = new URL(window.location.href);
-              url.searchParams.set("forceAlert", "1");
-              window.open(url.toString(), "_blank");
-            }}
-            className="px-3 py-1.5 rounded-lg bg-red-700 text-white text-sm font-semibold hover:bg-red-600 flex items-center gap-1"
-            title="Força o alerta a aparecer na próxima abertura de qualquer gerente"
-          >
-            🚨 Disparar Alerta
-          </button>
-        )}
-
         <button
           onClick={sair}
           className="px-3 py-1.5 rounded-lg bg-white text-red-600 text-sm font-semibold border border-red-200 hover:bg-red-50"
@@ -96,10 +66,6 @@ export default function TarjaUsuario() {
         </button>
       </div>
 
-      {/* Modal "Meu Desempenho" (sem som) */}
-      {showDesempenho && (
-        <AlertModalContent muted onClose={() => setShowDesempenho(false)} />
-      )}
     </div>
   );
 }

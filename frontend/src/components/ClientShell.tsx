@@ -1,8 +1,6 @@
 "use client";
 import { useEffect } from "react";
-import DailyAlertModal from "@/components/DailyAlertModal";
 import ComunicadosPanel from "@/components/ComunicadosPanel";
-import ForcedAlertPoller from "@/components/ForcedAlertPoller";
 import SessionLoginNotifier from "@/components/SessionLoginNotifier";
 import { getSessionPayload, logoutCurrentSession, postSessionPresence } from "@/app/lib/sessionPresence";
 
@@ -76,8 +74,6 @@ export default function ClientShell({ children }: { children: React.ReactNode })
   return (
     <>
       {children}
-      <ForcedAlertPoller />
-      <DailyAlertModal />
       <ComunicadosPanel />
       <SessionLoginNotifier />
     </>

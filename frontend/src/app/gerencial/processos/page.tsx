@@ -5,11 +5,12 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import {
   RefreshCw, Search, ChevronDown, ChevronUp, Download, Plus, ArrowLeft,
-  AlertCircle , Paperclip, CheckCircle2, Trash2, FileText, CheckCircle, BarChart3
+  AlertCircle, Paperclip, CheckCircle2, Trash2, FileText, CheckCircle, BarChart3, DollarSign, SlidersHorizontal
 } from "lucide-react";
 import { getLoggedUser, getToken, filterByScope } from "@/app/lib/auth";
 import { logoutCurrentSession } from "@/app/lib/sessionPresence";
-import { AlertModalContent } from "@/components/DailyAlertModal";
+
+import ComissaoMes from "@/components/ComissaoMes";
 
 /** ===================== Helpers ===================== */
 function displayGerenteName(row: any): string {
@@ -261,12 +262,56 @@ const fmtBRL = (v: any) => {
   if (Number.isNaN(n)) return "—";
   return n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 };
+const fmtBRLCompact = (v: any): string => {
+  const n = Number(v);
+  if (Number.isNaN(n)) return "—";
+  if (Math.abs(n) >= 1_000_000) return `R$ ${(n / 1_000_000).toLocaleString("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}M`;
+  if (Math.abs(n) >= 1_000) return `R$ ${(n / 1_000).toLocaleString("pt-BR", { minimumFractionDigits: 0, maximumFractionDigits: 1 })}K`;
+  return fmtBRL(n);
+};
+const fmtPhone = (tel: string): string => {
+  const d = tel.replace(/\D/g, "");
+  if (d.length === 11) return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
+  if (d.length === 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`;
+  return tel;
+};
 const fmtDate = (iso?: string) => {
   if (!iso) return "—";
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "—";
   return d.toLocaleDateString("pt-BR", { year: "numeric", month: "2-digit", day: "2-digit" });
 };
+
+// Parse de campo somente-data (YYYY-MM-DD) sem problema de fuso — trata como horário local
+function parseDateOnly(s?: string | null): Date | null {
+  if (!s) return null;
+  const m = String(s).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!m) return null;
+  return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+}
+
+// Parse de DateTime UTC vindo do SQLite (sem sufixo Z) com ajuste para BRT (UTC-3)
+function parseDateTimeUTCtoBRT(s?: string | null): Date | null {
+  if (!s) return null;
+  // Normaliza: substitui espaço por T e adiciona Z se não tiver offset
+  const norm = String(s).replace(' ', 'T').replace(/(\.\d+)?$/, (x) => x || '') + 'Z';
+  const d = new Date(norm);
+  if (Number.isNaN(d.getTime())) return null;
+  // Subtrai 3h para BRT
+  return new Date(d.getTime() - 3 * 60 * 60 * 1000);
+}
+
+function fmtDateOnly(s?: string | null): string {
+  const d = parseDateOnly(s);
+  if (!d) return "—";
+  return d.toLocaleDateString("pt-BR", { year: "numeric", month: "2-digit", day: "2-digit" });
+}
+
+function fmtDateTimeBRT(s?: string | null): string {
+  const d = parseDateTimeUTCtoBRT(s);
+  if (!d) return "—";
+  return d.toLocaleDateString("pt-BR", { year: "numeric", month: "2-digit", day: "2-digit" });
+}
 const fmtDateTime = (isoOrDate?: string|Date|null) => {
   if (!isoOrDate) return "";
   const d = typeof isoOrDate === 'string' ? new Date(isoOrDate) : isoOrDate;
@@ -340,31 +385,40 @@ function getResultadoLabel(it: any): string {
   if (r) return r.charAt(0).toUpperCase() + r.slice(1);
   return "Sem Julgamento";
 }
-function calcComissaoGerente(it: any): number | null {
-  const numeroProc = (it.numero_processo ?? it.numeroProcesso ?? it.processo_numero ?? "").toString().trim();
-  if (!numeroProc || numeroProc === "None") return null;
-  if (getResultadoLabel(it) !== "Acordo") return null;
-  const raw = it.honorarios_hoje_total ?? (Number(it.honorarios_hoje_adv || 0) + Number(it.honorarios_hoje_emp || 0));
-  const parseVal = (v: any): number => {
-    if (typeof v === "number") return v;
-    const s = String(v ?? "").replace(/R\$\s*/g, "").replace(/\./g, "").replace(",", ".");
-    return parseFloat(s);
-  };
-  const honor = parseVal(raw);
-  if (!Number.isFinite(honor) || honor <= 0) return null;
-  return honor / 12;
+function calcExpectativaHonorarios(it: any): number | null {
+  const causa = Number(it.valor_causa);
+  if (!Number.isFinite(causa) || causa <= 0) return null;
+  const pct = Number(it.honorarios_percentual);
+  if (!Number.isFinite(pct) || pct <= 0) return null;
+  return causa * 0.7 * (pct / 100);
 }
 
+// Marco Antonio Faria Junior recebe 1/6; todos os demais recebem 1/12
+function divisorComissao(it: any): number {
+  const nome = (it.gerente_nome ?? it.gerente?.nome ?? it.criado_por_nome ?? it.usuario_criador_nome ?? "").toUpperCase();
+  const id = Number(it.gerente_id ?? it.criado_por_id ?? it.usuario_id ?? 0);
+  if (id === 11 || nome.includes("MARCO ANTONIO FARIA")) return 6;
+  return 12;
+}
+
+// Acordo → base = Honorários Hoje (realizado); demais → base = Exp. Honorários (projeção)
 function calcComissaoTodos(it: any): number | null {
-  const raw = it.honorarios_hoje_total ?? (Number(it.honorarios_hoje_adv || 0) + Number(it.honorarios_hoje_emp || 0));
-  const parseVal = (v: any): number => {
-    if (typeof v === "number") return v;
-    const s = String(v ?? "").replace(/R\$\s*/g, "").replace(/\./g, "").replace(",", ".");
-    return parseFloat(s);
-  };
-  const honor = parseVal(raw);
-  if (!Number.isFinite(honor) || honor <= 0) return null;
-  return honor / 12;
+  const divisor = divisorComissao(it);
+  if (getResultadoLabel(it) === "Acordo") {
+    const raw = it.honorarios_hoje_total ?? (Number(it.honorarios_hoje_adv || 0) + Number(it.honorarios_hoje_emp || 0));
+    const base = typeof raw === "number" ? raw : parseFloat(String(raw ?? "").replace(/R\$\s*/g, "").replace(/\./g, "").replace(",", "."));
+    if (!Number.isFinite(base) || base <= 0) return null;
+    return base / divisor;
+  }
+  const exp = calcExpectativaHonorarios(it);
+  if (exp === null) return null;
+  return exp / divisor;
+}
+
+// Mantido para compatibilidade com sumComissaoGerente (somente Acordo)
+function calcComissaoGerente(it: any): number | null {
+  if (getResultadoLabel(it) !== "Acordo") return null;
+  return calcComissaoTodos(it);
 }
 
 function resultadoPillClass(label: string): string {
@@ -460,8 +514,9 @@ function getDaysSince(date: Date | null, now = new Date()): number {
 
 function isAwaitingSignatureOverFiveDays(row: any, now = new Date()): boolean {
   if (getDisplayStatus(row) !== "Enviado") return false;
-  const sentAt = getSentAtDate(row);
-  return getDaysSince(sentAt, now) > 2;
+  const sentAt = getSentAtDate(row) || parseDateMaybe(row?.criado_em || row?.created_at);
+  if (!sentAt) return false;
+  return (now.getTime() - sentAt.getTime()) > 24 * 60 * 60 * 1000;
 }
 
 function getAwaitingSignatureLabel(row: any, now = new Date()): string {
@@ -470,7 +525,15 @@ function getAwaitingSignatureLabel(row: any, now = new Date()): string {
   if (days === 1) return "1 dia";
   return `${days} dias`;
 }
-const OVERDUE_SIGNATURE_DAYS = 2;
+const OVERDUE_SIGNATURE_DAYS = 1;
+
+function isEnviadoOver24h(row: any, now = new Date()): boolean {
+  if (getDisplayStatus(row) !== "Enviado") return false;
+  // Tenta pegar a data de envio; se não existir, usa criado_em como aproximação
+  const sentAt = getSentAtDate(row) || parseDateMaybe(row?.criado_em || row?.created_at);
+  if (!sentAt) return false;
+  return (now.getTime() - sentAt.getTime()) > 24 * 60 * 60 * 1000;
+}
 
 // ❌ formatDurationDHMS removida - não é mais usada no sistema simplificado
 // ❌ ProcessTimeline removido - sistema mostra apenas status em outras seções
@@ -577,12 +640,17 @@ function displayComarcaNome(it: any): string {
 }
 
 /* ===== Tarja (inline) ===== */
-function TarjaInline() {
+function TarjaInline({ compact = false, onRiscoPrejuizo, overdueCount = 0, producaoTotal = 0 }: { compact?: boolean; onRiscoPrejuizo?: () => void; overdueCount?: number; producaoTotal?: number } = {}) {
   const [nome, setNome] = useState<string>("");
   const [perfil, setPerfil] = useState<string>("");
   const [usuarioId, setUsuarioId] = useState<number | null>(null);
   const [hydrated, setHydrated] = useState(false);
-  const [showDesempenho, setShowDesempenho] = useState(false);
+  const [tacticoPulsing, setTacticoPulsing] = useState<boolean>(true);
+
+  useEffect(() => {
+    const t = setTimeout(() => setTacticoPulsing(false), 5000);
+    return () => clearTimeout(t);
+  }, []);
 
   useEffect(() => {
     setHydrated(true);
@@ -603,7 +671,6 @@ function TarjaInline() {
 
   const isGerente = perfil === "gerente" || perfil === "admin";
   const isGerenteSomente = perfil === "gerente";
-  const isLeonardo = usuarioId === 5;
   const isUsuarioMonitor = usuarioId === 5 || usuarioId === 8 || usuarioId === 11;
 
   const sair = () => {
@@ -611,28 +678,24 @@ function TarjaInline() {
     window.location.href = "/login";
   };
 
-  const dispararAlerta = () => {
-    try {
-      const rawId = typeof window !== "undefined" ? localStorage.getItem("usuarioId") || "" : "";
-      const uid = parseInt(rawId, 10) || 0;
-      fetch(`${API_BASE}/alerta-forcado/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(uid ? { "X-Usuario-Id": String(uid) } : {}),
-        },
-        credentials: "include",
-      }).catch(() => {});
-    } catch {}
-  };
+  if (compact) {
+    return (
+      <div className="flex items-center gap-2 min-w-0 overflow-hidden">
+        <span className="flex items-center justify-center w-5 h-5 rounded-full bg-blue-200 shrink-0 text-xs">👤</span>
+        <span className="truncate font-semibold text-black text-sm">{nome}</span>
+        {perfil && (
+          <span className="shrink-0 text-[10px] px-1.5 py-0.5 rounded-full bg-yellow-100 text-amber-700 border border-amber-300">
+            {perfil.charAt(0).toUpperCase() + perfil.slice(1)}
+          </span>
+        )}
+      </div>
+    );
+  }
 
   return (
     <>
-      {showDesempenho && (
-        <AlertModalContent muted onClose={() => setShowDesempenho(false)} />
-      )}
       <div className="w-full border rounded-2xl px-3 py-2 bg-gray-50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <div className="flex items-center gap-3 min-w-0 w-full sm:w-auto">
+        <div className="flex flex-wrap items-center gap-3 min-w-0 w-full sm:w-auto">
           <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-200">👤</span>
           <div className="truncate font-semibold text-black">{nome}</div>
           {perfil && (
@@ -640,24 +703,28 @@ function TarjaInline() {
               {perfil.charAt(0).toUpperCase() + perfil.slice(1)}
             </span>
           )}
+          {isGerente && <ComissaoMes />}
+          {producaoTotal > 0 && (
+            <span className="inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-extrabold text-amber-800" title={fmtBRL(producaoTotal)}>
+              📁 {fmtBRLCompact(producaoTotal)} produção
+            </span>
+          )}
         </div>
 
         <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto sm:justify-end">
-          {isGerenteSomente && (
+          {isGerente && onRiscoPrejuizo && (
             <button
-              onClick={() => setShowDesempenho(true)}
-              className="hidden sm:inline-flex px-3 py-1.5 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700"
+              onClick={onRiscoPrejuizo}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition ${
+                overdueCount > 0
+                  ? "bg-red-600 text-white hover:bg-red-700"
+                  : "border border-slate-300 bg-white text-slate-500 hover:bg-slate-50"
+              }`}
             >
-              📊 Meu Desempenho
-            </button>
-          )}
-          {isLeonardo && (
-            <button
-              onClick={dispararAlerta}
-              className="inline-flex px-3 py-1.5 rounded-lg bg-red-600 text-white text-sm font-semibold hover:bg-red-700"
-            >
-              <span className="sm:hidden">🚨 Alerta</span>
-              <span className="hidden sm:inline">🚨 Disparar Alerta</span>
+              {overdueCount > 0 ? "⚠️" : "✓"} Risco de prejuízo
+              {overdueCount > 0 && (
+                <span className="rounded-full bg-red-800 px-1.5 py-0.5 text-xs font-bold">{overdueCount}</span>
+              )}
             </button>
           )}
           {isUsuarioMonitor && (
@@ -667,6 +734,14 @@ function TarjaInline() {
             >
               <span className="sm:hidden">Sessões</span>
               <span className="hidden sm:inline">Monitor de Sessões</span>
+            </a>
+          )}
+          {perfil === "admin" && (
+            <a
+              href="/dashboard-campanha"
+              className={`hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-purple-600 text-white text-sm font-semibold hover:bg-purple-700 transition-all ${tacticoPulsing ? "ring-4 ring-purple-400 ring-offset-1 animate-pulse scale-105" : ""}`}
+            >
+              📊 Info. Tática
             </a>
           )}
           {isGerente && (
@@ -723,36 +798,34 @@ function MobileProcessCard({ it, compact=false, onToggleSignedExternal, onDelete
   return (
     <div
       className={cls(
-        "rounded-2xl border p-3 bg-white shadow-sm",
-        compact ? "py-2" : "py-3",
+        "rounded-xl border px-3 py-2.5 bg-white shadow-sm",
+        compact ? "py-2" : "",
         haProcesso ? "border-emerald-300 bg-emerald-50/30" : (awaiting ? "border-amber-300 bg-amber-50/70" : "border-slate-200")
       )}
     >
       {/* Linha superior: Nome à esquerda, Anexos à direita */}
-      <div className="flex items-center justify-between gap-2 mb-2">
-        <div className={cls("font-semibold text-slate-900 truncate", compact ? "text-base" : "text-lg")}>
+      <div className="flex items-center justify-between gap-2 mb-1.5">
+        <div className={cls("font-semibold text-slate-900 truncate", compact ? "text-sm" : "text-base")}>
           {it.nome_cliente || "—"}
         </div>
-        
         <div className="shrink-0">
-          {/* ✅ Href CONCRETA, sem [extratoId], sem onClick */}
           <Link
             href={`/anexos/${it.id}?uid=${pickUidFromRow(it)}&gname=${encodeURIComponent(displayGerenteName(it) || '')}`}
             prefetch={false}
             className={cls(
-              "inline-flex items-center gap-1 rounded-lg border px-2.5 py-1.5 text-xs font-medium whitespace-nowrap",
+              "inline-flex items-center gap-1 rounded-lg border px-2 py-1 text-xs font-medium whitespace-nowrap",
               awaiting && statusLabel !== "Assinado" ? "border-amber-300 bg-amber-50 text-amber-800" : "border-slate-300 bg-white text-slate-700"
             )}
           >
-            <Paperclip className="h-4 w-4" /> 
+            <Paperclip className="h-3.5 w-3.5" />
             {awaiting && statusLabel !== "Assinado" ? "Pendente" : "Anexos"}
-            {docs.count > 0 && <span className="ml-1">({docs.count})</span>}
+            {docs.count > 0 && <span className="ml-0.5">({docs.count})</span>}
           </Link>
         </div>
       </div>
 
       {/* Linha Ass. Manual + Status + Fluxo + ID */}
-      <div className="flex items-center justify-between gap-2 mb-2 pb-2 border-b border-slate-100">
+      <div className="flex items-center justify-between gap-2 mb-1.5 pb-1.5 border-b border-slate-100">
         <div className="flex items-center gap-2 flex-wrap">
           {onToggleSignedExternal && (
             <button
@@ -795,25 +868,52 @@ function MobileProcessCard({ it, compact=false, onToggleSignedExternal, onDelete
         </div>
       </div>
 
+      {/* Resultado + datas */}
+      {resLabel && resLabel !== "—" && (
+        <div className="mb-2 flex items-start gap-2">
+          <span className={cls("inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold whitespace-nowrap", pillCls)}>
+            {resLabel}
+          </span>
+          {resLabel === "Acordo" && (it.resultado_acordo_em || it.data_recebimento_acordo) && (
+            <div className="text-[10px] leading-tight text-slate-500">
+              {it.resultado_acordo_em && (
+                <div><span className="font-semibold">Reportado:</span> {fmtDateTimeBRT(it.resultado_acordo_em)}</div>
+              )}
+              {it.data_recebimento_acordo && (
+                <div className="text-emerald-700 font-semibold">Pago: {fmtDateOnly(it.data_recebimento_acordo)}</div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Restante das informações */}
-      <div className="space-y-2">
-        {/* Número do Processo */}
-        <div className={cls("text-slate-600", compact ? "text-sm" : "text-base")}>
-          <span className="text-slate-500">Proc.:</span>{" "}
-          <span className="font-semibold text-slate-900">{numeroProc || "—"}</span>
+      <div className="space-y-1.5">
+        {/* Número do Processo + Valor Causa */}
+        <div className="flex items-center justify-between gap-2">
+          <div className={cls("text-slate-600", compact ? "text-sm" : "text-sm")}>
+            <span className="text-slate-500">Proc.:</span>{" "}
+            <span className="font-semibold text-slate-900">{numeroProc || "—"}</span>
+          </div>
+          {it.valor_causa != null && (
+            <div className="text-xs text-slate-500 shrink-0">
+              <span>Causa:</span>{" "}
+              <span className="font-semibold text-slate-800">{fmtBRL(it.valor_causa)}</span>
+            </div>
+          )}
         </div>
 
         {/* Informações em grid */}
-        <div className={cls("grid grid-cols-2 gap-x-4 gap-y-1", compact ? "text-xs" : "text-sm")}>
+        <div className="grid grid-cols-2 gap-x-4 gap-y-0.5 text-xs">
           {comarcaUF && (
             <div className="text-slate-600">
-              <span className="font-semibold uppercase tracking-wide text-[11px] text-slate-500">Cidade:</span>{" "}
+              <span className="font-semibold uppercase tracking-wide text-[10px] text-slate-500">Cidade:</span>{" "}
               <span className="text-slate-700">{comarcaUF}</span>
             </div>
           )}
           {comarcaNome && (
             <div className="text-slate-600">
-              <span className="font-semibold uppercase tracking-wide text-[11px] text-slate-500">Comarca:</span>{" "}
+              <span className="font-semibold uppercase tracking-wide text-[10px] text-slate-500">Comarca:</span>{" "}
               <span className="text-slate-700">{comarcaNome}</span>
             </div>
           )}
@@ -826,75 +926,75 @@ function MobileProcessCard({ it, compact=false, onToggleSignedExternal, onDelete
 
       {!compact && (
         <>
-          <div className="mt-3 grid grid-cols-2 gap-2">
-            <div className="rounded-xl bg-slate-50 p-2.5">
-              <div className="text-[11px] text-slate-500 font-medium">Valor Hoje</div>
-              <div className="text-base font-semibold tabular-nums">{fmtBRL(valorHojeDisplay(it))}</div>
+          <div className="mt-2 grid grid-cols-2 gap-1.5">
+            <div className="rounded-lg bg-slate-50 p-2">
+              <div className="text-[10px] text-slate-500 font-medium">Valor Hoje</div>
+              <div className="text-sm font-semibold tabular-nums">{fmtBRL(valorHojeDisplay(it))}</div>
             </div>
-            <div className="rounded-xl bg-slate-50 p-2.5">
-              <div className="text-[11px] text-slate-500 font-medium">Valor Futuro</div>
-              <div className="text-base font-semibold tabular-nums">{fmtBRL((it.valor_futuro ?? it.valor_corrigido_futuro))}</div>
+            <div className="rounded-lg bg-slate-50 p-2">
+              <div className="text-[10px] text-slate-500 font-medium">Valor Futuro</div>
+              <div className="text-sm font-semibold tabular-nums">{fmtBRL((it.valor_futuro ?? it.valor_corrigido_futuro))}</div>
             </div>
-            <div className="rounded-xl bg-slate-50 p-2.5">
-              <div className="text-[11px] text-slate-500 font-medium">Honorários Hoje (tot.)</div>
+            <div className="rounded-lg bg-slate-50 p-2">
+              <div className="text-[10px] text-slate-500 font-medium">Hon. Hoje (tot.)</div>
               {(() => {
                 const adv = Number(it.honorarios_hoje_adv||0); const emp = Number(it.honorarios_hoje_emp||0);
                 const tot = Number((it.honorarios_hoje_total ?? (adv+emp)) ?? 0) || 0;
                 return (
                   <div>
-                    <div className="text-base font-semibold tabular-nums">{fmtBRL(tot)}</div>
-                    <div className="text-[10px] text-slate-500">{fmtBRL(adv)} + {fmtBRL(emp)}</div>
+                    <div className="text-sm font-semibold tabular-nums">{fmtBRL(tot)}</div>
+                    <div className="text-[10px] text-slate-400">{fmtBRL(adv)} + {fmtBRL(emp)}</div>
                   </div>
                 );
               })()}
             </div>
-            <div className="rounded-xl bg-slate-50 p-2.5">
-              <div className="text-[11px] text-slate-500 font-medium">Honorários Futuro (tot.)</div>
+            <div className="rounded-lg bg-slate-50 p-2">
+              <div className="text-[10px] text-slate-500 font-medium">Hon. Futuro (tot.)</div>
               {(() => {
                 const adv = Number(it.honorarios_futuro_adv||0); const emp = Number(it.honorarios_futuro_emp||0);
                 const tot = Number((it.honorarios_futuro_total ?? (adv+emp)) ?? 0) || 0;
                 return (
                   <div>
-                    <div className="text-base font-semibold tabular-nums">{fmtBRL(tot)}</div>
-                    <div className="text-[10px] text-slate-500">{fmtBRL(adv)} + {fmtBRL(emp)}</div>
+                    <div className="text-sm font-semibold tabular-nums">{fmtBRL(tot)}</div>
+                    <div className="text-[10px] text-slate-400">{fmtBRL(adv)} + {fmtBRL(emp)}</div>
                   </div>
                 );
               })()}
             </div>
-            <div className="rounded-xl bg-green-50 p-2.5 border border-green-200">
-              <div className="text-[11px] text-green-700 font-semibold">💰 Líquido Hoje</div>
+            <div className="rounded-lg bg-green-50 p-2 border border-green-200">
+              <div className="text-[10px] text-green-700 font-semibold">💰 Líquido Hoje</div>
               {(() => {
                 const valorHoje = valorHojeDisplay(it);
                 const honHoje = Number((it.honorarios_hoje_total ?? (Number(it.honorarios_hoje_adv||0) + Number(it.honorarios_hoje_emp||0))) ?? 0) || 0;
                 const liquido = valorHoje - honHoje;
                 return (
-                  <div className="text-base font-bold tabular-nums text-green-800">{fmtBRL(liquido)}</div>
+                  <div className="text-sm font-bold tabular-nums text-green-800">{fmtBRL(liquido)}</div>
                 );
               })()}
             </div>
-            <div className="rounded-xl bg-blue-50 p-2.5 border border-blue-200">
-              <div className="text-[11px] text-blue-700 font-semibold">💰 Líquido Futuro</div>
+            <div className="rounded-lg bg-blue-50 p-2 border border-blue-200">
+              <div className="text-[10px] text-blue-700 font-semibold">💰 Líquido Futuro</div>
               {(() => {
                 const valorFuturo = Number(it.valor_futuro ?? it.valor_corrigido_futuro ?? 0);
                 const honFuturo = Number((it.honorarios_futuro_total ?? (Number(it.honorarios_futuro_adv||0) + Number(it.honorarios_futuro_emp||0))) ?? 0) || 0;
                 const liquido = valorFuturo - honFuturo;
                 return (
-                  <div className="text-base font-bold tabular-nums text-blue-800">{fmtBRL(liquido)}</div>
+                  <div className="text-sm font-bold tabular-nums text-blue-800">{fmtBRL(liquido)}</div>
                 );
               })()}
             </div>
           </div>
 
-          <div className="mt-3 flex items-center justify-between gap-2 text-xs text-slate-600">
-            <div className="min-w-0">
-              <div className="truncate" title={it.administradora || ''}><span className="text-slate-500">Adm:</span> {it.administradora || "—"}</div>
-              <div className="truncate"><span className="text-slate-500">Adv.:</span> {displayAdvogadoName(it) || "—"}</div>
-              <div className="truncate"><span className="text-slate-500">Ger.:</span> {displayGerenteName(it) || (it.gerente_id ? `#${it.gerente_id}` : "—")}</div>
+          <div className="mt-2 flex items-center justify-between gap-2 text-xs text-slate-600 border-t border-slate-100 pt-2">
+            <div className="min-w-0 space-y-0.5">
+              <div className="truncate" title={it.administradora || ''}><span className="text-slate-400">Adm:</span> {it.administradora || "—"}</div>
+              <div className="truncate"><span className="text-slate-400">Adv.:</span> {displayAdvogadoName(it) || "—"}</div>
+              <div className="truncate"><span className="text-slate-400">Ger.:</span> {displayGerenteName(it) || (it.gerente_id ? `#${it.gerente_id}` : "—")}</div>
             </div>
             <div className="shrink-0">
               <Link
                 href={`/?extratoId=${it.id}&mode=adv&reload=${Date.now()}`}
-                className="rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-slate-800"
+                className="rounded-lg bg-slate-900 px-3 py-1 text-xs font-semibold text-white hover:bg-slate-800"
               >
                 EDITAR
               </Link>
@@ -930,6 +1030,7 @@ export default function GerencialProcessosPage() {
   const [deletingId, setDeletingId] = useState<number | null>(null);
 
   // Filtros UI
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [q, setQ] = useState("");
   const [status, setStatus] = useState<string>("");
   const [adm, setAdm] = useState<string>("");
@@ -942,7 +1043,7 @@ export default function GerencialProcessosPage() {
   const [onlyLive, setOnlyLive] = useState<boolean>(false); // mostra apenas processos com timer rodando
   const [overdueSignatureOnly, setOverdueSignatureOnly] = useState<boolean>(false);
   const [overdueExpanded, setOverdueExpanded] = useState<boolean>(false);
-  const [comissaoExpanded, setComissaoExpanded] = useState<boolean>(false);
+  const [showRiscoPrejuizo, setShowRiscoPrejuizo] = useState<boolean>(false);
 
   // Ordenação e Infinite Scroll
   const [sortKey, setSortKey] = useState<string>("id");
@@ -1225,6 +1326,8 @@ export default function GerencialProcessosPage() {
     setQ(""); setStatus(""); setAdm(""); setResultado(""); setFluxoFilter(""); setGerenteFilter(""); setAdvogadoFilter(""); setDateFrom(""); setDateTo(""); setOverdueSignatureOnly(false); setPage(1);
   };
 
+  const activeFilterCount = [status, adm, resultado, gerenteFilter, advogadoFilter, fluxoFilter, dateFrom, dateTo].filter(Boolean).length;
+
   const applyOverdueSignatureFilter = (managerName?: string) => {
     setStatus("Enviado");
     setOverdueSignatureOnly(true);
@@ -1462,7 +1565,20 @@ export default function GerencialProcessosPage() {
     return arr;
   }, [items, q, status, adm, resultado, fluxoFilter, gerenteFilter, advogadoFilter, overdueSignatureOnly, dateFrom, dateTo, sortKey, sortAsc, perfil, currentUser, onlyLive]);
 
+  const overdueFor24h = useMemo(() => {
+    const now = new Date();
+    const scoped = filterByScope(items, perfil as any, currentUser as any);
+    return scoped.filter(it => isEnviadoOver24h(it, now));
+  }, [items, perfil, currentUser]);
+
+  // Para cálculos do resumo: exclui processos "Enviado" com mais de 24h sem assinatura
+  const filteredParaCalculo = useMemo(() => {
+    const now = new Date();
+    return filtered.filter(it => !isEnviadoOver24h(it, now));
+  }, [filtered]);
+
   const total = filtered.length;
+  const totalParaCalculo = filteredParaCalculo.length;
   const visibleProcesses = filtered.slice(0, visibleItems);
   // Para compatibilidade com cards/mobile (não usado na tabela)
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
@@ -1524,81 +1640,62 @@ export default function GerencialProcessosPage() {
   };
 
   const totals = useMemo(() => {
+    // Usa filteredParaCalculo: exclui enviados > 24h sem assinatura do resumo financeiro
+    const base = filteredParaCalculo;
     const num = (v: any) => { const n = Number(v); return Number.isFinite(n) ? n : 0; };
     const getFuturo = (i: any) => num((i.valor_futuro ?? i.valor_corrigido_futuro));
     const getHoje = (i: any) => num(i.valor_corrigido_hoje);
 
-    const sumHoje = filtered.reduce((acc, i) => acc + getHoje(i), 0);
-    const sumFuturo = filtered.reduce((acc, i) => acc + getFuturo(i), 0);
-    const sumValorCausa = filtered.reduce((acc, i) => acc + num(i.valor_causa), 0);
+    const sumHoje = base.reduce((acc, i) => acc + getHoje(i), 0);
+    const sumFuturo = base.reduce((acc, i) => acc + getFuturo(i), 0);
+    const sumValorCausa = base.reduce((acc, i) => acc + num(i.valor_causa), 0);
 
-    // 🆕 Acordo Provável = 70% do Valor da Causa
-    const sumAcordoProvavel = sumValorCausa * 0.7;
-    // 🆕 Expectativa de Honorários = 30% do Acordo Provável
-    const sumExpectativaHonorarios = sumAcordoProvavel * 0.3;
+    // Projeções: excluir processos que já têm acordo fechado
+    const semAcordo = base.filter(i => getResultadoLabel(i) !== "Acordo");
+    const sumValorCausaEmAndamento = semAcordo.reduce((acc, i) => acc + num(i.valor_causa), 0);
+    const sumAcordoProvavel = semAcordo.reduce((acc, i) => acc + num(i.valor_causa) * 0.7, 0);
+    const sumExpectativaHonorarios = semAcordo.reduce((acc, i) => {
+      const v = calcExpectativaHonorarios(i);
+      return acc + (v !== null ? v : 0);
+    }, 0);
 
-    const hHojeAdv = filtered.reduce((acc, i) => acc + num(i.honorarios_hoje_adv), 0);
-    const hHojeEmp = filtered.reduce((acc, i) => acc + num(i.honorarios_hoje_emp), 0);
+    const hHojeAdv = base.reduce((acc, i) => acc + num(i.honorarios_hoje_adv), 0);
+    const hHojeEmp = base.reduce((acc, i) => acc + num(i.honorarios_hoje_emp), 0);
     const hHojeTot = hHojeAdv + hHojeEmp;
 
-    const hFutAdv = filtered.reduce((acc, i) => acc + num(i.honorarios_futuro_adv), 0);
-    const hFutEmp = filtered.reduce((acc, i) => acc + num(i.honorarios_futuro_emp), 0);
+    const hFutAdv = base.reduce((acc, i) => acc + num(i.honorarios_futuro_adv), 0);
+    const hFutEmp = base.reduce((acc, i) => acc + num(i.honorarios_futuro_emp), 0);
     const hFutTot = hFutAdv + hFutEmp;
 
-    const liqHojeSum = filtered.reduce((acc, i) => {
+    const liqHojeSum = base.reduce((acc, i) => {
       const tot = num(i.honorarios_hoje_total ?? (num(i.honorarios_hoje_adv) + num(i.honorarios_hoje_emp)));
       return acc + (num(i.liquido_hoje) || (num(i.valor_corrigido_hoje) - tot));
     }, 0);
 
-    const liqFutSum = filtered.reduce((acc, i) => {
+    const liqFutSum = base.reduce((acc, i) => {
       const tot = num(i.honorarios_futuro_total ?? (num(i.honorarios_futuro_adv) + num(i.honorarios_futuro_emp)));
       const bruto = getFuturo(i);
       return acc + (num(i.liquido_futuro) || (bruto - tot));
     }, 0);
 
-    const sumComissaoGerente = filtered.reduce((acc, i) => {
+    const sumComissaoGerente = base.reduce((acc, i) => {
       const v = calcComissaoGerente(i);
       return acc + (v !== null ? v : 0);
     }, 0);
 
-    return { sumHoje, sumFuturo, sumValorCausa, sumAcordoProvavel, sumExpectativaHonorarios, hHojeAdv, hHojeEmp, hHojeTot, hFutAdv, hFutEmp, hFutTot, liqHojeSum, liqFutSum, sumComissaoGerente,
-      hasHoje: filtered.some(i => i.valor_corrigido_hoje != null),
-      hasFuturo: filtered.some(i => (i.valor_futuro ?? i.valor_corrigido_futuro) != null),
-      hasValorCausa: filtered.some(i => i.valor_causa != null),
-    };
-  }, [filtered]);
+    const sumValorAcordos = base.reduce((acc, i) => {
+      if (getResultadoLabel(i) !== "Acordo") return acc;
+      return acc + num(i.valor_acordo ?? i.valor_corrigido_hoje ?? i.valor_sentenca);
+    }, 0);
 
-  const comissaoSummary = useMemo(() => {
-    const scoped = filterByScope(items, perfil as any, currentUser as any);
-    const byGerente = new Map<string, { emAndamento: number; concluidas: number; qtdAndamento: number; qtdConcluidas: number }>();
-    let totalEmAndamento = 0;
-    let totalConcluidas = 0;
-    let qtdAndamento = 0;
-    let qtdConcluidas = 0;
-    for (const it of scoped) {
-      const isAcordo = getResultadoLabel(it) === "Acordo";
-      const v = calcComissaoTodos(it);
-      if (v === null) continue;
-      const gerente = displayGerenteName(it) || (pickUidFromRow(it) ? `#${pickUidFromRow(it)}` : "Sem gerente");
-      const entry = byGerente.get(gerente) ?? { emAndamento: 0, concluidas: 0, qtdAndamento: 0, qtdConcluidas: 0 };
-      if (isAcordo) {
-        entry.concluidas += v;
-        entry.qtdConcluidas += 1;
-        totalConcluidas += v;
-        qtdConcluidas += 1;
-      } else {
-        entry.emAndamento += v;
-        entry.qtdAndamento += 1;
-        totalEmAndamento += v;
-        qtdAndamento += 1;
-      }
-      byGerente.set(gerente, entry);
-    }
-    const byGerenteList = [...byGerente.entries()]
-      .map(([nome, vals]) => ({ nome, ...vals, total: vals.emAndamento + vals.concluidas }))
-      .sort((a, b) => b.total - a.total);
-    return { totalEmAndamento, totalConcluidas, total: totalEmAndamento + totalConcluidas, qtdAndamento, qtdConcluidas, byGerenteList };
-  }, [items, perfil, currentUser]);
+    return { sumHoje, sumFuturo, sumValorCausa, sumValorCausaEmAndamento, sumAcordoProvavel, sumExpectativaHonorarios, sumValorAcordos, hHojeAdv, hHojeEmp, hHojeTot, hFutAdv, hFutEmp, hFutTot, liqHojeSum, liqFutSum, sumComissaoGerente,
+      hasHoje: base.some(i => i.valor_corrigido_hoje != null),
+      hasFuturo: base.some(i => (i.valor_futuro ?? i.valor_corrigido_futuro) != null),
+      hasValorCausa: base.some(i => calcExpectativaHonorarios(i) !== null),
+      hasAcordos: base.some(i => getResultadoLabel(i) === "Acordo"),
+    };
+  }, [filteredParaCalculo]);
+
 
   const exportCSV = () => {
     const header = [
@@ -1647,9 +1744,136 @@ export default function GerencialProcessosPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
+
+
+      {/* Modal: Risco de Prejuízo */}
+      {showRiscoPrejuizo && (
+        <div className="fixed inset-0 z-[9999] flex items-start justify-center overflow-y-auto bg-black/50 px-4 py-8">
+          <div className="w-full max-w-2xl rounded-2xl border border-red-200 bg-white shadow-2xl">
+            {/* Cabeçalho */}
+            <div className="flex items-center justify-between rounded-t-2xl bg-red-600 px-5 py-4">
+              <div>
+                <div className="text-lg font-extrabold text-white">⚠️ Risco de Prejuízo</div>
+                <div className="mt-0.5 text-sm font-medium text-red-100">
+                  {overdueFor24h.length} extrato{overdueFor24h.length !== 1 ? "s" : ""} aguardando assinatura há mais de 24 horas
+                </div>
+              </div>
+              <button
+                onClick={() => setShowRiscoPrejuizo(false)}
+                className="rounded-lg border border-red-400 bg-red-700 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-800"
+              >
+                Fechar
+              </button>
+            </div>
+
+            {/* Total em risco */}
+            {overdueFor24h.reduce((acc, it) => acc + Number((it as any).valor_causa || 0), 0) > 0 && (
+              <div className="flex items-center justify-between border-b border-red-200 bg-red-700 px-5 py-2.5">
+                <span className="text-xs font-semibold uppercase tracking-wide text-red-200">Total em risco</span>
+                <span className="text-xl font-extrabold text-white">{fmtBRL(overdueFor24h.reduce((acc, it) => acc + Number((it as any).valor_causa || 0), 0))}</span>
+              </div>
+            )}
+
+            {/* Instruções */}
+            <div className="border-b border-red-100 bg-red-50 px-5 py-3 text-sm font-medium text-red-800">
+              Estes clientes ainda não assinaram o documento enviado. Ligue para cada um e solicite a assinatura.
+              Assim que o status mudar para <strong>Assinado</strong>, o processo voltará a ser computado nos seus resultados.
+            </div>
+
+            {/* Lista */}
+            <div className="divide-y divide-slate-100 max-h-[60vh] overflow-y-auto">
+              {overdueFor24h.length === 0 ? (
+                <div className="px-5 py-8 text-center text-slate-500">
+                  Nenhum processo com risco no momento.
+                </div>
+              ) : (
+                overdueFor24h.map((it) => {
+                  const sentAt = getSentAtDate(it);
+                  const dias = sentAt ? Math.floor((new Date().getTime() - sentAt.getTime()) / 86400000) : 0;
+                  const horas = sentAt ? Math.floor((new Date().getTime() - sentAt.getTime()) / 3600000) : 0;
+                  const tempoLabel = dias >= 1 ? `${dias} dia${dias !== 1 ? "s" : ""}` : `${horas}h`;
+                  const telefone = (it as any).telefone || (it as any).telefone_cliente || "";
+                  const nomeCliente = (it as any).nome_cliente || "—";
+                  const administradora = (it as any).administradora || "";
+                  const grupo = (it as any).grupo || "";
+                  const cota = (it as any).cota || "";
+                  const valorCausa = Number((it as any).valor_causa || 0);
+
+                  const gerenteNome = (it as any).gerente_nome || (it as any).gerente?.nome || (it as any).criado_por_nome || (it as any).usuario_criador_nome || "";
+
+                  return (
+                    <div key={(it as any).id} className="px-5 py-4 hover:bg-slate-50">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="font-bold text-slate-900 text-base">{nomeCliente}</span>
+                            <span className="rounded-full border border-red-200 bg-red-50 px-2 py-0.5 text-xs font-bold text-red-700">
+                              {tempoLabel} sem assinar
+                            </span>
+                            {perfil === "admin" && gerenteNome && (
+                              <span className="rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-xs font-semibold text-blue-700">
+                                👤 {gerenteNome}
+                              </span>
+                            )}
+                          </div>
+                          <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-600">
+                            {telefone && (
+                              <a
+                                href={`tel:${telefone.replace(/\D/g, "")}`}
+                                className="flex items-center gap-1 font-semibold text-blue-700 hover:text-blue-900 hover:underline"
+                              >
+                                📞 {fmtPhone(telefone)}
+                              </a>
+                            )}
+                            {!telefone && (
+                              <span className="text-slate-400 italic">Telefone não cadastrado</span>
+                            )}
+                            {administradora && (
+                              <span className="text-slate-500">{administradora}</span>
+                            )}
+                            {(grupo || cota) && (
+                              <span className="text-slate-500">
+                                {grupo && `Grupo ${grupo}`}{grupo && cota ? " / " : ""}{cota && `Cota ${cota}`}
+                              </span>
+                            )}
+                          </div>
+                          {valorCausa > 0 && (
+                            <div className="mt-1 text-xs text-slate-500">
+                              Valor da causa: <span className="font-semibold text-slate-700">{fmtBRL(valorCausa)}</span>
+                            </div>
+                          )}
+                        </div>
+                        <div className="shrink-0 text-right">
+                          <div className="text-xs font-bold text-red-600">#{(it as any).id}</div>
+                          {sentAt && (
+                            <div className="text-xs text-slate-400 mt-0.5">
+                              Enviado: {sentAt.toLocaleDateString("pt-BR")}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+
+            {/* Rodapé */}
+            <div className="rounded-b-2xl border-t border-slate-200 bg-slate-50 px-5 py-3 text-center">
+              <button
+                onClick={() => setShowRiscoPrejuizo(false)}
+                className="rounded-lg bg-slate-900 px-6 py-2 text-sm font-semibold text-white hover:bg-slate-700"
+              >
+                Fechar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="mx-auto max-w-none px-4 pt-2 sm:px-6 lg:px-8">
-        <TarjaInline />
+        <TarjaInline onRiscoPrejuizo={() => setShowRiscoPrejuizo(true)} overdueCount={overdueFor24h.length} producaoTotal={totals.sumValorCausa} />
       </div>
 
       <header className="border-b bg-white">
@@ -1674,8 +1898,11 @@ export default function GerencialProcessosPage() {
                   {perfil}
                 </span>
               )}
+              <Link href="/gerencial/comissoes" className="inline-flex items-center gap-1 rounded-lg border border-emerald-300 bg-emerald-50 px-2 py-1.5 text-xs font-medium text-emerald-800 shadow-sm hover:bg-emerald-100" title="Comissões">
+                <DollarSign className="h-3.5 w-3.5" /> <span className="hidden md:inline">Comissões</span>
+              </Link>
               {perfil === "admin" && (
-                <Link href="/dashboard-relatorio/producao" className="inline-flex items-center gap-1 rounded-lg border border-emerald-300 bg-emerald-50 px-2 py-1.5 text-xs font-medium text-emerald-800 shadow-sm hover:bg-emerald-100" title="Relatório de produção">
+                <Link href="/dashboard-relatorio/producao" className="inline-flex items-center gap-1 rounded-lg border border-amber-300 bg-amber-50 px-2 py-1.5 text-xs font-medium text-amber-800 shadow-sm hover:bg-amber-100" title="Relatório de produção">
                   <BarChart3 className="h-3.5 w-3.5" /> <span className="hidden md:inline">Relatório Produção</span>
                 </Link>
               )}
@@ -1708,100 +1935,123 @@ export default function GerencialProcessosPage() {
         </div>
       )}
 
-      {/* MOBILE - Filtros fixos no topo (fora do main) */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-slate-50 shadow-md border-b border-slate-200">
-        {/* Linha do usuário e botões */}
-        <div className="px-4 py-2 bg-white border-b border-slate-200">
-          <div className="flex items-center justify-between gap-2">
-            <div className="min-w-0 flex-1 overflow-hidden">
-              <TarjaInline />
-            </div>
-            <div className="flex items-center gap-2 shrink-0">
-              {perfil === "admin" && (
-                <Link href="/dashboard-relatorio/producao" className="inline-flex items-center gap-1 rounded-md border border-amber-300 bg-amber-50 px-2 py-1 text-[10px] font-semibold text-amber-900 shadow-sm" title="Relatório de produção">
-                  <BarChart3 className="h-3 w-3" />
-                  <span>Produção</span>
-                </Link>
-              )}
-              <Link href="/" className="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-white px-2 py-1 text-[10px] font-medium text-slate-700 shadow-sm" title="Página principal">
-                <ArrowLeft className="h-3 w-3" />
-              </Link>
-              <button onClick={fetchData} className="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-white px-2 py-1 text-[10px] font-medium text-slate-700 shadow-sm" title="Recarregar">
-                <RefreshCw className="h-3 w-3" />
-              </button>
-            </div>
-          </div>
-        </div>
+      {/* MOBILE - Header fixo colapsável */}
+      <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-white shadow-md border-b border-slate-200">
 
-        {/* Filtros */}
-        <div className="px-4 py-2 space-y-2">
-          <div className="relative">
+        {/* Linha única: Risco + Busca + Filtros + Novo */}
+        <div className="flex items-center gap-1.5 px-2 py-1.5">
+          {overdueFor24h.length > 0 && (
+            <button onClick={() => setShowRiscoPrejuizo(true)}
+              className="inline-flex items-center gap-0.5 rounded border border-red-300 bg-red-50 px-1.5 py-1 text-[10px] font-bold text-red-700 shrink-0">
+              ⚠️{overdueFor24h.length}
+            </button>
+          )}
+          <div className="relative flex-1">
             <input
-              className="w-full rounded-lg border border-slate-300 bg-white pl-9 pr-3 py-1.5 text-sm outline-none ring-0 focus:border-slate-400"
-              placeholder="Buscar..."
+              className="w-full rounded-lg border border-slate-300 bg-slate-50 pl-8 pr-3 py-1.5 text-sm outline-none focus:border-blue-400 focus:bg-white"
+              placeholder="Buscar processo..."
               value={q}
               onChange={(e) => { setQ(e.target.value); setPage(1); }}
             />
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
           </div>
-
-        {/* Filtros em grid compacto */}
-        <div className="grid grid-cols-3 gap-2 text-xs">
-          <select className="rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs" value={status} onChange={(e)=>{setStatus(e.target.value); setPage(1);}}>
-            <option value="">Status</option>
-            {uniqueStatuses.map((s)=> <option key={s} value={s}>{s}</option>)}
-          </select>
-          <select className="rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs" value={resultado} onChange={(e)=>{setResultado(e.target.value); setPage(1);}}>
-            <option value="">Resultado</option>
-            {uniqueResultados.map((s)=> <option key={s} value={s}>{s}</option>)}
-          </select>
-          <select className="rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs" value={adm} onChange={(e)=>{setAdm(e.target.value); setPage(1);}}>
-            <option value="">Adm</option>
-            {uniqueAdms.map((s)=> <option key={s} value={s}>{s}</option>)}
-          </select>
-          <select className="rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs" value={gerenteFilter} onChange={(e)=>{setGerenteFilter(e.target.value); setPage(1);}}>
-            <option value="">Gerente</option>
-            {uniqueGerentes.map((s)=> <option key={s} value={s}>{s}</option>)}
-          </select>
-          <select className="rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs" value={advogadoFilter} onChange={(e)=>{setAdvogadoFilter(e.target.value); setPage(1);}}>
-            <option value="">Advogado</option>
-            {uniqueAdvogados.map((s)=> <option key={s} value={s}>{s}</option>)}
-          </select>
-          <select className="rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs" value={fluxoFilter} onChange={(e)=>{setFluxoFilter(e.target.value); setPage(1);}}>
-            <option value="">Fluxo</option>
-            <option value="Concluído">Concluído</option>
-            <option value="Incompleto">Incompleto</option>
-          </select>
-          <input type="date" className="rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs" value={dateFrom} onChange={(e)=>{setDateFrom(e.target.value); setPage(1);}} placeholder="De" />
-          <input type="date" className="rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs" value={dateTo} onChange={(e)=>{setDateTo(e.target.value); setPage(1);}} placeholder="Até" />
-        </div>
-        <div className="flex items-center gap-2">
-          <button onClick={clearFilters} className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs font-medium text-slate-700 shadow-sm">
-            <RefreshCw className="h-3.5 w-3.5"/> Limpar
+          <button
+            onClick={() => setMobileFiltersOpen(v => !v)}
+            className={cls(
+              "relative inline-flex items-center gap-1 rounded-lg border px-2.5 py-1.5 text-xs font-semibold transition-colors",
+              mobileFiltersOpen
+                ? "border-blue-400 bg-blue-600 text-white"
+                : activeFilterCount > 0
+                  ? "border-blue-300 bg-blue-50 text-blue-700"
+                  : "border-slate-300 bg-white text-slate-600"
+            )}
+          >
+            <SlidersHorizontal className="h-3.5 w-3.5" />
+            Filtros
+            {activeFilterCount > 0 && (
+              <span className={cls(
+                "absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold",
+                mobileFiltersOpen ? "bg-white text-blue-600" : "bg-blue-600 text-white"
+              )}>
+                {activeFilterCount}
+              </span>
+            )}
           </button>
-          <Link href="/" className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-md bg-emerald-600 px-2 py-1.5 text-xs font-medium text-white shadow-sm">
-            <Plus className="h-3.5 w-3.5"/> Novo
+          <Link href="/" className="inline-flex items-center rounded-lg border border-emerald-500 bg-emerald-600 px-2.5 py-1.5 text-xs font-semibold text-white">
+            <Plus className="h-3.5 w-3.5" />
           </Link>
-          {perfil === "admin" ? (
-            <Link href="/dashboard-relatorio/producao" className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-md bg-amber-500 px-2 py-1.5 text-xs font-semibold text-slate-950 shadow-sm">
-              <BarChart3 className="h-3.5 w-3.5"/> Produção
-            </Link>
-          ) : (
-            <Link href="/dashboard-relatorio" className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-md bg-blue-500 px-2 py-1.5 text-xs font-medium text-white shadow-sm">
-              <BarChart3 className="h-3.5 w-3.5"/> 📊
-            </Link>
-          )}
-          <button onClick={exportCSV} className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-md bg-slate-900 px-2 py-1.5 text-xs font-medium text-white shadow-sm">
-            <Download className="h-3.5 w-3.5"/> CSV
-          </button>
         </div>
-        </div>
+
+        {/* Painel colapsável de filtros */}
+        {mobileFiltersOpen && (
+          <div className="px-2 pb-2 space-y-1.5 border-t border-slate-100 bg-slate-50">
+            <div className="grid grid-cols-3 gap-1.5 pt-1.5">
+              <select className="rounded border border-slate-300 bg-white px-1.5 py-1 text-xs" value={status} onChange={(e)=>{setStatus(e.target.value); setPage(1);}}>
+                <option value="">Status</option>
+                {uniqueStatuses.map((s)=> <option key={s} value={s}>{s}</option>)}
+              </select>
+              <select className="rounded border border-slate-300 bg-white px-1.5 py-1 text-xs" value={resultado} onChange={(e)=>{setResultado(e.target.value); setPage(1);}}>
+                <option value="">Resultado</option>
+                {uniqueResultados.map((s)=> <option key={s} value={s}>{s}</option>)}
+              </select>
+              <select className="rounded border border-slate-300 bg-white px-1.5 py-1 text-xs" value={adm} onChange={(e)=>{setAdm(e.target.value); setPage(1);}}>
+                <option value="">Adm</option>
+                {uniqueAdms.map((s)=> <option key={s} value={s}>{s}</option>)}
+              </select>
+              <select className="rounded border border-slate-300 bg-white px-1.5 py-1 text-xs" value={gerenteFilter} onChange={(e)=>{setGerenteFilter(e.target.value); setPage(1);}}>
+                <option value="">Gerente</option>
+                {uniqueGerentes.map((s)=> <option key={s} value={s}>{s}</option>)}
+              </select>
+              <select className="rounded border border-slate-300 bg-white px-1.5 py-1 text-xs" value={advogadoFilter} onChange={(e)=>{setAdvogadoFilter(e.target.value); setPage(1);}}>
+                <option value="">Advogado</option>
+                {uniqueAdvogados.map((s)=> <option key={s} value={s}>{s}</option>)}
+              </select>
+              <select className="rounded border border-slate-300 bg-white px-1.5 py-1 text-xs" value={fluxoFilter} onChange={(e)=>{setFluxoFilter(e.target.value); setPage(1);}}>
+                <option value="">Fluxo</option>
+                <option value="Concluído">Concluído</option>
+                <option value="Incompleto">Incompleto</option>
+              </select>
+              <input type="date" className="rounded border border-slate-300 bg-white px-1.5 py-1 text-xs" value={dateFrom} onChange={(e)=>{setDateFrom(e.target.value); setPage(1);}} />
+              <input type="date" className="rounded border border-slate-300 bg-white px-1.5 py-1 text-xs" value={dateTo} onChange={(e)=>{setDateTo(e.target.value); setPage(1);}} />
+              <button onClick={() => { clearFilters(); setMobileFiltersOpen(false); }}
+                className="rounded border border-slate-300 bg-white px-1.5 py-1 text-xs font-medium text-slate-600 flex items-center justify-center gap-1">
+                <RefreshCw className="h-3 w-3" /> Limpar
+              </button>
+            </div>
+            <div className="flex gap-1.5">
+              {perfil === "admin" ? (
+                <Link href="/dashboard-relatorio/producao" className="flex-1 inline-flex items-center justify-center gap-1 rounded bg-amber-500 px-2 py-1 text-xs font-semibold text-slate-950">
+                  <BarChart3 className="h-3 w-3" /> Produção
+                </Link>
+              ) : (
+                <Link href="/dashboard-relatorio" className="flex-1 inline-flex items-center justify-center gap-1 rounded bg-blue-500 px-2 py-1 text-xs font-medium text-white">
+                  <BarChart3 className="h-3 w-3" /> Relatório
+                </Link>
+              )}
+              <Link href="/gerencial/comissoes" className="flex-1 inline-flex items-center justify-center gap-1 rounded border border-emerald-400 bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-800">
+                <DollarSign className="h-3 w-3" /> Comissões
+              </Link>
+              <button onClick={exportCSV} className="flex-1 inline-flex items-center justify-center gap-1 rounded bg-slate-800 px-2 py-1 text-xs font-medium text-white">
+                <Download className="h-3 w-3" /> CSV
+              </button>
+            </div>
+            <div className="flex gap-1.5">
+              <button onClick={fetchData} className="flex-1 inline-flex items-center justify-center gap-1 rounded border border-slate-300 bg-white px-2 py-1 text-xs font-medium text-slate-600">
+                <RefreshCw className="h-3 w-3" /> Atualizar
+              </button>
+              <button onClick={() => { logoutCurrentSession(); window.location.href = "/login"; }}
+                className="flex-1 inline-flex items-center justify-center gap-1 rounded border border-red-200 bg-white px-2 py-1 text-xs font-medium text-red-600">
+                Sair
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Conteúdo */}
-      <main className="mx-auto max-w-none px-4 pb-24 sm:px-6 lg:px-8 md:pt-3 pt-[161px]">
+      <main className="mx-auto max-w-none px-4 pb-24 sm:px-6 lg:px-8 md:pt-3 pt-[52px]">
         {/* 🔵 Filtros Desktop */}
-        <div className="mb-4 space-y-4">
+        <div className="md:mb-4 md:space-y-4">
           {/* DESKTOP filtros compactos */}
           <div className="hidden md:block">
             {/* Linha 1: Busca e Ações */}
@@ -1858,7 +2108,7 @@ export default function GerencialProcessosPage() {
             </div>
           </div>
         </div>
-        <div className="mb-3 flex flex-wrap items-center gap-2">
+        <div className="md:mb-3 flex flex-wrap items-center gap-2">
           {overdueSignatureOnly && (
             <button
               type="button"
@@ -1881,7 +2131,7 @@ export default function GerencialProcessosPage() {
             </div>
             <div className="min-w-0 flex-1">
               <div className="text-sm font-extrabold uppercase tracking-wide text-amber-950">
-                Aguardando assinatura há mais de {OVERDUE_SIGNATURE_DAYS} dias
+                Aguardando assinatura há mais de 24 horas
               </div>
             </div>
             {overdueSignatureSummary.length > 1 && (
@@ -1900,7 +2150,7 @@ export default function GerencialProcessosPage() {
             <div className="border-t border-amber-200 p-4 pt-3">
               {overdueSignatureSummary.length === 0 ? (
                 <div className="rounded-xl border border-amber-200 bg-white px-4 py-4 text-sm font-medium text-slate-600">
-                  Nenhum processo enviado há mais de {OVERDUE_SIGNATURE_DAYS} dias aguardando assinatura no momento.
+                  Nenhum processo enviado há mais de 24 horas aguardando assinatura no momento.
                 </div>
               ) : isAdminView ? (
                 <div className="rounded-xl border border-amber-200 bg-white shadow-sm">
@@ -1963,17 +2213,29 @@ export default function GerencialProcessosPage() {
         {/* Resumo compacto desktop */}
         <div className="hidden md:flex items-center justify-between gap-4 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm shadow-sm mb-3">
           <div className="flex items-center gap-4 text-slate-700">
-            <span><strong>{total}</strong> processo(s)</span>
+            <span>
+              <strong>{totalParaCalculo}</strong> processo(s)
+              {overdueFor24h.length > 0 && (
+                <span className="ml-1.5 text-xs text-red-600 font-semibold">
+                  (+{overdueFor24h.length} ⚠️ risco)
+                </span>
+              )}
+            </span>
             <span className="text-slate-500">•</span>
+            <span className="text-slate-700 font-medium">
+              {`Total causas: ${fmtBRL(totals.sumValorCausa)}`}
+            </span>
+            <span className="text-indigo-700 font-medium">
+              {totals.hasValorCausa ? `Causas em andamento: ${fmtBRL(totals.sumValorCausaEmAndamento)}` : "Causas em andamento: —"}
+            </span>
             <span className="text-purple-700 font-medium">
               {totals.hasValorCausa ? `Acordo Provável: ${fmtBRL(totals.sumAcordoProvavel)}` : "Acordo Provável: —"}
             </span>
             <span className="text-orange-700 font-medium">
               {totals.hasValorCausa ? `Expectativa Honorários: ${fmtBRL(totals.sumExpectativaHonorarios)}` : "Exp. Honorários: —"}
             </span>
-            <span className="text-slate-500">•</span>
-            <span className="text-indigo-700 font-medium">
-              {totals.hasValorCausa ? `Causas: ${fmtBRL(totals.sumValorCausa)}` : "Causas: —"}
+            <span className="text-emerald-700 font-medium">
+              {totals.hasAcordos ? `Acordos realizados: ${fmtBRL(totals.sumValorAcordos)}` : "Acordos realizados: —"}
             </span>
           </div>
           <div className="flex items-center gap-2">
@@ -1993,13 +2255,7 @@ export default function GerencialProcessosPage() {
               <span className="hidden sm:inline">Relatório</span>
               <span className="sm:hidden">📊</span>
             </Link>
-            <Link
-              href="/ml-dashboard"
-              className="hidden md:inline-flex items-center gap-1 rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-blue-700"
-              title="Ver estatísticas do Machine Learning"
-            >
-              🤖 <span>ML Dashboard</span>
-            </Link>
+
             <button
               onClick={exportCSV}
               className="inline-flex items-center gap-1 rounded-lg bg-slate-900 px-3 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-slate-800"
@@ -2010,105 +2266,47 @@ export default function GerencialProcessosPage() {
           </div>
         </div>
 
-        {/* ===== PAINEL DE COMISSÕES ===== */}
-        {comissaoSummary.total > 0 && (
-          <div className="mb-3 rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden">
-            {/* Header clicável — igual ao padrão do "aguardando assinatura" */}
-            <button
-              type="button"
-              onClick={() => setComissaoExpanded((v) => !v)}
-              className="flex w-full items-center gap-3 px-4 py-3 text-left bg-white hover:bg-slate-50 transition"
-            >
-              <div className="rounded-full bg-slate-100 p-1.5 text-slate-600">
-                <span className="text-sm leading-none">💰</span>
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="text-sm font-extrabold uppercase tracking-wide text-slate-900">
-                  Comissões
-                </div>
-              </div>
-              <div className="shrink-0 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-0.5 text-sm font-extrabold text-slate-900">
-                {fmtBRL(comissaoSummary.total)}
-              </div>
-              <button
-                type="button"
-                onClick={(e) => { e.stopPropagation(); window.location.reload(); }}
-                className="shrink-0 inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2 py-1 text-xs font-medium text-slate-500 hover:bg-slate-100 transition"
-                title="Atualizar dados"
-              >
-                <svg className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd"/></svg>
-                Reload
-              </button>
-              <div className="shrink-0 text-slate-500">
-                {comissaoExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-              </div>
-            </button>
-
-            {/* Body colapsável */}
-            {comissaoExpanded && (
-              <div className="border-t border-slate-100">
-                <div className="grid grid-cols-3 divide-x divide-slate-100">
-                  <div className="px-4 py-3 text-center">
-                    <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wide mb-1">Em andamento</div>
-                    <div className="text-lg font-bold text-slate-900">{fmtBRL(comissaoSummary.totalEmAndamento)}</div>
-                    <div className="text-xs text-slate-400 mt-0.5">{comissaoSummary.qtdAndamento} processo(s)</div>
-                  </div>
-                  <div className="px-4 py-3 text-center">
-                    <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wide mb-1">Concluídas</div>
-                    <div className="text-lg font-bold text-blue-700">{fmtBRL(comissaoSummary.totalConcluidas)}</div>
-                    <div className="text-xs text-slate-400 mt-0.5">{comissaoSummary.qtdConcluidas} acordo(s)</div>
-                  </div>
-                  <div className="px-4 py-3 text-center">
-                    <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wide mb-1">Total</div>
-                    <div className="text-lg font-bold text-slate-900">{fmtBRL(comissaoSummary.total)}</div>
-                    <div className="text-xs text-slate-400 mt-0.5">geral</div>
-                  </div>
-                </div>
-                {isAdminView && comissaoSummary.byGerenteList.length > 1 && (
-                  <div className="border-t border-slate-100">
-                    <div className="divide-y divide-slate-50">
-                      {comissaoSummary.byGerenteList.map((g) => (
-                        <div key={g.nome} className="flex items-center gap-3 px-4 py-2 text-xs hover:bg-slate-50">
-                          <div className="flex-1 font-medium text-slate-800 truncate">{g.nome}</div>
-                          <div className="text-slate-500 whitespace-nowrap">And.: <span className="font-medium text-slate-900">{fmtBRL(g.emAndamento)}</span></div>
-                          <div className="text-slate-500 whitespace-nowrap">Conc.: <span className="font-bold text-blue-700">{fmtBRL(g.concluidas)}</span></div>
-                          <div className="font-bold text-slate-900 whitespace-nowrap w-28 text-right">{fmtBRL(g.total)}</div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        )}
 
         {/* Resumo mobile (mantido original) */}
 
                 {overdueSignatureOnly && (
                   <div className="mb-3 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900 shadow-sm">
-                    Mostrando apenas processos com status Enviado aguardando assinatura há mais de {OVERDUE_SIGNATURE_DAYS} dias{gerenteFilter ? ` para ${gerenteFilter}` : ""}.
+                    Mostrando apenas processos com status Enviado aguardando assinatura há mais de 24 horas{gerenteFilter ? ` para ${gerenteFilter}` : ""}.
                   </div>
                 )}
-        <div className="md:hidden mb-3 flex flex-col items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-white px-3 sm:px-4 py-3 text-xs sm:text-sm shadow-sm">
-          <div className="text-slate-700 text-center">
-            Resultados filtrados: <span className="font-semibold">{total}</span> processo(s)
+        <div className="md:hidden mb-2 rounded-xl border border-slate-200 bg-white px-3 py-2 shadow-sm">
+          <div className="text-xs text-slate-500 text-center mb-2">
+            <span className="font-semibold text-slate-800">{totalParaCalculo}</span> processo(s) filtrado(s)
+            {overdueFor24h.length > 0 && (
+              <span className="ml-1 text-red-600 font-semibold">(+{overdueFor24h.length} ⚠️)</span>
+            )}
           </div>
-          <div className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
-            <span className="rounded-full border-2 border-purple-300 bg-purple-50 px-3 py-2 text-xs sm:text-sm font-bold text-purple-800">
-              {totals.hasValorCausa ? `Acordo Provável: ${fmtBRL(totals.sumAcordoProvavel)}` : "Acordo Provável: —"}
-            </span>
-            <span className="rounded-full border-2 border-orange-300 bg-orange-50 px-3 py-2 text-xs sm:text-sm font-bold text-orange-800">
-              {totals.hasValorCausa ? `Exp. Honorários: ${fmtBRL(totals.sumExpectativaHonorarios)}` : "Exp. Honorários: —"}
-            </span>
-            <span className="rounded-full border-2 border-blue-300 bg-blue-50 px-3 py-2 text-xs sm:text-sm font-bold text-blue-800">
-              {totals.hasValorCausa ? `Causas: ${fmtBRL(totals.sumValorCausa)}` : "Causas: —"}
-            </span>
+          <div className="grid grid-cols-2 gap-1.5 text-xs">
+            <div className="rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5">
+              <div className="text-[10px] text-slate-400 font-medium">Total causas</div>
+              <div className="font-bold text-slate-800 tabular-nums">{fmtBRL(totals.sumValorCausa)}</div>
+            </div>
+            <div className="rounded-lg border border-blue-200 bg-blue-50 px-2 py-1.5">
+              <div className="text-[10px] text-blue-500 font-medium">Em andamento</div>
+              <div className="font-bold text-blue-800 tabular-nums">{totals.hasValorCausa ? fmtBRL(totals.sumValorCausaEmAndamento) : "—"}</div>
+            </div>
+            <div className="rounded-lg border border-purple-200 bg-purple-50 px-2 py-1.5">
+              <div className="text-[10px] text-purple-500 font-medium">Acordo provável</div>
+              <div className="font-bold text-purple-800 tabular-nums">{totals.hasValorCausa ? fmtBRL(totals.sumAcordoProvavel) : "—"}</div>
+            </div>
+            <div className="rounded-lg border border-orange-200 bg-orange-50 px-2 py-1.5">
+              <div className="text-[10px] text-orange-500 font-medium">Exp. honorários</div>
+              <div className="font-bold text-orange-800 tabular-nums">{totals.hasValorCausa ? fmtBRL(totals.sumExpectativaHonorarios) : "—"}</div>
+            </div>
+            <div className="col-span-2 rounded-lg border border-emerald-200 bg-emerald-50 px-2 py-1.5">
+              <div className="text-[10px] text-emerald-600 font-medium">Acordos realizados</div>
+              <div className="font-bold text-emerald-800 tabular-nums">{totals.hasAcordos ? fmtBRL(totals.sumValorAcordos) : "—"}</div>
+            </div>
           </div>
         </div>
 
         {/* ====== MOBILE: Cards ou Tabela ====== */}
-        <section className="md:hidden space-y-2 pb-4">
+        <section className="md:hidden space-y-1.5 pb-4">
           {loading && (
             <div className="rounded-2xl border border-slate-200 bg-white p-4 text-center text-slate-500">Carregando processos…</div>
           )}
@@ -2203,7 +2401,7 @@ export default function GerencialProcessosPage() {
                       { key: "liquido_hoje", label: "Líquido Hoje", w: "w-[140px]", align: "text-right" },
                       { key: "liquido_futuro", label: "Líquido Futuro", w: "w-[150px]", align: "text-right" },
                       { key: "advogado_nome", label: "Advogado", w: "min-w-[180px]", align: "text-left" },
-                      { key: "comissao_gerente", label: "Comissão Gerente", w: "w-[160px]", align: "text-right" },
+                      { key: "comissao_gerente", label: "Comissões", w: "w-[160px]", align: "text-right" },
                       { key: "gerente_nome", label: "Gerente", w: "min-w-[160px]", align: "text-left" },
                       { key: "criado_em", label: "Criado em", w: "w-[130px]", align: "text-center" },
                       { key: "acoes", label: "Ações", w: "w-[120px]", align: "text-center" },
@@ -2347,6 +2545,16 @@ export default function GerencialProcessosPage() {
                           <span className={cls("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset", pillCls)}>
                             {resLabel}
                           </span>
+                          {resLabel === "Acordo" && (it as any).resultado_acordo_em && (
+                            <div className="mt-0.5 text-[10px] text-slate-500 leading-tight">
+                              <span className="font-semibold">Reportado:</span> {fmtDateTimeBRT((it as any).resultado_acordo_em)}
+                            </div>
+                          )}
+                          {resLabel === "Acordo" && (it as any).data_recebimento_acordo && (
+                            <div className="mt-0.5 text-[10px] text-emerald-700 leading-tight font-semibold">
+                              Pago: {fmtDateOnly((it as any).data_recebimento_acordo)}
+                            </div>
+                          )}
                         </td>
 
                         {/* Número do processo — negrito + COMARCA/UF abaixo */}
@@ -2390,14 +2598,14 @@ export default function GerencialProcessosPage() {
                           {it.valor_causa ? fmtBRL(it.valor_causa) : "—"}
                         </td>
 
-                        {/* 🆕 Acordo Provável (70% do Valor da Causa) */}
+                        {/* 🆕 Acordo Provável (70% do Valor da Causa) — oculto para quem já tem Acordo */}
                         <td className="px-2.5 py-1.5 text-right tabular-nums whitespace-nowrap bg-purple-50">
-                          {it.valor_causa ? fmtBRL(it.valor_causa * 0.7) : "—"}
+                          {getResultadoLabel(it) === "Acordo" ? <span className="text-slate-400 text-xs">Acordado</span> : it.valor_causa ? fmtBRL(it.valor_causa * 0.7) : "—"}
                         </td>
 
-                        {/* 🆕 Expectativa de Honorários (30% do Acordo Provável) */}
+                        {/* 🆕 Expectativa de Honorários — oculto para quem já tem Acordo */}
                         <td className="px-2.5 py-1.5 text-right tabular-nums whitespace-nowrap bg-orange-50">
-                          {it.valor_causa ? fmtBRL(it.valor_causa * 0.7 * 0.3) : "—"}
+                          {getResultadoLabel(it) === "Acordo" ? <span className="text-slate-400 text-xs">Acordado</span> : (() => { const v = calcExpectativaHonorarios(it); return v !== null ? fmtBRL(v) : "—"; })()}
                         </td>
 
                         {/* Valor Hoje */}
@@ -2439,7 +2647,7 @@ export default function GerencialProcessosPage() {
                         <td className="px-2.5 py-1.5 text-right tabular-nums whitespace-nowrap">
                           {(() => {
                             const isAcordo = getResultadoLabel(it) === "Acordo";
-                            const v = isAcordo ? calcComissaoGerente(it) : calcComissaoTodos(it);
+                            const v = calcComissaoTodos(it);
                             if (v === null) return <span className="text-slate-400">—</span>;
                             return (
                               <span className={isAcordo ? "font-bold text-blue-700" : "text-slate-900"}>

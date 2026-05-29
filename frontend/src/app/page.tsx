@@ -963,6 +963,14 @@ const handleCampoChange = (campo: string, novoValor: string) => {
   const [telefoneInvalido, setTelefoneInvalido] = useState(false);
   const [houveAcordo, setHouveAcordo] = useState(false);
   const [valorAcordo, setValorAcordo] = useState("");
+  const [dataRecebimentoAcordo, setDataRecebimentoAcordo] = useState("");
+  const [comprovanteRecebimentoAcordoUrl, setComprovanteRecebimentoAcordoUrl] = useState("");
+  const [comprovanteModalUrl, setComprovanteModalUrl] = useState<string | null>(null);
+  const [uploadingComprovanteAcordo, setUploadingComprovanteAcordo] = useState(false);
+  const [acordoCelebradoEm, setAcordoCelebradoEm] = useState<string>("");
+  const [acordoInseridoPorNome, setAcordoInseridoPorNome] = useState<string>("");
+  const [gerenteNome, setGerenteNome] = useState<string>("");
+  const [advogadoNomeExtrato, setAdvogadoNomeExtrato] = useState<string>("");
   const [houveSentenca, setHouveSentenca] = useState(false);
   const [tipoSentenca, setTipoSentenca] = useState("");
   const [valorSentenca, setValorSentenca] = useState("");
@@ -1244,6 +1252,8 @@ setDadosManuais((prev) => {
 
         // Sincroniza controles específicos
         try {
+          setGerenteNome((data as any).gerente_nome || "");
+          setAdvogadoNomeExtrato((data as any).advogado_nome || "");
           const fase = (data as any).resultado_processo ?? (data as any).fase_processo;
           const tp = ((data as any).tipo_pagamento || "").toString();
           if (fase === "Acordo") {
@@ -1251,6 +1261,10 @@ setDadosManuais((prev) => {
             setHouveSentenca(false);
             const vA = brl((data as any).valor_acordo);
             if (typeof vA === "number") setValorAcordo(String(vA));
+            setDataRecebimentoAcordo(converterParaInputDate((data as any).data_recebimento_acordo) || "");
+            setComprovanteRecebimentoAcordoUrl((data as any).comprovante_recebimento_acordo_url || "");
+            setAcordoCelebradoEm((data as any).resultado_acordo_em || (data as any).valor_acordo_inserido_em || "");
+            setAcordoInseridoPorNome((data as any).valor_acordo_inserido_por_nome || "");
           } else if (fase === "Ganhamos") {
             setHouveSentenca(true);
             setHouveAcordo(false);
@@ -2360,6 +2374,7 @@ const num = (v: any) => {
 
   // 👇 ADICIONE ESTA LINHA para enviar valor_acordo no payload
 (__payload as any).valor_acordo = houveAcordo ? Number(numSafe(currentValorAcordo) || 0) : null;
+(__payload as any).data_recebimento_acordo = houveAcordo && dataRecebimentoAcordo ? dataRecebimentoAcordo : null;
 
   // Futuro sempre zerado em: acordo / à vista / perdemos
   if (mustZeroFuturo) {
@@ -2738,6 +2753,19 @@ const handleSalvar = async ({ silent = false }: { silent?: boolean } = {}) => {
         isAdvMode  // 🔐 Preservar email do ZapSign em mode=adv
       );
 
+      // Garante data_recebimento_acordo diretamente do estado (evita problema de closure)
+      if (houveAcordo) {
+        (payload as any).data_recebimento_acordo = dataRecebimentoAcordo || null;
+      }
+
+      // Validação: comprovante anexado exige data de pagamento
+      if (houveAcordo && comprovanteRecebimentoAcordoUrl && !dataRecebimentoAcordo) {
+        if (toastId) toast.dismiss(toastId);
+        toast.error("Preencha a data de recebimento antes de salvar. O campo é obrigatório quando há comprovante anexado.");
+        document.getElementById("data-recebimento-acordo")?.focus();
+        return;
+      }
+
       console.log("[DEBUG SAVE] Parcelas no payload:", payload.parcelas);
 
       const headers: Record<string, string> = { "Content-Type": "application/json" };
@@ -2831,7 +2859,7 @@ const handleSalvar = async ({ silent = false }: { silent?: boolean } = {}) => {
       };
     }
 
-  }, [papel, ehAdvogado, dadosBasicos, dadosManuais, parcelas, valorSelecionado, resultadoTaxaAdmDevidaValor, resultadoJurosHoje, resultadoJurosFuturo, houveAcordo, valorAcordo, houveSentenca, tipoSentenca, valorSentenca, custasProcessuais, emailCliente, metadeHonorarioHoje, metadeHonorarioFuturo, diferenca, totalHonorariosHoje, totalHonorariosFuturo, totalCustasProcessuais]);
+  }, [papel, ehAdvogado, dadosBasicos, dadosManuais, parcelas, valorSelecionado, resultadoTaxaAdmDevidaValor, resultadoJurosHoje, resultadoJurosFuturo, houveAcordo, valorAcordo, houveSentenca, tipoSentenca, valorSentenca, custasProcessuais, emailCliente, metadeHonorarioHoje, metadeHonorarioFuturo, diferenca, totalHonorariosHoje, totalHonorariosFuturo, totalCustasProcessuais, dataRecebimentoAcordo, comprovanteRecebimentoAcordoUrl]);
 
 
   // Quando snapshot do banco chega, completa dadosManuais se estiverem vazios
@@ -3317,6 +3345,7 @@ const handleSalvar = async ({ silent = false }: { silent?: boolean } = {}) => {
             </div>
 
             {dadosManuais.fase_processo === "Acordo" && (
+              <>
               <div className={INPUT_FOCUS_WRAPPER}>
                 <label className="text-sm font-medium text-slate-700">Valor do Acordo</label>
                 <NumericFormat
@@ -3328,7 +3357,70 @@ const handleSalvar = async ({ silent = false }: { silent?: boolean } = {}) => {
                   className="w-full rounded-2xl border border-slate-200 bg-white px-3 py-2 text-sm text-right transition-all duration-200 focus:border-blue-500 focus:shadow-lg focus:outline-none"
                   allowNegative={false}
                 />
+                {acordoCelebradoEm && (
+                  <div className="text-xs text-slate-400 text-right pr-1">
+                    Reportado{acordoInseridoPorNome ? ` por ${acordoInseridoPorNome}` : ""} em {new Date(acordoCelebradoEm).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "America/Sao_Paulo" })}
+                  </div>
+                )}
               </div>
+              <div className={INPUT_FOCUS_WRAPPER}>
+                <label className="text-sm font-medium text-slate-700">
+                  Data de recebimento (pago pela adm.)
+                  {comprovanteRecebimentoAcordoUrl && <span className="ml-1 text-red-500 font-bold">*</span>}
+                </label>
+                <input
+                  id="data-recebimento-acordo"
+                  type="date"
+                  value={dataRecebimentoAcordo}
+                  onChange={(e) => setDataRecebimentoAcordo(e.target.value)}
+                  className={`w-full rounded-2xl border bg-white px-3 py-2 text-sm transition-all duration-200 focus:border-blue-500 focus:shadow-lg focus:outline-none ${comprovanteRecebimentoAcordoUrl && !dataRecebimentoAcordo ? "border-red-400 ring-1 ring-red-300" : "border-slate-200"}`}
+                />
+                {comprovanteRecebimentoAcordoUrl && !dataRecebimentoAcordo && (
+                  <p className="mt-1 text-xs text-red-500">Obrigatório quando há comprovante anexado</p>
+                )}
+              </div>
+              <div className={INPUT_FOCUS_WRAPPER}>
+                <label className="text-sm font-medium text-slate-700">Comprovante de pagamento (opcional)</label>
+                {comprovanteRecebimentoAcordoUrl ? (
+                  <div className="flex items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm">
+                    <button type="button" onClick={() => setComprovanteModalUrl(comprovanteRecebimentoAcordoUrl)} className="text-emerald-700 underline font-medium text-sm">Ver comprovante</button>
+                    <button type="button" onClick={() => setComprovanteRecebimentoAcordoUrl("")} className="ml-auto text-xs text-red-500 hover:text-red-700">Remover</button>
+                  </div>
+                ) : (
+                  <label className="flex cursor-pointer items-center gap-2 rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-500 hover:border-blue-400 hover:text-blue-600 transition-colors">
+                    {uploadingComprovanteAcordo ? "Enviando..." : "Selecionar arquivo (PDF ou imagem)"}
+                    <input
+                      type="file"
+                      accept=".pdf,image/*"
+                      className="hidden"
+                      disabled={uploadingComprovanteAcordo}
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        const params = new URLSearchParams(window.location.search);
+                        const extratoId = params.get("extratoId") || params.get("extrato_id") || (window as any).__EXTRATO_ID__;
+                        if (!extratoId) { alert("Salve o processo antes de anexar o comprovante."); return; }
+                        const uid = localStorage.getItem("usuarioId") || sessionStorage.getItem("usuarioId") || "";
+                        setUploadingComprovanteAcordo(true);
+                        try {
+                          const fd = new FormData();
+                          fd.append("file", file);
+                          const res = await fetch(`${API_BASE}/uploads/comprovante_recebimento_acordo?extrato_id=${extratoId}`, {
+                            method: "POST",
+                            headers: uid ? { "X-Usuario-Id": uid } : {},
+                            body: fd,
+                          });
+                          if (!res.ok) throw new Error("Falha no upload");
+                          const uploadData = await res.json();
+                          setComprovanteRecebimentoAcordoUrl(uploadData.public_url || uploadData.url || "");
+                        } catch { alert("Erro ao enviar o comprovante."); }
+                        finally { setUploadingComprovanteAcordo(false); }
+                      }}
+                    />
+                  </label>
+                )}
+              </div>
+              </>
             )}
 
             {dadosManuais.fase_processo === "Ganhamos" && (
@@ -3444,7 +3536,21 @@ const handleSalvar = async ({ silent = false }: { silent?: boolean } = {}) => {
               <h2 className="text-blue-800 font-semibold text-lg">📝 Análise Completa</h2>
 
               <div>
-                <h3 className="text-gray-700 font-semibold text-sm mb-2">📄 Dados do Consorciado</h3>
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-gray-700 font-semibold text-sm">📄 Dados do Consorciado</h3>
+                  <div className="flex items-center gap-2">
+                    {advogadoNomeExtrato && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-3 py-0.5 text-xs font-bold text-emerald-700 ring-1 ring-emerald-300">
+                        ADV.: {advogadoNomeExtrato}
+                      </span>
+                    )}
+                    {gerenteNome && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-3 py-0.5 text-xs font-bold text-blue-700 ring-1 ring-blue-300">
+                        GERENTE: {gerenteNome}
+                      </span>
+                    )}
+                  </div>
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
                   <div className="md:col-span-3">
@@ -4690,6 +4796,42 @@ const handleSalvar = async ({ silent = false }: { silent?: boolean } = {}) => {
       mensagens={mensagensAprendizado}
       onRemoverMensagem={removerMensagemAprendizado}
     />
+
+    {/* Modal comprovante de pagamento */}
+    {comprovanteModalUrl && (
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/70"
+        onClick={() => setComprovanteModalUrl(null)}
+      >
+        <div
+          className="relative w-full h-full bg-white flex flex-col"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200">
+            <span className="text-sm font-semibold text-slate-700">Comprovante de pagamento</span>
+            <button
+              type="button"
+              onClick={() => setComprovanteModalUrl(null)}
+              className="text-slate-400 hover:text-slate-700 text-xl font-bold leading-none"
+            >
+              ×
+            </button>
+          </div>
+          <div className="flex-1 overflow-auto">
+            {/\.(jpg|jpeg|png|gif|webp)(\?|$)/i.test(comprovanteModalUrl) ? (
+              <img src={comprovanteModalUrl} alt="Comprovante" className="w-full h-auto" />
+            ) : (
+              <iframe
+                src={comprovanteModalUrl}
+                className="w-full"
+                style={{ flex: 1, minHeight: 0 }}
+                title="Comprovante"
+              />
+            )}
+          </div>
+        </div>
+      </div>
+    )}
     </>
   );
 }
