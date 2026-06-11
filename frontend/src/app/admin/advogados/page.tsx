@@ -48,6 +48,7 @@ interface FormData {
   telefone: string;
   senha: string;
   genero: string;
+  api_key_zapsign: string;
 }
 
 const FORM_VAZIO: FormData = {
@@ -58,6 +59,7 @@ const FORM_VAZIO: FormData = {
   telefone: "",
   senha: "",
   genero: "M",
+  api_key_zapsign: DEFAULT_API_KEY_ZAPSIGN,
 };
 
 function slugifyPrimeiroNome(nome: string): string {
@@ -68,6 +70,14 @@ function slugifyPrimeiroNome(nome: string): string {
     .normalize("NFD")
     .replace(/[̀-ͯ]/g, "")
     .replace(/[^a-z0-9]/g, "");
+}
+
+function gerarUsuarioUnico(base: string, advogados: Advogado[]): string {
+  const existentes = new Set(advogados.map(a => a.usuario.toLowerCase()));
+  if (!existentes.has(base)) return base;
+  let i = 2;
+  while (existentes.has(`${base}${i}`)) i++;
+  return `${base}${i}`;
 }
 
 function formatOAB(raw: string): string {
@@ -101,6 +111,7 @@ export default function AdminAdvogados() {
   const [formLoading, setFormLoading] = useState(false);
   const [formErro, setFormErro] = useState("");
   const [modeloSelecionado, setModeloSelecionado] = useState<string | null>(null);
+  const [advogadoEditando, setAdvogadoEditando] = useState<Advogado | null>(null);
 
   const carregarAdvogados = async () => {
     setErro("");
@@ -123,6 +134,39 @@ export default function AdminAdvogados() {
     setUsuarioManual(false);
     setFormErro("");
     setModeloSelecionado(null);
+    setAdvogadoEditando(null);
+  };
+
+  const abrirCriacao = () => {
+    if (showForm && !advogadoEditando) {
+      fecharForm();
+      return;
+    }
+    setForm(FORM_VAZIO);
+    setUsuarioManual(false);
+    setFormErro("");
+    setModeloSelecionado(null);
+    setAdvogadoEditando(null);
+    setShowForm(true);
+  };
+
+  const abrirEdicao = (adv: Advogado) => {
+    setAdvogadoEditando(adv);
+    setUsuarioManual(true);
+    setModeloSelecionado(null);
+    setFormErro("");
+    setShowForm(true);
+    setForm({
+      nome_completo: adv.nome_completo || "",
+      usuario: adv.usuario || "",
+      oab: adv.oab || "",
+      email: adv.email || "",
+      telefone: adv.telefone || "",
+      senha: "",
+      genero: "M",
+      api_key_zapsign: adv.api_key_zapsign || "",
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const aplicarModelo = (id: string) => {
@@ -138,7 +182,7 @@ export default function AdminAdvogados() {
     setForm(prev => ({
       ...prev,
       nome_completo: upper,
-      usuario: usuarioManual ? prev.usuario : slugifyPrimeiroNome(valor),
+      usuario: usuarioManual ? prev.usuario : gerarUsuarioUnico(slugifyPrimeiroNome(valor), advogados),
     }));
   };
 
@@ -155,7 +199,7 @@ export default function AdminAdvogados() {
         email: form.email.trim().toLowerCase(),
         telefone: form.telefone,
         senha: form.senha,
-        api_key_zapsign: DEFAULT_API_KEY_ZAPSIGN,
+        api_key_zapsign: form.api_key_zapsign || DEFAULT_API_KEY_ZAPSIGN,
         webhook_path_token: DEFAULT_WEBHOOK_PATH_TOKEN,
         genero: form.genero,
       };
@@ -172,6 +216,52 @@ export default function AdminAdvogados() {
       setTimeout(() => { carregarAdvogados(); setSucesso(""); }, 2500);
     } catch (err: any) {
       setFormErro(err?.response?.data?.detail || err?.message || "Erro ao criar advogado");
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  const handleAtualizarAdvogado = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!advogadoEditando) return;
+
+    setFormErro("");
+    setFormLoading(true);
+
+    try {
+      const payload: any = {
+        nome_completo: form.nome_completo.trim(),
+        usuario: form.usuario.trim().toLowerCase(),
+        oab: form.oab.trim().toUpperCase(),
+        email: form.email.trim().toLowerCase(),
+        telefone: form.telefone,
+        api_key_zapsign: form.api_key_zapsign.trim(),
+      };
+
+      if (form.senha.trim()) {
+        payload.senha = form.senha;
+      }
+
+      if (!payload.nome_completo || !payload.usuario || !payload.oab || !payload.email) {
+        setFormErro("Preencha todos os campos obrigatórios");
+        return;
+      }
+
+      const response = await axios.put(`${API_BASE}/advogados/${advogadoEditando.id}`, payload, {
+        headers: { "Content-Type": "application/json" },
+      });
+
+      setSucesso(`✅ Advogado "${response.data.nome_completo}" atualizado com sucesso!`);
+      setAdvogados((atuais) =>
+        atuais.map((adv) =>
+          adv.id === advogadoEditando.id ? { ...adv, ...response.data } : adv
+        )
+      );
+      fecharForm();
+      await carregarAdvogados();
+      setTimeout(() => setSucesso(""), 3000);
+    } catch (err: any) {
+      setFormErro(err?.response?.data?.detail || err?.message || "Erro ao atualizar advogado");
     } finally {
       setFormLoading(false);
     }
@@ -200,10 +290,10 @@ export default function AdminAdvogados() {
           <p className="text-gray-600 mt-1">Crie advogados copiando templates de um advogado existente</p>
         </div>
         <button
-          onClick={() => showForm ? fecharForm() : setShowForm(true)}
+          onClick={abrirCriacao}
           className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded transition-colors"
         >
-          {showForm ? "❌ Fechar" : "➕ Novo Advogado"}
+          {showForm && !advogadoEditando ? "❌ Fechar" : "➕ Novo Advogado"}
         </button>
       </div>
 
@@ -222,13 +312,17 @@ export default function AdminAdvogados() {
       {/* Formulário */}
       {showForm && (
         <div className="bg-white p-6 rounded-lg shadow mb-8 border-l-4 border-green-500">
-          <h2 className="text-xl font-semibold mb-1 text-gray-900">➕ Novo Advogado</h2>
+          <h2 className="text-xl font-semibold mb-1 text-gray-900">
+            {advogadoEditando ? "Editar Advogado" : "➕ Novo Advogado"}
+          </h2>
           <p className="text-sm text-gray-500 mb-4">
-            O usuário é preenchido automaticamente com o primeiro nome. API ZapSign e Webhook aplicados pelo padrão do escritório.
+            {advogadoEditando
+              ? "Altere os dados cadastrais. Deixe a senha em branco para manter a senha atual."
+              : "O usuário é preenchido automaticamente com o primeiro nome. API ZapSign e Webhook aplicados pelo padrão do escritório."}
           </p>
 
           {/* Seleção de modelo */}
-          <div className="mb-5">
+          {!advogadoEditando && <div className="mb-5">
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Usar modelo de escritório</p>
             <div className="flex gap-3">
               {MODELOS.map((m) => {
@@ -250,12 +344,12 @@ export default function AdminAdvogados() {
                 );
               })}
             </div>
-          </div>
+          </div>}
 
-          <form onSubmit={handleCriarAdvogado} className="space-y-4">
+          <form onSubmit={advogadoEditando ? handleAtualizarAdvogado : handleCriarAdvogado} className="space-y-4">
 
             {/* Gênero */}
-            <div className="flex gap-6 items-center">
+            {!advogadoEditando && <div className="flex gap-6 items-center">
               <span className="text-sm font-medium text-gray-700">Gênero *</span>
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
@@ -279,7 +373,7 @@ export default function AdminAdvogados() {
                 />
                 <span className="text-sm text-gray-700">Feminino (Dra.)</span>
               </label>
-            </div>
+            </div>}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
@@ -364,24 +458,38 @@ export default function AdminAdvogados() {
 
               {/* Senha */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Senha *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Senha {advogadoEditando ? "" : "*"}
+                </label>
                 <input
                   type="password"
-                  required
+                  required={!advogadoEditando}
                   minLength={8}
                   value={form.senha}
                   onChange={(e) => setForm({ ...form, senha: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="Mínimo 8 caracteres"
+                  placeholder={advogadoEditando ? "Deixe em branco para manter" : "Mínimo 8 caracteres"}
+                />
+              </div>
+
+              {/* API ZapSign */}
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Chave API ZapSign</label>
+                <input
+                  type="text"
+                  value={form.api_key_zapsign}
+                  onChange={(e) => setForm({ ...form, api_key_zapsign: e.target.value.trim() })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 font-mono text-xs"
+                  placeholder="Chave API ZapSign"
                 />
               </div>
 
             </div>
 
             {/* Info ZapSign */}
-            <div className="flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 text-xs text-gray-500">
+            {!advogadoEditando && <div className="flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 text-xs text-gray-500">
               🔐 API ZapSign e Webhook Token serão configurados automaticamente com o padrão do escritório.
-            </div>
+            </div>}
 
             {formErro && (
               <div className="p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
@@ -395,7 +503,7 @@ export default function AdminAdvogados() {
                 disabled={formLoading}
                 className="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-medium py-2 px-4 rounded transition-colors"
               >
-                {formLoading ? "Criando..." : "✅ Criar Advogado"}
+                {formLoading ? (advogadoEditando ? "Salvando..." : "Criando...") : (advogadoEditando ? "Salvar alterações" : "✅ Criar Advogado")}
               </button>
               <button
                 type="button"
@@ -411,7 +519,7 @@ export default function AdminAdvogados() {
 
       {/* Tabela */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="overflow-x-auto">
+        <div className="overflow-hidden">
           {loading ? (
             <div className="flex items-center justify-center h-32">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600" />
@@ -419,44 +527,54 @@ export default function AdminAdvogados() {
           ) : advogados.length === 0 ? (
             <div className="text-center py-8 text-gray-600">Nenhum advogado encontrado</div>
           ) : (
-            <table className="w-full">
+            <table className="w-full table-auto">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wide">Nome</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wide">Usuário</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wide">OAB</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wide">Email</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wide">Telefone</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wide">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wide">Ações</th>
+                  <th className="px-2 lg:px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wide">Nome</th>
+                  <th className="px-2 lg:px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wide">Usuário</th>
+                  <th className="px-2 lg:px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wide">OAB</th>
+                  <th className="px-2 lg:px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wide">Email</th>
+                  <th className="px-2 lg:px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wide">Telefone</th>
+                  <th className="px-2 lg:px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wide">Status</th>
+                  <th className="px-2 lg:px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wide">Ações</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {advogados.map((adv) => (
                   <tr key={adv.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-3 text-sm font-medium text-gray-900">{adv.nome_completo}</td>
-                    <td className="px-6 py-3 text-sm text-gray-600">
+                    <td className="px-2 lg:px-4 py-3 text-sm font-medium text-gray-900 break-words">{adv.nome_completo}</td>
+                    <td className="px-2 lg:px-4 py-3 text-sm text-gray-600">
                       <code className="bg-gray-100 px-2 py-0.5 rounded text-xs">{adv.usuario}</code>
                     </td>
-                    <td className="px-6 py-3 text-sm text-gray-600 whitespace-nowrap">{adv.oab}</td>
-                    <td className="px-6 py-3 text-sm text-gray-600">{adv.email}</td>
-                    <td className="px-6 py-3 text-sm text-gray-600 whitespace-nowrap">
+                    <td className="px-2 lg:px-4 py-3 text-sm text-gray-600">{adv.oab}</td>
+                    <td className="px-2 lg:px-4 py-3 text-sm text-gray-600 break-all">{adv.email}</td>
+                    <td className="px-2 lg:px-4 py-3 text-sm text-gray-600">
                       {formatarTelefone(adv.telefone)}
                     </td>
-                    <td className="px-6 py-3 text-sm">
+                    <td className="px-2 lg:px-4 py-3 text-sm">
                       {adv.ativo !== false ? (
                         <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">Ativo</span>
                       ) : (
                         <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">Inativo</span>
                       )}
                     </td>
-                    <td className="px-6 py-3 text-sm">
-                      <button
-                        onClick={() => handleDeletar(adv.id, adv.nome_completo)}
-                        className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs"
-                      >
-                        Deletar
-                      </button>
+                    <td className="px-2 lg:px-4 py-3 text-sm">
+                      <div className="flex flex-col xl:flex-row items-stretch xl:items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => abrirEdicao(adv)}
+                          className="inline-flex justify-center bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-xs font-medium"
+                        >
+                          Editar
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDeletar(adv.id, adv.nome_completo)}
+                          className="inline-flex justify-center bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded text-xs font-medium"
+                        >
+                          Deletar
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
