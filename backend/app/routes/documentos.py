@@ -10,7 +10,6 @@ import subprocess
 import shutil
 import glob
 import traceback
-import random as _random
 from typing import Optional
 import fitz  # PyMuPDF
 
@@ -332,24 +331,20 @@ def _padrao_dir() -> str:
 def localizar_modelo(pasta_base: str, tipo: str, extrato_id: int = 0) -> str:
     tipo = (tipo or "").strip().lower()
     padrao = "contrato" if "contrato" in tipo else "procuracao"
+
+    # Procuração: template único universal em _padrao para todos os advogados
+    if padrao == "procuracao":
+        padrao_path = os.path.join(_padrao_dir(), "modelo_procuracao_padrao.docx")
+        if os.path.exists(padrao_path):
+            return padrao_path
+
+    # Contrato: usar template específico do advogado
     candidatos = glob.glob(os.path.join(pasta_base, "*.docx"))
     candidatos = [c for c in candidatos if padrao in os.path.basename(c).lower()]
     candidatos.sort()
     if not candidatos:
         raise FileNotFoundError(f"Modelo '{padrao}' não encontrado em: {pasta_base}")
-
-    # Para procuração com template único: adicionar variantes do _padrao para rotação
-    if padrao == "procuracao" and len(candidatos) == 1:
-        extras = sorted(glob.glob(
-            os.path.join(_padrao_dir(), "modelo_procuracao_padrao_v*.docx")
-        ))
-        if extras:
-            pool = candidatos + extras  # [own_v1, _padrao_v2, _padrao_v3, _padrao_v4]
-            idx = extrato_id if extrato_id > 0 else _random.randint(0, len(pool) - 1)
-            return pool[idx % len(pool)]
-
-    idx = extrato_id if extrato_id > 0 else _random.randint(0, len(candidatos) - 1)
-    return candidatos[idx % len(candidatos)]
+    return candidatos[0]
 
 # ========================= FUNÇÕES EXPOSTAS PARA TESTES =========================
 def gerar_documento_preview(dados: dict):
