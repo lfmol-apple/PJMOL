@@ -2496,6 +2496,19 @@ return __payload;
         return localStorage.getItem("usuarioAdvogado") || "";
       };
       const usuarioAdvogadoFinal = obterUsuarioAdvogado();
+
+      const extratoIdForPayload = (() => {
+        if (typeof window === "undefined") return "";
+        const params = new URLSearchParams(window.location.search || "");
+        return (
+          params.get("extratoId") ||
+          params.get("extrato_id") ||
+          params.get("id") ||
+          (window as any).__EXTRATO_ID__ ||
+          ""
+        );
+      })();
+
       const payload = {
         nome: dadosBasicos.nome_cliente,
         cpf: dadosBasicos.cpf_cnpj,
@@ -2517,6 +2530,7 @@ return __payload;
         administradora: dadosBasicos.administradora,
         data_encerramento: isoParaBR(dadosBasicos.data_encerramento),
         usuario_advogado: advogado.usuario || "",
+        extrato_id: extratoIdForPayload,
 
         email: emailCliente,
       };
