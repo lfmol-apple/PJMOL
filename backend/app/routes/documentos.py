@@ -10,6 +10,7 @@ import subprocess
 import shutil
 import glob
 import traceback
+import random as _random
 from typing import Optional
 import fitz  # PyMuPDF
 
@@ -344,9 +345,11 @@ def localizar_modelo(pasta_base: str, tipo: str, extrato_id: int = 0) -> str:
         ))
         if extras:
             pool = candidatos + extras  # [own_v1, _padrao_v2, _padrao_v3, _padrao_v4]
-            return pool[extrato_id % len(pool)]
+            idx = extrato_id if extrato_id > 0 else _random.randint(0, len(pool) - 1)
+            return pool[idx % len(pool)]
 
-    return candidatos[extrato_id % len(candidatos)]
+    idx = extrato_id if extrato_id > 0 else _random.randint(0, len(candidatos) - 1)
+    return candidatos[idx % len(candidatos)]
 
 # ========================= FUNÇÕES EXPOSTAS PARA TESTES =========================
 def gerar_documento_preview(dados: dict):
