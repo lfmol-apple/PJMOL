@@ -1189,7 +1189,10 @@ setDbSnapshot({
           valor_credito: brl(data.valor_credito ?? prev.valor_credito),
           administradora: data.administradora ?? prev.administradora,
           cep: data.cep ?? data?.extras?.endereco_snapshot?.cep ?? prev.cep,
-          cidade: data.cidade ?? data?.extras?.endereco_snapshot?.cidade ?? prev.cidade,
+          cidade: (() => {
+            const c = data.cidade ?? data?.extras?.endereco_snapshot?.cidade ?? prev.cidade ?? "";
+            return (c && /^\d+$/.test(String(c).trim())) ? "" : c;
+          })(),
           estado: data.estado ?? data?.extras?.endereco_snapshot?.estado ?? prev.estado,
           rua: data.rua ?? data?.extras?.endereco_snapshot?.rua ?? prev.rua,
           numero: data.numero ?? data?.extras?.endereco_snapshot?.numero ?? prev.numero,
@@ -1249,6 +1252,25 @@ setDadosManuais((prev) => {
             comarca_escolhida: limparComarcaTexto(comarcaEscolhidaData),
           };
         });
+
+        // Se cidade do extrato for inválida (numérica/vazia), buscar pelo CEP via ViaCEP
+        const cidadeRaw = String(data.cidade ?? data?.extras?.endereco_snapshot?.cidade ?? "").trim();
+        const cepRaw = String(data.cep ?? data?.extras?.endereco_snapshot?.cep ?? "").replace(/\D/g, "");
+        if ((!cidadeRaw || /^\d+$/.test(cidadeRaw)) && cepRaw.length === 8) {
+          fetch(`https://viacep.com.br/ws/${cepRaw}/json/`)
+            .then(res => res.json())
+            .then(via => {
+              if (!via.erro && via.localidade) {
+                setDadosBasicos(prev => ({
+                  ...prev,
+                  cidade: via.localidade,
+                  estado: via.uf || prev.estado,
+                  bairro: prev.bairro || via.bairro || "",
+                }));
+              }
+            })
+            .catch(() => {});
+        }
 
         // Sincroniza controles específicos
         try {
@@ -2313,11 +2335,8 @@ const num = (v: any) => {
       cidade_estado_cliente: (() => {
         const cid = currentDadosBasicos?.cidade || "";
         const uf  = currentDadosBasicos?.estado  || "";
-        const cidadeValida = cid && !/^\d+$/.test(cid.trim());
-        if (cidadeValida) return `${cid}/${uf}`;
-        const comarca = (currentDadosManuais as any)?.comarca_escolhida || dbSnapshot?.comarca_escolhida_nome || "";
-        const cidadeComarca = comarca.split(/\s*[-/]\s*/)[0].trim();
-        return cidadeComarca ? `${cidadeComarca}/${uf}` : `/${uf}`;
+        if (cid && !/^\d+$/.test(cid.trim())) return `${cid}/${uf}`;
+        return `/${uf}`;
       })(),
       cep: currentDadosBasicos?.cep || null,
       // 🔐 CORREÇÃO: Em mode=adv, não sobrescrever email capturado pelo ZapSign se campo estiver vazio
@@ -2511,11 +2530,8 @@ return __payload;
         cidade_estado_cliente: (() => {
           const cid = dadosBasicos.cidade || "";
           const uf  = dadosBasicos.estado  || "";
-          const cidadeValida = cid && !/^\d+$/.test(cid.trim());
-          if (cidadeValida) return `${cid}/${uf}`;
-          const comarca = dadosManuais.comarca_escolhida || "";
-          const cidadeComarca = comarca.split(/\s*[-/]\s*/)[0].trim();
-          return cidadeComarca ? `${cidadeComarca}/${uf}` : `/${uf}`;
+          if (cid && !/^\d+$/.test(cid.trim())) return `${cid}/${uf}`;
+          return `/${uf}`;
         })(),
         comarca: dadosManuais.comarca_escolhida,
         comarca_escolhida: dadosManuais.comarca_escolhida,
