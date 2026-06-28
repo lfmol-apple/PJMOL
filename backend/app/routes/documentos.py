@@ -314,7 +314,7 @@ def resolve_base_modelos(usuario_advogado: str) -> str:
     app_dir = os.path.dirname(routes_dir)  # /backend/app
     backend_dir = os.path.dirname(app_dir)  # /backend
     raiz = os.path.join(backend_dir, "modelos")  # /backend/modelos
-
+    
     alvo = (usuario_advogado or "").strip().lower()
     if not alvo:
         return os.path.join(raiz, "vitor")
@@ -323,28 +323,15 @@ def resolve_base_modelos(usuario_advogado: str) -> str:
         return pasta_adv
     return os.path.join(raiz, "vitor")
 
-def _padrao_dir() -> str:
-    arquivo_atual = os.path.abspath(__file__)
-    backend_dir = os.path.dirname(os.path.dirname(os.path.dirname(arquivo_atual)))
-    return os.path.join(backend_dir, "modelos", "_padrao")
-
-def localizar_modelo(pasta_base: str, tipo: str, extrato_id: int = 0) -> str:
+def localizar_modelo(pasta_base: str, tipo: str) -> str:
     tipo = (tipo or "").strip().lower()
     padrao = "contrato" if "contrato" in tipo else "procuracao"
-
-    # Procuração: template único universal em _padrao para todos os advogados
-    if padrao == "procuracao":
-        padrao_path = os.path.join(_padrao_dir(), "modelo_procuracao_padrao.docx")
-        if os.path.exists(padrao_path):
-            return padrao_path
-
-    # Contrato: usar template específico do advogado
     candidatos = glob.glob(os.path.join(pasta_base, "*.docx"))
     candidatos = [c for c in candidatos if padrao in os.path.basename(c).lower()]
-    candidatos.sort()
-    if not candidatos:
-        raise FileNotFoundError(f"Modelo '{padrao}' não encontrado em: {pasta_base}")
-    return candidatos[0]
+    if candidatos:
+        candidatos.sort()
+        return candidatos[0]
+    raise FileNotFoundError(f"Modelo '{padrao}' não encontrado em: {pasta_base}")
 
 # ========================= FUNÇÕES EXPOSTAS PARA TESTES =========================
 def gerar_documento_preview(dados: dict):
@@ -375,21 +362,10 @@ async def gerar_documentos_preview(dados: dict):
         usuario_advogado = (dados.get("usuario_advogado") or "").strip().lower()
         base_modelos = resolve_base_modelos(usuario_advogado)
         print(f"[Docs][Preview] Extrato {dados.get('extrato_id')} / advogado {usuario_advogado}")
-
-        # Injetar dados do advogado para variantes _padrao ({{ adv_nome }}, {{ adv_oab }})
-        try:
-            _db = SessionLocal()
-            _adv = _db.query(Advogado).filter(Advogado.usuario == usuario_advogado).first()
-            if _adv:
-                dados.setdefault("adv_nome", _adv.nome_completo or "")
-                dados.setdefault("adv_oab", _adv.oab or "")
-            _db.close()
-        except Exception:
-            pass
-
+        
         # 🔍 DEBUG: Ver campos essenciais ANTES
         print(f"🔍 [PREVIEW ANTES] cpf_cnpj={dados.get('cpf_cnpj')} | tipo_documento={dados.get('tipo_documento')}")
-
+        
         # ✅ Detectar tipo_documento automaticamente se não vier
         if not dados.get('tipo_documento'):
             cpf_cnpj = dados.get('cpf_cnpj') or dados.get('cpf') or ''
@@ -400,12 +376,11 @@ async def gerar_documentos_preview(dados: dict):
             else:
                 dados['tipo_documento'] = 'CPF'
                 print(f"✅ [PREVIEW] tipo_documento detectado: CPF (padrão)")
-
+        
         print(f"🔍 [PREVIEW DEPOIS] cpf_cnpj={dados.get('cpf_cnpj')} | tipo_documento={dados.get('tipo_documento')}")
 
-        extrato_id_int = int(dados.get("extrato_id") or 0)
-        contrato_modelo = localizar_modelo(base_modelos, "contrato", extrato_id_int)
-        procuracao_modelo = localizar_modelo(base_modelos, "procuracao", extrato_id_int)
+        contrato_modelo = localizar_modelo(base_modelos, "contrato")
+        procuracao_modelo = localizar_modelo(base_modelos, "procuracao")
 
         contrato_pdf_path = preencher_documento(contrato_modelo, dados, "contrato")
         print(f"[Docs][Preview] Contrato preenchido -> {contrato_pdf_path}")
@@ -439,7 +414,7 @@ def gerar_documentos(dados: dict, db: Session = Depends(get_db)):
 
         base_modelos = resolve_base_modelos(usuario_advogado)
         print(f"[Docs][Geração] extrato={dados.get('extrato_id')} advogado={usuario_advogado}")
-
+        
         # 🔍 DEBUG COMPLETO: Ver TODOS os dados recebidos
         print(f"🔍 [DEBUG GERAR-DOCUMENTOS] Dados completos recebidos:")
         print(f"   - nome: {dados.get('nome')}")
@@ -447,14 +422,9 @@ def gerar_documentos(dados: dict, db: Session = Depends(get_db)):
         print(f"   - cpf_cnpj: {dados.get('cpf_cnpj')}")
         print(f"   - tipo_documento: {dados.get('tipo_documento')}")
         print(f"   - Total campos: {len(dados)}")
-
-        # Injetar dados do advogado para variantes _padrao ({{ adv_nome }}, {{ adv_oab }})
-        dados.setdefault("adv_nome", advogado.nome_completo or "")
-        dados.setdefault("adv_oab", advogado.oab or "")
-
-        extrato_id_int = int(dados.get("extrato_id") or 0)
-        contrato_modelo = localizar_modelo(base_modelos, "contrato", extrato_id_int)
-        procuracao_modelo = localizar_modelo(base_modelos, "procuracao", extrato_id_int)
+        
+        contrato_modelo = localizar_modelo(base_modelos, "contrato")
+        procuracao_modelo = localizar_modelo(base_modelos, "procuracao")
 
         contrato_pdf_path = preencher_documento(contrato_modelo, dados, "contrato")
         print(f"[Docs][Geração] Contrato preenchido -> {contrato_pdf_path}")

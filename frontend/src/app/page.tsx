@@ -2488,27 +2488,12 @@ return __payload;
           if (perfil === "advogado") {
             return localStorage.getItem("usuarioAdvogado") || "";
           }
-          const selecionado = dbSnapshot?.advogado_nome 
-            ? { usuario: dbSnapshot.advogado_nome.split(" ")[0].toLowerCase() }
-            : JSON.parse(localStorage.getItem("advogadoSelecionado") || "{}");
+          const selecionado = JSON.parse(localStorage.getItem("advogadoSelecionado") || "{}");
           if (selecionado && selecionado.usuario) return selecionado.usuario;
         } catch { }
         return localStorage.getItem("usuarioAdvogado") || "";
       };
       const usuarioAdvogadoFinal = obterUsuarioAdvogado();
-
-      const extratoIdForPayload = (() => {
-        if (typeof window === "undefined") return "";
-        const params = new URLSearchParams(window.location.search || "");
-        return (
-          params.get("extratoId") ||
-          params.get("extrato_id") ||
-          params.get("id") ||
-          (window as any).__EXTRATO_ID__ ||
-          ""
-        );
-      })();
-
       const payload = {
         nome: dadosBasicos.nome_cliente,
         cpf: dadosBasicos.cpf_cnpj,
@@ -2529,8 +2514,7 @@ return __payload;
         data_procuracao: dataExtenso,
         administradora: dadosBasicos.administradora,
         data_encerramento: isoParaBR(dadosBasicos.data_encerramento),
-        usuario_advogado: advogado.usuario || "",
-        extrato_id: extratoIdForPayload,
+        usuario_advogado: usuarioAdvogadoFinal,
 
         email: emailCliente,
       };
@@ -4612,10 +4596,8 @@ const handleSalvar = async ({ silent = false }: { silent?: boolean } = {}) => {
       )}
 
       {mostrarModal && documentosGerados && (() => {
-        // 🔧 CORREÇÃO: Usar advogado do extrato carregado em vez do localStorage quando visualizando extrato existente
-        const usuarioAdvogado = dbSnapshot?.advogado_nome 
-          ? dbSnapshot.advogado_nome.split(" ")[0].toLowerCase()
-          : JSON.parse(localStorage.getItem("advogadoSelecionado") || "{}").usuario || localStorage.getItem("usuarioAdvogado") || "";
+        const usuarioAdvogado = JSON.parse(localStorage.getItem("advogadoSelecionado") || "{}").usuario
+          || localStorage.getItem("usuarioAdvogado") || "";
 
         return (
           <ModalDocumentos
