@@ -2310,7 +2310,15 @@ const num = (v: any) => {
       cnpj_administradora: (currentDadosBasicos as any)?.cnpj_administradora,
       numero_contrato: (currentDadosBasicos as any)?.numero_contrato,
       endereco_cliente: (currentDadosBasicos as any)?.endereco_cliente,
-      cidade_estado_cliente: `${currentDadosBasicos?.cidade || ""}/${currentDadosBasicos?.estado || ""}`,
+      cidade_estado_cliente: (() => {
+        const cid = currentDadosBasicos?.cidade || "";
+        const uf  = currentDadosBasicos?.estado  || "";
+        const cidadeValida = cid && !/^\d+$/.test(cid.trim());
+        if (cidadeValida) return `${cid}/${uf}`;
+        const comarca = (currentDadosManuais as any)?.comarca_escolhida || dbSnapshot?.comarca_escolhida_nome || "";
+        const cidadeComarca = comarca.split(/\s*[-/]\s*/)[0].trim();
+        return cidadeComarca ? `${cidadeComarca}/${uf}` : `/${uf}`;
+      })(),
       cep: currentDadosBasicos?.cep || null,
       // 🔐 CORREÇÃO: Em mode=adv, não sobrescrever email capturado pelo ZapSign se campo estiver vazio
       ...((() => {
@@ -2500,7 +2508,15 @@ return __payload;
         endereco_cliente: montarEnderecoCliente(),
         cidade: dadosBasicos.cidade,
         estado: dadosBasicos.estado,
-        cidade_estado_cliente: `${dadosBasicos.cidade}/${dadosBasicos.estado}`,
+        cidade_estado_cliente: (() => {
+          const cid = dadosBasicos.cidade || "";
+          const uf  = dadosBasicos.estado  || "";
+          const cidadeValida = cid && !/^\d+$/.test(cid.trim());
+          if (cidadeValida) return `${cid}/${uf}`;
+          const comarca = dadosManuais.comarca_escolhida || "";
+          const cidadeComarca = comarca.split(/\s*[-/]\s*/)[0].trim();
+          return cidadeComarca ? `${cidadeComarca}/${uf}` : `/${uf}`;
+        })(),
         comarca: dadosManuais.comarca_escolhida,
         comarca_escolhida: dadosManuais.comarca_escolhida,
         comarca_cliente: dadosBasicos.comarca_cliente,
