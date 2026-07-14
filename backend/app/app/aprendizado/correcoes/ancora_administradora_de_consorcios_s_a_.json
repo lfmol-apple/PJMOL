@@ -269,6 +269,66 @@
         "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
       },
       "timestamp": "2026-05-25T19:31:46.926245"
+    },
+    {
+      "original": "SERRA",
+      "corrigido": "Serra",
+      "contexto": {
+        "grupo": "000707",
+        "cota": "2698-04",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-06-02T17:35:26.106152"
+    },
+    {
+      "original": "SANTA LUZIA",
+      "corrigido": "Santa Luzia",
+      "contexto": {
+        "grupo": "000525",
+        "cota": "0498-00",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-06-02T17:43:10.771482"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "001003",
+        "cota": "3689-00",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-06-03T19:38:22.128327"
+    },
+    {
+      "original": "ALEGRETE",
+      "corrigido": "Alegrete",
+      "contexto": {
+        "grupo": "000433",
+        "cota": "0899-00",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-06-08T14:42:44.700657"
+    },
+    {
+      "original": "FLORIANÓPOLIS",
+      "corrigido": "Florianópolis",
+      "contexto": {
+        "grupo": "000707",
+        "cota": "3461-01",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-06-12T14:26:13.730933"
+    },
+    {
+      "original": "ESPÍRITO SANTO DO PINHAL",
+      "corrigido": "Espírito Santo do Pinhal",
+      "contexto": {
+        "grupo": "000449",
+        "cota": "0246-00",
+        "administradora": "ANCORA ADMINISTRADORA DE CONSORCIOS S.A."
+      },
+      "timestamp": "2026-06-16T18:15:41.078417"
     }
   ]
 }

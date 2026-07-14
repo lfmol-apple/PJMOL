@@ -29,6 +29,116 @@
         "administradora": "ADMINISTRADORA DE CONSORCIO RCI LTDA"
       },
       "timestamp": "2026-05-20T14:11:35.399224"
+    },
+    {
+      "original": "TRAIRI",
+      "corrigido": "Trairi",
+      "contexto": {
+        "grupo": "009809",
+        "cota": "0174-04",
+        "administradora": "ADMINISTRADORA DE CONSORCIO RCI LTDA"
+      },
+      "timestamp": "2026-05-27T21:09:54.830149"
+    },
+    {
+      "original": "PATO BRANCO",
+      "corrigido": "Pato Branco",
+      "contexto": {
+        "grupo": "070091",
+        "cota": "0412-00",
+        "administradora": "ADMINISTRADORA DE CONSORCIO RCI LTDA"
+      },
+      "timestamp": "2026-06-15T20:16:14.232036"
+    },
+    {
+      "original": "BRAGANÇA PAULISTA",
+      "corrigido": "Bragança Paulista",
+      "contexto": {
+        "grupo": "009827",
+        "cota": "0822-00",
+        "administradora": "ADMINISTRADORA DE CONSORCIO RCI LTDA"
+      },
+      "timestamp": "2026-06-25T17:50:45.564515"
+    },
+    {
+      "original": "MURIAÉ",
+      "corrigido": "Muriaé",
+      "contexto": {
+        "grupo": "009820",
+        "cota": "0731-01",
+        "administradora": "ADMINISTRADORA DE CONSORCIO RCI LTDA"
+      },
+      "timestamp": "2026-06-29T19:24:59.617572"
+    },
+    {
+      "original": "MURIAÉ",
+      "corrigido": "Muriaé",
+      "contexto": {
+        "grupo": "009820",
+        "cota": "0731-01",
+        "administradora": "ADMINISTRADORA DE CONSORCIO RCI LTDA"
+      },
+      "timestamp": "2026-06-29T19:24:59.619180"
+    },
+    {
+      "original": "ARACAJU",
+      "corrigido": "Aracaju",
+      "contexto": {
+        "grupo": "009829",
+        "cota": "0022-01",
+        "administradora": "ADMINISTRADORA DE CONSORCIO RCI LTDA"
+      },
+      "timestamp": "2026-07-02T17:32:04.064962"
+    },
+    {
+      "original": "CABO FRIO",
+      "corrigido": "Cabo Frio",
+      "contexto": {
+        "grupo": "009800",
+        "cota": "0047-02",
+        "administradora": "ADMINISTRADORA DE CONSORCIO RCI LTDA"
+      },
+      "timestamp": "2026-07-03T20:50:25.476790"
+    },
+    {
+      "original": "CACOAL",
+      "corrigido": "Cacoal",
+      "contexto": {
+        "grupo": "009827",
+        "cota": "0490-02",
+        "administradora": "ADMINISTRADORA DE CONSORCIO RCI LTDA"
+      },
+      "timestamp": "2026-07-08T15:20:39.077363"
+    },
+    {
+      "original": "CACOAL",
+      "corrigido": "Cacoal",
+      "contexto": {
+        "grupo": "009827",
+        "cota": "0490-02",
+        "administradora": "ADMINISTRADORA DE CONSORCIO RCI LTDA"
+      },
+      "timestamp": "2026-07-08T15:33:07.744033"
+    },
+    {
+      "original": "MURIAÉ",
+      "corrigido": "Muriaé",
+      "contexto": {
+        "grupo": "009820",
+        "cota": "0731-01",
+        "administradora": "ADMINISTRADORA DE CONSORCIO RCI LTDA"
+      },
+      "timestamp": "2026-07-08T20:47:49.048523"
+    },
+    {
+      "original": "MURIAÉ",
+      "corrigido": "Muriaé",
+      "contexto": {
+        "grupo": "009820",
+        "cota": "0731-01",
+        "administradora": "ADMINISTRADORA DE CONSORCIO RCI LTDA"
+      },
+      "timestamp": "2026-07-08T20:47:49.060074"
     }
   ]
 }

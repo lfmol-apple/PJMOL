@@ -1,0 +1,14 @@
+{
+  "cidade": [
+    {
+      "original": "BELO HORIZONTE",
+      "corrigido": "Belo Horizonte",
+      "contexto": {
+        "grupo": "001302",
+        "cota": "0089",
+        "administradora": "SICOOB ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-07-14T15:55:42.790022"
+    }
+  ]
+}

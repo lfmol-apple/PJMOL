@@ -304,6 +304,8 @@ def build_production_report(
                 "valor_acordo_fmt": _fmt_brl(acordo_valor),
                 "valor_comissao": round(comissao_valor, 2),
                 "valor_comissao_fmt": _fmt_brl(comissao_valor),
+                "data_recebimento_acordo": getattr(extrato, "data_recebimento_acordo", None).isoformat() if getattr(extrato, "data_recebimento_acordo", None) else None,
+                "comprovante_recebimento_acordo_url": getattr(extrato, "comprovante_recebimento_acordo_url", None),
             }
         )
 
@@ -602,6 +604,8 @@ def build_commission_report(
             "valor_comissao": round(comissao_valor, 2),
             "valor_comissao_fmt": _fmt_brl(comissao_valor),
             "percentual": round((comissao_valor / acordo_valor * 100) if acordo_valor > 0 else 0, 2),
+            "data_recebimento_acordo": getattr(extrato, "data_recebimento_acordo", None).isoformat() if getattr(extrato, "data_recebimento_acordo", None) else None,
+            "comprovante_recebimento_acordo_url": getattr(extrato, "comprovante_recebimento_acordo_url", None),
         })
 
     registros.sort(key=lambda r: r["data_valor_acordo"], reverse=True)

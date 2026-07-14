@@ -92,6 +92,96 @@
         "administradora": "ADEMICON ADMINISTRADORA DE CONSORCIOS S/A"
       },
       "timestamp": "2026-05-26T16:08:12.785035"
+    },
+    {
+      "original": "SÃO JOSÉ",
+      "corrigido": "São José",
+      "contexto": {
+        "grupo": "000840",
+        "cota": "0095",
+        "administradora": "ADEMICON ADMINISTRADORA DE CONSORCIOS S/A"
+      },
+      "timestamp": "2026-06-01T18:37:22.405966"
+    },
+    {
+      "original": "URUGUAIANA",
+      "corrigido": "Uruguaiana",
+      "contexto": {
+        "grupo": "000950",
+        "cota": "0193",
+        "administradora": "ADEMICON ADMINISTRADORA DE CONSORCIOS S/A"
+      },
+      "timestamp": "2026-06-09T20:23:41.312286"
+    },
+    {
+      "original": "TIMÓTEO",
+      "corrigido": "Timóteo",
+      "contexto": {
+        "grupo": "012129",
+        "cota": "2458-00",
+        "administradora": "ADEMICON ADMINISTRADORA DE CONSORCIOS S/A"
+      },
+      "timestamp": "2026-06-11T16:25:21.124777"
+    },
+    {
+      "original": "TIMÓTEO",
+      "corrigido": "Timóteo",
+      "contexto": {
+        "grupo": "012129",
+        "cota": "2458-00",
+        "administradora": "ADEMICON ADMINISTRADORA DE CONSORCIOS S/A"
+      },
+      "timestamp": "2026-06-11T16:33:15.993058"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "000720",
+        "cota": "1955-00",
+        "administradora": "ADEMICON ADMINISTRADORA DE CONSORCIOS S/A"
+      },
+      "timestamp": "2026-06-12T17:15:03.462852"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "001050",
+        "cota": "2890-00",
+        "administradora": "ADEMICON ADMINISTRADORA DE CONSORCIOS S/A"
+      },
+      "timestamp": "2026-06-18T15:27:37.447976"
+    },
+    {
+      "original": "RIO DE JANEIRO",
+      "corrigido": "Rio de Janeiro",
+      "contexto": {
+        "grupo": "000660",
+        "cota": "0723",
+        "administradora": "ADEMICON ADMINISTRADORA DE CONSORCIOS S/A"
+      },
+      "timestamp": "2026-06-22T20:18:17.015117"
+    },
+    {
+      "original": "RIO DE JANEIRO",
+      "corrigido": "Rio de Janeiro",
+      "contexto": {
+        "grupo": "000660",
+        "cota": "0723",
+        "administradora": "ADEMICON ADMINISTRADORA DE CONSORCIOS S/A"
+      },
+      "timestamp": "2026-06-22T20:18:17.041777"
+    },
+    {
+      "original": "CAJAMAR",
+      "corrigido": "Cajamar",
+      "contexto": {
+        "grupo": "000420",
+        "cota": "0971-00",
+        "administradora": "ADEMICON ADMINISTRADORA DE CONSORCIOS S/A"
+      },
+      "timestamp": "2026-07-13T14:48:32.872910"
     }
   ]
 }

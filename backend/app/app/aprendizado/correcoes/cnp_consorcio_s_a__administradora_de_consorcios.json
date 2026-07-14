@@ -159,6 +159,46 @@
         "administradora": "CNP CONSORCIO S.A. ADMINISTRADORA DE CONSORCIOS"
       },
       "timestamp": "2026-05-19T18:49:36.494722"
+    },
+    {
+      "original": "BELO HORIZONTE",
+      "corrigido": "Belo Horizonte",
+      "contexto": {
+        "grupo": "001043",
+        "cota": "3469-00",
+        "administradora": "CNP CONSORCIO S.A. ADMINISTRADORA DE CONSORCIOS"
+      },
+      "timestamp": "2026-06-09T16:08:21.679950"
+    },
+    {
+      "original": "BELO HORIZONTE",
+      "corrigido": "Belo Horizonte",
+      "contexto": {
+        "grupo": "001041",
+        "cota": "5284",
+        "administradora": "CNP CONSORCIO S.A. ADMINISTRADORA DE CONSORCIOS"
+      },
+      "timestamp": "2026-06-17T18:02:43.529450"
+    },
+    {
+      "original": "BELO HORIZONTE",
+      "corrigido": "Belo Horizonte",
+      "contexto": {
+        "grupo": "001041",
+        "cota": "5284",
+        "administradora": "CNP CONSORCIO S.A. ADMINISTRADORA DE CONSORCIOS"
+      },
+      "timestamp": "2026-06-17T18:02:48.382519"
+    },
+    {
+      "original": "RIBEIRÃO DAS NEVES",
+      "corrigido": "Ribeirão das Neves",
+      "contexto": {
+        "grupo": "001043",
+        "cota": "2289,7245,4151",
+        "administradora": "CNP CONSORCIO S.A. ADMINISTRADORA DE CONSORCIOS"
+      },
+      "timestamp": "2026-07-07T17:37:09.855919"
     }
   ],
   "bairro": [

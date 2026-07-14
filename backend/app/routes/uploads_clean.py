@@ -54,6 +54,7 @@ TIPO_TO_FIELD: Dict[str, str] = {
     "comprovante_endereco": "comprovante_endereco_url",
     "documento_identidade": "documento_identidade_url",
     "outros": "outros_anexos_url",  # Para anexos diversos
+    "comprovante_recebimento_acordo": "comprovante_recebimento_acordo_url",
 }
 
 
@@ -68,11 +69,24 @@ def _dest_dir(extrato_id: int, tipo: str) -> str:
     return os.path.join(STORAGE_ROOT, "anexos", str(extrato_id), tipo)
 
 
-def _safe_filename(orig_name: str) -> str:
+def _safe_filename(orig_name: str, content_type: str = "") -> str:
     base, ext = os.path.splitext(orig_name)
     ts = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
-    # Normaliza extensão
-    ext = (ext or "").lower() or ".bin"
+    ext = (ext or "").lower()
+    if not ext:
+        ct = (content_type or "").lower()
+        if "pdf" in ct:
+            ext = ".pdf"
+        elif "jpeg" in ct or "jpg" in ct:
+            ext = ".jpg"
+        elif "png" in ct:
+            ext = ".png"
+        elif "gif" in ct:
+            ext = ".gif"
+        elif "webp" in ct:
+            ext = ".webp"
+        else:
+            ext = ".bin"
     return f"{base}_{ts}{ext}"
 
 
@@ -754,7 +768,7 @@ async def upload(
         )
     
     content_type = (file.content_type or "").lower()
-    filename = _safe_filename(file.filename or "arquivo")
+    filename = _safe_filename(file.filename or "arquivo", content_type)
 
     # Se for imagem e Pillow disponível, converte para PDF
     saved_url: str

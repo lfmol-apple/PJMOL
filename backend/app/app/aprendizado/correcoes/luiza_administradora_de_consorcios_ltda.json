@@ -109,6 +109,116 @@
         "administradora": "LUIZA ADMINISTRADORA DE CONSORCIOS LTDA"
       },
       "timestamp": "2026-05-25T20:49:01.066502"
+    },
+    {
+      "original": "TEÓFILO OTONI",
+      "corrigido": "Teófilo Otoni",
+      "contexto": {
+        "grupo": "006035",
+        "cota": "1250",
+        "administradora": "LUIZA ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-06-03T16:59:21.067244"
+    },
+    {
+      "original": "TEÓFILO OTONI",
+      "corrigido": "Teófilo Otoni",
+      "contexto": {
+        "grupo": "006035",
+        "cota": "1250",
+        "administradora": "LUIZA ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-06-03T16:59:25.172333"
+    },
+    {
+      "original": "TEÓFILO OTONI",
+      "corrigido": "Teófilo Otoni",
+      "contexto": {
+        "grupo": "006035",
+        "cota": "1250",
+        "administradora": "LUIZA ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-06-03T16:59:25.173936"
+    },
+    {
+      "original": "SOROCABA",
+      "corrigido": "Sorocaba",
+      "contexto": {
+        "grupo": "006032",
+        "cota": "1534-00",
+        "administradora": "LUIZA ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-06-09T13:45:36.640123"
+    },
+    {
+      "original": "BATATAIS",
+      "corrigido": "Batatais",
+      "contexto": {
+        "grupo": "006035",
+        "cota": "0679-00",
+        "administradora": "LUIZA ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-06-15T20:35:20.957142"
+    },
+    {
+      "original": "BATATAIS",
+      "corrigido": "Batatais",
+      "contexto": {
+        "grupo": "006035",
+        "cota": "0679-00",
+        "administradora": "LUIZA ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-06-15T20:43:24.549695"
+    },
+    {
+      "original": "ARAME",
+      "corrigido": "Arame",
+      "contexto": {
+        "grupo": "005235",
+        "cota": "0579-05",
+        "administradora": "LUIZA ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-06-16T18:06:03.366593"
+    },
+    {
+      "original": "RIO DE JANEIRO",
+      "corrigido": "Rio de Janeiro",
+      "contexto": {
+        "grupo": "005251",
+        "cota": "0030-04",
+        "administradora": "LUIZA ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-06-17T20:51:31.933608"
+    },
+    {
+      "original": "SANTO ANTÔNIO DE POSSE",
+      "corrigido": "Santo Antônio de Posse",
+      "contexto": {
+        "grupo": "005286",
+        "cota": "1186-00",
+        "administradora": "LUIZA ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-06-22T14:16:07.842811"
+    },
+    {
+      "original": "SANTO ANTÔNIO DE POSSE",
+      "corrigido": "Santo Antônio de Posse",
+      "contexto": {
+        "grupo": "005286",
+        "cota": "1186-00",
+        "administradora": "LUIZA ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-06-22T14:16:07.844722"
+    },
+    {
+      "original": "SANTO ANTÔNIO DE POSSE",
+      "corrigido": "Santo Antônio de Posse",
+      "contexto": {
+        "grupo": "005286",
+        "cota": "1186-00",
+        "administradora": "LUIZA ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-06-22T14:16:07.965355"
     }
   ]
 }

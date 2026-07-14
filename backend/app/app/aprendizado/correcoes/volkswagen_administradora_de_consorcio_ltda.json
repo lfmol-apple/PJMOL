@@ -179,6 +179,248 @@
         "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
       },
       "timestamp": "2026-04-25T15:14:56.653696"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "001147",
+        "cota": "4532-01",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-05-27T18:09:25.928644"
+    },
+    {
+      "original": "PARAUAPEBAS",
+      "corrigido": "Parauapebas",
+      "contexto": {
+        "grupo": "001152",
+        "cota": "3218-01",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-06-01T16:22:27.138868"
+    },
+    {
+      "original": "PARAUAPEBAS",
+      "corrigido": "Parauapebas",
+      "contexto": {
+        "grupo": "001152",
+        "cota": "3218-01",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-06-01T16:22:27.142120"
+    },
+    {
+      "original": "SÃO DESIDÉRIO",
+      "corrigido": "São Desidério",
+      "contexto": {
+        "grupo": "001138",
+        "cota": "0003-01",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-06-01T19:28:58.358587"
+    },
+    {
+      "original": "RECIFE",
+      "corrigido": "Recife",
+      "contexto": {
+        "grupo": "001139",
+        "cota": "0712-00",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-06-02T15:22:07.792144"
+    },
+    {
+      "original": "MARITUBA",
+      "corrigido": "Marituba",
+      "contexto": {
+        "grupo": "001131",
+        "cota": "0218-03",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-06-03T17:38:35.712075"
+    },
+    {
+      "original": "AMERICANA",
+      "corrigido": "Americana",
+      "contexto": {
+        "grupo": "001147",
+        "cota": "0400-02",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-06-08T16:07:49.434820"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "001137",
+        "cota": "0744-00",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-06-16T13:29:59.135580"
+    },
+    {
+      "original": "SÃO PAULO",
+      "corrigido": "São Paulo",
+      "contexto": {
+        "grupo": "001147",
+        "cota": "3655-00",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-06-17T13:18:57.686324"
+    },
+    {
+      "original": "SANTA GERTRUDES",
+      "corrigido": "Santa Gertrudes",
+      "contexto": {
+        "grupo": "001139",
+        "cota": "0398-02",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-06-19T14:20:37.185629"
+    },
+    {
+      "original": "JABOATÃO DOS GUARARAPES",
+      "corrigido": "Jaboatão dos Guararapes",
+      "contexto": {
+        "grupo": "001146",
+        "cota": "3664-01",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-06-19T16:43:29.217094"
+    },
+    {
+      "original": "MANTENÓPOLIS",
+      "corrigido": "Mantenópolis",
+      "contexto": {
+        "grupo": "001147",
+        "cota": "1097-03",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-06-22T17:27:21.646958"
+    },
+    {
+      "original": "SANTOS DUMONT",
+      "corrigido": "Santos Dumont",
+      "contexto": {
+        "grupo": "001152",
+        "cota": "4720-00",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-06-23T20:24:30.353051"
+    },
+    {
+      "original": "BARRA DO PIRAÍ",
+      "corrigido": "Barra do Piraí",
+      "contexto": {
+        "grupo": "001160",
+        "cota": "3531-00",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-06-24T19:34:34.582513"
+    },
+    {
+      "original": "SINOP",
+      "corrigido": "Sinop",
+      "contexto": {
+        "grupo": "001138",
+        "cota": "0336-00",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-06-26T19:26:18.096989"
+    },
+    {
+      "original": "CANAÃ DOS CARAJÁS",
+      "corrigido": "Canaã dos Carajás",
+      "contexto": {
+        "grupo": "001152",
+        "cota": "2361-00",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-06-29T16:59:23.157911"
+    },
+    {
+      "original": "HORIZONTE",
+      "corrigido": "Horizonte",
+      "contexto": {
+        "grupo": "001136",
+        "cota": "0183-01",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-06-29T19:28:18.416527"
+    },
+    {
+      "original": "RIO DE JANEIRO",
+      "corrigido": "Rio de Janeiro",
+      "contexto": {
+        "grupo": "001160",
+        "cota": "4144-00",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-07-07T14:08:15.742488"
+    },
+    {
+      "original": "JACOBINA",
+      "corrigido": "Jacobina",
+      "contexto": {
+        "grupo": "001153",
+        "cota": "4821-02",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-07-07T19:14:26.666179"
+    },
+    {
+      "original": "RECIFE",
+      "corrigido": "Recife",
+      "contexto": {
+        "grupo": "081153",
+        "cota": "3727-00",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-07-09T17:27:12.910437"
+    },
+    {
+      "original": "TERESINA",
+      "corrigido": "Teresina",
+      "contexto": {
+        "grupo": "001155",
+        "cota": "4361-01",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-07-09T19:45:34.867907"
+    },
+    {
+      "original": "TERESINA",
+      "corrigido": "Teresina",
+      "contexto": {
+        "grupo": "001155",
+        "cota": "4361-01",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-07-09T19:45:34.869102"
+    },
+    {
+      "original": "TATUÍ",
+      "corrigido": "Tatuí",
+      "contexto": {
+        "grupo": "001147",
+        "cota": "1988-00",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-07-13T14:51:06.823358"
+    }
+  ],
+  "cep": [
+    {
+      "original": "40082-026",
+      "corrigido": "11920-000",
+      "contexto": {
+        "grupo": "091399",
+        "cota": "0204-03",
+        "administradora": "VOLKSWAGEN ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-07-09T18:48:48.839993"
     }
   ]
 }

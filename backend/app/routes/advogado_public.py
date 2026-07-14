@@ -17,7 +17,9 @@ from app.models.extrato import Extrato
 try:
     from app.auth_utils import SECRET_KEY, ALGORITHM
 except Exception:
-    raise RuntimeError("SECRET_KEY/JWT_SECRET_KEY não configurada no ambiente.")
+    # Fallback dev: não usar em produção
+    SECRET_KEY = "dev-secret-change-me"
+    ALGORITHM = "HS256"
 
 router = APIRouter(prefix="/public/advogado", tags=["Public | Advogado"])
 

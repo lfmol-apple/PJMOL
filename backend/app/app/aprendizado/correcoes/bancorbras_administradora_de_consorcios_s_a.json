@@ -19,6 +19,26 @@
         "administradora": "BANCORBRAS ADMINISTRADORA DE CONSORCIOS S/A"
       },
       "timestamp": "2026-05-18T20:34:01.753754"
+    },
+    {
+      "original": "BRASÍLIA",
+      "corrigido": "Brasília",
+      "contexto": {
+        "grupo": "001605",
+        "cota": "0630-00",
+        "administradora": "BANCORBRAS ADMINISTRADORA DE CONSORCIOS S/A"
+      },
+      "timestamp": "2026-07-02T14:08:16.457347"
+    },
+    {
+      "original": "BRASÍLIA",
+      "corrigido": "Brasília",
+      "contexto": {
+        "grupo": "001605",
+        "cota": "0630-00",
+        "administradora": "BANCORBRAS ADMINISTRADORA DE CONSORCIOS S/A"
+      },
+      "timestamp": "2026-07-02T15:20:10.051674"
     }
   ]
 }

@@ -145,6 +145,56 @@
         "administradora": "BAMAQ ADMINISTRADORA DE CONSORCIOS LTDA"
       },
       "timestamp": "2026-05-05T20:24:09.144694"
+    },
+    {
+      "original": "BELO HORIZONTE",
+      "corrigido": "Belo Horizonte",
+      "contexto": {
+        "grupo": "005029",
+        "cota": "6262-1",
+        "administradora": "BAMAQ ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-27T13:17:18.219992"
+    },
+    {
+      "original": "BELO HORIZONTE",
+      "corrigido": "Belo Horizonte",
+      "contexto": {
+        "grupo": "005029",
+        "cota": "6262-1",
+        "administradora": "BAMAQ ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-27T13:17:22.896925"
+    },
+    {
+      "original": "BELO HORIZONTE",
+      "corrigido": "Belo Horizonte",
+      "contexto": {
+        "grupo": "004010",
+        "cota": "320-5",
+        "administradora": "BAMAQ ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-06-15T17:42:47.028202"
+    },
+    {
+      "original": "LINHARES UF",
+      "corrigido": "LINHARES",
+      "contexto": {
+        "grupo": "004010",
+        "cota": "995-1",
+        "administradora": "BAMAQ ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-06-24T18:36:09.590293"
+    },
+    {
+      "original": "LINHARES UF",
+      "corrigido": "LINHARES",
+      "contexto": {
+        "grupo": "004010",
+        "cota": "995-1",
+        "administradora": "BAMAQ ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-06-24T18:36:09.612336"
     }
   ]
 }

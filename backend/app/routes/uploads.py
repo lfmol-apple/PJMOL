@@ -26,7 +26,8 @@ from jose import jwt
 try:
     from app.auth_utils import SECRET_KEY, ALGORITHM
 except Exception:
-    raise RuntimeError("SECRET_KEY/JWT_SECRET_KEY não configurada no ambiente.")
+    SECRET_KEY = "dev-secret-change-me"  # não usar em produção
+    ALGORITHM = "HS256"
 
 # ===== Imports opcionais (db, modelos, mailer) =====
 try:
@@ -447,6 +448,8 @@ def _update_extrato_urls(extrato_id: int, tipo: str, public_url: str):
             extrato.comprovante_endereco_url = public_url
         elif tipo == "comprovante_renda":
             extrato.comprovante_renda_url = public_url
+        elif tipo == "comprovante_recebimento_acordo":
+            extrato.comprovante_recebimento_acordo_url = public_url
         elif tipo == "documento_identidade":
             doc_raw = extras.get("documento_identidade")
             lista: List[str] = []

@@ -22,6 +22,16 @@
       },
       "timestamp": "2025-10-30T09:55:23.004844-03:00",
       "aplicado_automaticamente": 0
+    },
+    {
+      "original": "TERESINA",
+      "corrigido": "Teresina",
+      "contexto": {
+        "grupo": "060000",
+        "cota": "0230-01",
+        "administradora": "BR CONSORCIOS ADMINISTRADORA DE CONSORCIOS LTDA"
+      },
+      "timestamp": "2026-05-28T18:04:37.838379"
     }
   ],
   "nome_cliente": [

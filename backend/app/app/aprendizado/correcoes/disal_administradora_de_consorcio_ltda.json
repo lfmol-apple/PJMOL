@@ -41,6 +41,16 @@
         "administradora": "DISAL ADMINISTRADORA DE CONSORCIO LTDA"
       },
       "timestamp": "2026-04-09T11:39:05.924254"
+    },
+    {
+      "original": "ARRAIAS",
+      "corrigido": "Arraias",
+      "contexto": {
+        "grupo": "003324",
+        "cota": "4965-1",
+        "administradora": "DISAL ADMINISTRADORA DE CONSORCIO LTDA"
+      },
+      "timestamp": "2026-06-15T18:28:53.438608"
     }
   ]
 }

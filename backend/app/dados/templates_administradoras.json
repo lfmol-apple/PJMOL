@@ -1406,12 +1406,12 @@
   },
   "EMBRACON ADMINISTRADORA DE CONSÓRCIO LTDA": {
     "nome": "EMBRACON ADMINISTRADORA DE CONSÓRCIO LTDA",
-    "total_extratos_processados": 551,
-    "ultima_atualizacao": "2026-05-26T13:13:20.777767",
+    "total_extratos_processados": 552,
+    "ultima_atualizacao": "2026-05-28T10:26:14.810413",
     "layouts": {
       "COL6_COTA_DATA_LONGA_EXTRATO": {
         "assinatura": "COL6_COTA_DATA_LONGA_EXTRATO",
-        "extratos_com_este_layout": 470,
+        "extratos_com_este_layout": 471,
         "padroes": {
           "parcelas": [],
           "valores": [],
@@ -1423,33 +1423,33 @@
             "exemplos": [
               {
                 "num_colunas": 6,
-                "exemplo_linha": "% Normal: 4,2304 0,2995 94,1256 98,6555 Ideal Pago: 5,5854 % Mensal c/ Taxas: 0,6110",
+                "exemplo_linha": "% Normal: 1,8184 1,8360 96,3456 100,0000 Ideal Pago: 1,8184 % Mensal c/ Taxas: 0,3524",
                 "valores_exemplo": [
-                  "4,23",
-                  "0,29",
-                  "94,12",
-                  "98,65",
-                  "5,58"
+                  "1,81",
+                  "1,83",
+                  "96,34",
+                  "100,00",
+                  "1,81"
                 ]
               },
               {
                 "num_colunas": 3,
-                "exemplo_linha": "% Antecipado: 1,3445 1,3445 Diferença: 0,0105",
+                "exemplo_linha": "% Antecipado: 0,0000 0,0000 Diferença: 0,0000",
                 "valores_exemplo": [
-                  "1,34",
-                  "1,34",
-                  "0,01"
+                  "0,00",
+                  "0,00",
+                  "0,00"
                 ]
               },
               {
                 "num_colunas": 6,
-                "exemplo_linha": "TOTAL 5,5749 0,2995 94,1256 100,0000 Ideal Devido: 94,4146 Valor Contrib. Mensal: 1.619,31",
+                "exemplo_linha": "TOTAL 1,8184 1,8360 96,3456 100,0000 Ideal Devido: 98,1816 Valor Contrib. Mensal: 679,17",
                 "valores_exemplo": [
-                  "5,57",
-                  "0,29",
-                  "94,12",
+                  "1,81",
+                  "1,83",
+                  "96,34",
                   "100,00",
-                  "94,41"
+                  "98,18"
                 ]
               }
             ]

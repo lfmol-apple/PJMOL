@@ -83,10 +83,7 @@ def _resolve_adv_by_token(
 def _resolve_api_key(adv: Advogado | None) -> str:
     if adv and getattr(adv, "api_key_zapsign", None):
         return adv.api_key_zapsign
-    api_key = os.getenv("ZAPSIGN_API_KEY_DEFAULT", "").strip()
-    if not api_key:
-        raise HTTPException(status_code=500, detail="ZAPSIGN_API_KEY_DEFAULT não configurada.")
-    return api_key
+    return os.getenv("ZAPSIGN_API_KEY_DEFAULT", "SUA_API_KEY_ZAPSIGN")
 
 
 def _get_doc_detail(doc_token: str, api_key: str) -> dict:
