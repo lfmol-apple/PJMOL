@@ -384,6 +384,7 @@ class CriarAdvogadoComTemplateIn(BaseModel):
 
 PADRAO_CONTRATO   = os.path.join(MODELOS_DIR, '_padrao', 'modelo_contrato_padrao.docx')
 PADRAO_PROCURACAO = os.path.join(MODELOS_DIR, '_padrao', 'modelo_procuracao_padrao.docx')
+NARRATIVA_BASE    = os.path.join(MODELOS_DIR, 'marcella', 'modelo_procuracao_marcella.docx')
 
 
 def _gerar_tokens(adv, genero: str) -> dict:
@@ -448,6 +449,58 @@ def _aplicar_tokens_template(caminho_docx: str, tokens: dict):
 
 
 
+def _gerar_procuracao_narrativa(dst_path: str, adv, genero: str):
+    """Gera procuração personalizada no formato narrativo a partir do template da Marcella."""
+    from docx.oxml.ns import qn as _qn
+
+    oab_raw = (adv.oab or "").strip()
+    parts = oab_raw.split()
+    if len(parts) >= 2:
+        oab_sigla = f"OAB/{parts[0]}"
+        oab_num   = " ".join(parts[1:])
+    else:
+        oab_sigla = "OAB/MG"
+        oab_num   = oab_raw
+
+    nome = (adv.nome_completo or "").strip()
+    feminino = genero.strip().upper() == "F"
+    proc     = "sua procuradora a advogada" if feminino else "seu procurador o advogado"
+    inscrito = "inscrita" if feminino else "inscrito"
+
+    def _clear(para):
+        for r in para._p.findall(_qn("w:r")):
+            para._p.remove(r)
+
+    def _run(para, text, bold=None):
+        run = para.add_run(text)
+        if bold is not None:
+            run.bold = bold
+
+    doc = Document(NARRATIVA_BASE)
+    p3  = doc.paragraphs[3]
+    _clear(p3)
+    _run(p3, "Pelo presente instrumento de mandato, ")
+    _run(p3, "{{ nome }}")
+    _run(p3, ", ")
+    _run(p3, "{{ nacionalidade }}")
+    _run(p3, ", inscrito(a) no ")
+    _run(p3, "{{tipo_documento}}")
+    _run(p3, " sob o nº ")
+    _run(p3, "{{ cpf }}")
+    _run(p3, ", residente e domiciliado(a) na ")
+    _run(p3, "{{ endereco_cliente }}")
+    _run(p3, f", nomeia e constitui como {proc} ")
+    _run(p3, nome, bold=True)
+    _run(p3, f", {inscrito} na {oab_sigla} sob o nº {oab_num}, outorgando-lhe os poderes"
+             " contidos na cláusula \"ad judicia\", para ajuizar ação em face de ")
+    _run(p3, "{{ administradora }}")
+    _run(p3, ", podendo, para tanto, requerer em juízo ou onde se apresentar, podendo ainda"
+             " receber e dar quitação, substabelecer, nomear preposto, praticando, enfim,"
+             " todos os atos necessários ou úteis ao bom desempenho deste mandato para o"
+             " fim de representar o(a) outorgante. ")
+    doc.save(dst_path)
+
+
 @router.post("/advogados/com-template/", status_code=status.HTTP_201_CREATED)
 def criar_advogado_com_template(
     dados: CriarAdvogadoComTemplateIn,
@@ -490,11 +543,10 @@ def criar_advogado_com_template(
         caminho_nova_procuracao = os.path.join(pasta_novo, f"modelo_procuracao_{novo_advogado.usuario}.docx")
 
         shutil.copy2(PADRAO_CONTRATO, caminho_novo_contrato)
-        shutil.copy2(PADRAO_PROCURACAO, caminho_nova_procuracao)
-
         tokens = _gerar_tokens(novo_advogado, dados.genero)
         _aplicar_tokens_template(caminho_novo_contrato, tokens)
-        _aplicar_tokens_template(caminho_nova_procuracao, tokens)
+
+        _gerar_procuracao_narrativa(caminho_nova_procuracao, novo_advogado, dados.genero)
     except Exception as exc:
         db.delete(novo_advogado)
         db.commit()
