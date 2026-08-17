@@ -10,6 +10,7 @@ import subprocess
 import shutil
 import glob
 import traceback
+import hashlib
 from typing import Optional
 import fitz  # PyMuPDF
 
@@ -22,6 +23,8 @@ from app.utils.zapsign import enviar_documentos_consolidados_para_assinatura, bu
 from app.core.time import now_sp  # ✅ fuso America/Sao_Paulo
 
 router = APIRouter()
+
+PROCURACOES_ROTATIVAS_DIRNAME = "_procuracoes_rotativas"
 
 # ========================= STORAGE HELPERS =========================
 def _resolve_storage_root() -> str:
@@ -205,6 +208,11 @@ def converter_docx_para_pdf(caminho_docx: str, caminho_pdf: str, *, rasterizar_s
 # ========================= GERAÇÃO DOCX (PLACEHOLDERS) =========================
 def preencher_documento(modelo_path: str, dados: dict, nome_saida: str) -> str:
     doc = Document(modelo_path)
+
+    if dados.get("advogado_nome") and not dados.get("adv_nome"):
+        dados["adv_nome"] = dados.get("advogado_nome")
+    if dados.get("advogado_oab") and not dados.get("adv_oab"):
+        dados["adv_oab"] = dados.get("advogado_oab")
     
     # ✨ COMPATIBILIDADE CPF/CNPJ
     # Se não tiver 'cpf', usar 'cpf_cnpj'
@@ -333,6 +341,28 @@ def localizar_modelo(pasta_base: str, tipo: str) -> str:
         return candidatos[0]
     raise FileNotFoundError(f"Modelo '{padrao}' não encontrado em: {pasta_base}")
 
+def localizar_procuracao_rotativa(pasta_base: str, dados: dict) -> str:
+    if (os.getenv("PROCURACOES_ROTATIVAS", "1") or "").strip().lower() in {"0", "false", "no", "off"}:
+        return localizar_modelo(pasta_base, "procuracao")
+
+    raiz_modelos = os.path.dirname(pasta_base)
+    pasta_rotativas = os.path.join(raiz_modelos, PROCURACOES_ROTATIVAS_DIRNAME)
+    candidatos = sorted(glob.glob(os.path.join(pasta_rotativas, "P[0-9][0-9].docx")))
+    if not candidatos:
+        return localizar_modelo(pasta_base, "procuracao")
+
+    chave = "|".join(
+        str(dados.get(k) or "")
+        for k in ("extrato_id", "cpf", "cpf_cnpj", "nome", "nome_cliente", "usuario_advogado")
+    )
+    if not chave.strip("|"):
+        chave = now_sp().strftime("%Y%m%d")
+    idx = int(hashlib.sha256(chave.encode("utf-8")).hexdigest()[:8], 16) % len(candidatos)
+    escolhido = candidatos[idx]
+    dados["modelo_procuracao_rotativa"] = os.path.splitext(os.path.basename(escolhido))[0]
+    print(f"[Docs] Procuração rotativa selecionada: {escolhido}")
+    return escolhido
+
 # ========================= FUNÇÕES EXPOSTAS PARA TESTES =========================
 def gerar_documento_preview(dados: dict):
     """Função simples para testes que gera documentos sem salvar no banco"""
@@ -341,7 +371,7 @@ def gerar_documento_preview(dados: dict):
         base_modelos = resolve_base_modelos(usuario_advogado)
         
         contrato_modelo = localizar_modelo(base_modelos, "contrato")
-        procuracao_modelo = localizar_modelo(base_modelos, "procuracao")
+        procuracao_modelo = localizar_procuracao_rotativa(base_modelos, dados)
         
         contrato_pdf_path = preencher_documento(contrato_modelo, dados, "contrato")
         procuracao_pdf_path = preencher_documento(procuracao_modelo, dados, "procuracao")
@@ -380,7 +410,7 @@ async def gerar_documentos_preview(dados: dict):
         print(f"🔍 [PREVIEW DEPOIS] cpf_cnpj={dados.get('cpf_cnpj')} | tipo_documento={dados.get('tipo_documento')}")
 
         contrato_modelo = localizar_modelo(base_modelos, "contrato")
-        procuracao_modelo = localizar_modelo(base_modelos, "procuracao")
+        procuracao_modelo = localizar_procuracao_rotativa(base_modelos, dados)
 
         contrato_pdf_path = preencher_documento(contrato_modelo, dados, "contrato")
         print(f"[Docs][Preview] Contrato preenchido -> {contrato_pdf_path}")
@@ -412,6 +442,11 @@ def gerar_documentos(dados: dict, db: Session = Depends(get_db)):
         if not advogado or not advogado.api_key_zapsign:
             raise HTTPException(status_code=404, detail="Advogado não encontrado ou sem chave ZapSign")
 
+        dados.setdefault("advogado_nome", advogado.nome_completo)
+        dados.setdefault("advogado_oab", advogado.oab)
+        dados.setdefault("advogado_email", advogado.email)
+        dados.setdefault("advogado_telefone", advogado.telefone)
+
         base_modelos = resolve_base_modelos(usuario_advogado)
         print(f"[Docs][Geração] extrato={dados.get('extrato_id')} advogado={usuario_advogado}")
         
@@ -424,7 +459,7 @@ def gerar_documentos(dados: dict, db: Session = Depends(get_db)):
         print(f"   - Total campos: {len(dados)}")
         
         contrato_modelo = localizar_modelo(base_modelos, "contrato")
-        procuracao_modelo = localizar_modelo(base_modelos, "procuracao")
+        procuracao_modelo = localizar_procuracao_rotativa(base_modelos, dados)
 
         contrato_pdf_path = preencher_documento(contrato_modelo, dados, "contrato")
         print(f"[Docs][Geração] Contrato preenchido -> {contrato_pdf_path}")
