@@ -351,13 +351,17 @@ def localizar_procuracao_rotativa(pasta_base: str, dados: dict) -> str:
     if not candidatos:
         return localizar_modelo(pasta_base, "procuracao")
 
-    chave = "|".join(
-        str(dados.get(k) or "")
-        for k in ("extrato_id", "cpf", "cpf_cnpj", "nome", "nome_cliente", "usuario_advogado")
-    )
-    if not chave.strip("|"):
-        chave = now_sp().strftime("%Y%m%d")
-    idx = int(hashlib.sha256(chave.encode("utf-8")).hexdigest()[:8], 16) % len(candidatos)
+    extrato_id = dados.get("extrato_id")
+    try:
+        idx = (int(extrato_id) - 1) % len(candidatos)
+    except (TypeError, ValueError):
+        chave = "|".join(
+            str(dados.get(k) or "")
+            for k in ("cpf", "cpf_cnpj", "nome", "nome_cliente", "usuario_advogado")
+        )
+        if not chave.strip("|"):
+            chave = now_sp().strftime("%Y%m%d")
+        idx = int(hashlib.sha256(chave.encode("utf-8")).hexdigest()[:8], 16) % len(candidatos)
     escolhido = candidatos[idx]
     dados["modelo_procuracao_rotativa"] = os.path.splitext(os.path.basename(escolhido))[0]
     print(f"[Docs] Procuração rotativa selecionada: {escolhido}")
