@@ -7,8 +7,8 @@ import { PatternFormat } from "react-number-format";
 
 const API_BASE = "/api";
 
-const DEFAULT_API_KEY_ZAPSIGN = "068da606-d352-4630-8b35-6cb194faa674d7419744-ab96-468f-9fbd-66b3872d9ab0";
-const DEFAULT_WEBHOOK_PATH_TOKEN = "5145ee69d9202235aeaeb29b2f7bd6a1";
+const DEFAULT_API_KEY_ZAPSIGN = "e96e4e97-94c7-4fd6-b969-efb796f1cd52d24bb740-4a4f-4465-8c9f-656365b70ce5";
+const DEFAULT_WEBHOOK_PATH_TOKEN = "d54ec8a4bc6dd872bfa7b0e76d1c9943";
 
 const MODELOS = [
   {
@@ -164,7 +164,7 @@ export default function AdminAdvogados() {
       telefone: adv.telefone || "",
       senha: "",
       genero: "M",
-      api_key_zapsign: adv.api_key_zapsign || "",
+      api_key_zapsign: DEFAULT_API_KEY_ZAPSIGN,
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -199,7 +199,7 @@ export default function AdminAdvogados() {
         email: form.email.trim().toLowerCase(),
         telefone: form.telefone,
         senha: form.senha,
-        api_key_zapsign: form.api_key_zapsign || DEFAULT_API_KEY_ZAPSIGN,
+        api_key_zapsign: DEFAULT_API_KEY_ZAPSIGN,
         webhook_path_token: DEFAULT_WEBHOOK_PATH_TOKEN,
         genero: form.genero,
       };
@@ -235,7 +235,7 @@ export default function AdminAdvogados() {
         oab: form.oab.trim().toUpperCase(),
         email: form.email.trim().toLowerCase(),
         telefone: form.telefone,
-        api_key_zapsign: form.api_key_zapsign.trim(),
+        api_key_zapsign: DEFAULT_API_KEY_ZAPSIGN,
       };
 
       if (form.senha.trim()) {
@@ -317,8 +317,8 @@ export default function AdminAdvogados() {
           </h2>
           <p className="text-sm text-gray-500 mb-4">
             {advogadoEditando
-              ? "Altere os dados cadastrais. Deixe a senha em branco para manter a senha atual."
-              : "O usuário é preenchido automaticamente com o primeiro nome. API ZapSign e Webhook aplicados pelo padrão do escritório."}
+              ? "Altere os dados cadastrais. Deixe a senha em branco para manter a senha atual. ZapSign e webhook permanecem padronizados para todos."
+              : "O usuário é preenchido automaticamente com o primeiro nome. API ZapSign e webhook são aplicados automaticamente no padrão único do escritório."}
           </p>
 
           {/* Seleção de modelo */}
@@ -478,17 +478,17 @@ export default function AdminAdvogados() {
                 <input
                   type="text"
                   value={form.api_key_zapsign}
-                  onChange={(e) => setForm({ ...form, api_key_zapsign: e.target.value.trim() })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 font-mono text-xs"
-                  placeholder="Chave API ZapSign"
+                  readOnly
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-gray-50 text-gray-600 focus:outline-none font-mono text-xs"
                 />
+                <p className="mt-1 text-xs text-gray-500">Chave fixa para todos os advogados. O sistema reaplica esse padrão automaticamente.</p>
               </div>
 
             </div>
 
             {/* Info ZapSign */}
             {!advogadoEditando && <div className="flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 text-xs text-gray-500">
-              🔐 API ZapSign e Webhook Token serão configurados automaticamente com o padrão do escritório.
+              🔐 API ZapSign e webhook serão configurados automaticamente com o mesmo padrão para todos os advogados, inclusive os novos.
             </div>}
 
             {formErro && (

@@ -15,7 +15,30 @@ interface Usuario {
   email: string;
   telefone?: string;
   perfil: Perfil;
+  is_admin?: boolean;
   criado_em?: string;
+}
+
+const PERFIL_PRIORITY: Record<Perfil, number> = {
+  admin: 0,
+  gerente: 1,
+  usuario: 2,
+};
+
+function normalizePerfil(user: Partial<Usuario>): Perfil {
+  const perfil = String(user.perfil || "").trim().toLowerCase();
+  if (perfil === "admin" || perfil === "gerente" || perfil === "usuario") {
+    return perfil as Perfil;
+  }
+  return user.is_admin ? "admin" : "usuario";
+}
+
+function sortUsuarios(items: Usuario[]): Usuario[] {
+  return [...items].sort((a, b) => {
+    const perfilDiff = PERFIL_PRIORITY[normalizePerfil(a)] - PERFIL_PRIORITY[normalizePerfil(b)];
+    if (perfilDiff !== 0) return perfilDiff;
+    return a.nome.localeCompare(b.nome, "pt-BR", { sensitivity: "base" });
+  });
 }
 
 export default function AdminUsuarios() {
@@ -46,7 +69,7 @@ export default function AdminUsuarios() {
     setLoading(true);
     try {
       const { data } = await axios.get(`${API_BASE}/usuarios/`, { timeout: 15000 });
-      setUsuarios(Array.isArray(data) ? data : []);
+      setUsuarios(sortUsuarios(Array.isArray(data) ? data : []));
     } catch (err: any) {
       console.error("Erro ao carregar usuários:", err);
       setErro(
@@ -76,7 +99,7 @@ export default function AdminUsuarios() {
         perfil: formData.perfil,
       };
 
-      const response = await axios.post(`${API_BASE}/usuarios/`, payload);
+      await axios.post(`${API_BASE}/usuarios/`, payload);
       
       setSucesso(`✅ Usuário "${payload.nome}" criado com sucesso!`);
       setFormData({
@@ -152,7 +175,7 @@ export default function AdminUsuarios() {
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Gerenciar Usuários</h1>
           <p className="text-gray-600 mt-1">
-            Crie, edite ou delete usuários administradores e gerentes
+            Crie, edite ou delete usuários administradores e gerentes com o mesmo padrão dos perfis já existentes
           </p>
         </div>
         <button
@@ -248,7 +271,6 @@ export default function AdminUsuarios() {
                 >
                   <option value="admin">Administrador</option>
                   <option value="gerente">Gerente</option>
-                  <option value="usuario">Usuário</option>
                 </select>
               </div>
             </div>
@@ -378,7 +400,6 @@ export default function AdminUsuarios() {
                         >
                           <option value="admin">Administrador</option>
                           <option value="gerente">Gerente</option>
-                          <option value="usuario">Usuário</option>
                         </select>
                       ) : (
                         <span

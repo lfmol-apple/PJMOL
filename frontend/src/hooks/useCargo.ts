@@ -13,19 +13,7 @@ function read(key: string): string {
 export function computeCargo(): Cargo {
   if (typeof window === "undefined") return "";
 
-  // --- 0) Nome tem PRIORIDADE (Breno/Marcel => Gerente) ---
-  const nome = (
-    read("nomeUsuario") ||
-    read("nomeAdvogado") ||
-    read("nome") ||
-    ""
-  ).toLowerCase();
-
-  if (nome.includes("breno") || nome.includes("marcel")) {
-    return "Gerente";
-  }
-
-  // --- 1) Derivar pelo PERFIL ---
+  // --- 1) Derivar pelo PERFIL salvo na sessão ---
   const perfil = (
     read("perfilUsuario") ||
     read("perfil") ||
@@ -35,7 +23,7 @@ export function computeCargo(): Cargo {
 
   if (perfil == "gerente") return "Gerente";
   if (perfil == "advogado") return "Advogado";
-  if (["admin","administrador","usuario"].includes(perfil)) return "Administrador";
+  if (["admin","administrador"].includes(perfil)) return "Administrador";
 
   // --- 2) Só então usa ROTULO salvo (evita sujeira antiga) ---
   const saved = read("rotulo").trim();

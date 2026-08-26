@@ -38,6 +38,7 @@ interface Advogado {
 }
 
 const API_BASE = (process.env.NEXT_PUBLIC_BACKEND_URL || process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000").replace(/\/$/, "");
+const DEFAULT_API_KEY_ZAPSIGN = "e96e4e97-94c7-4fd6-b969-efb796f1cd52d24bb740-4a4f-4465-8c9f-656365b70ce5";
 
 // ---------- helpers ----------
 const normalizarTelefone = (t?: string) => (t ? t.replace(/\D+/g, "") : "");
@@ -102,7 +103,7 @@ export default function GerenciarAdvogados() {
         telefone: normalizarTelefone(editandoDados.telefone as string),
         usuario: (editandoDados.usuario ?? "").toString().trim().toLowerCase(),
         oab: buildOAB(editandoDados.oab as string), // garante padrão "AA 000.000"
-        api_key_zapsign: (editandoDados.api_key_zapsign ?? "").toString().trim() || null,
+        api_key_zapsign: DEFAULT_API_KEY_ZAPSIGN,
       };
       if ((editandoDados as any).senha && String((editandoDados as any).senha).trim() !== "") {
         payload.senha = String((editandoDados as any).senha).trim();
@@ -206,10 +207,9 @@ export default function GerenciarAdvogados() {
 
                     <input
                       type="text"
-                      value={(editandoDados.api_key_zapsign ?? a.api_key_zapsign ?? "") as string}
-                      onChange={(e) => setEditandoDados({ ...editandoDados, api_key_zapsign: e.target.value })}
-                      className="border p-2 rounded"
-                      placeholder="API Key ZapSign (opcional)"
+                      value={DEFAULT_API_KEY_ZAPSIGN}
+                      readOnly
+                      className="border p-2 rounded bg-gray-50 text-gray-600 font-mono text-xs"
                     />
 
                     <input

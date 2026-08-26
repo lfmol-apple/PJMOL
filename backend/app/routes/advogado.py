@@ -9,6 +9,8 @@ import unicodedata
 import re
 import subprocess
 import shutil
+import glob
+import hashlib
 from typing import Optional, Tuple, Dict, Any, List
 import json
 
@@ -24,6 +26,11 @@ from app.core.time import now_sp
 
 router = APIRouter(tags=["Advogados"])
 
+DEFAULT_ZAPSIGN_API_KEY = "e96e4e97-94c7-4fd6-b969-efb796f1cd52d24bb740-4a4f-4465-8c9f-656365b70ce5"
+DEFAULT_ZAPSIGN_WEBHOOK_PATH_TOKEN = "d54ec8a4bc6dd872bfa7b0e76d1c9943"
+DEFAULT_ZAPSIGN_WEBHOOK_SECRET = "6d4ad4db5c8c1313e47001e20ba8794a"
+PROCURACOES_ROTATIVAS_DIRNAME = "_procuracoes_rotativas"
+
 # ✅ CAMINHOS ABSOLUTOS CONFIÁVEIS
 from app.utils.paths import get_documentos_dir, get_modelos_dir, get_app_root, get_backend_root
 
@@ -31,6 +38,28 @@ DOCS_GERADOS_DIR = get_documentos_dir()
 MODELOS_DIR = get_modelos_dir()
 BASE_DIR = get_app_root()
 BACKEND_ROOT = get_backend_root()
+
+def _apply_default_zapsign_config(adv: Advogado) -> bool:
+    changed = False
+    if (getattr(adv, "api_key_zapsign", None) or "").strip() != DEFAULT_ZAPSIGN_API_KEY:
+        adv.api_key_zapsign = DEFAULT_ZAPSIGN_API_KEY
+        changed = True
+    if (getattr(adv, "webhook_path_token", None) or "").strip() != DEFAULT_ZAPSIGN_WEBHOOK_PATH_TOKEN:
+        adv.webhook_path_token = DEFAULT_ZAPSIGN_WEBHOOK_PATH_TOKEN
+        changed = True
+    if (getattr(adv, "webhook_secret", None) or "").strip() != DEFAULT_ZAPSIGN_WEBHOOK_SECRET:
+        adv.webhook_secret = DEFAULT_ZAPSIGN_WEBHOOK_SECRET
+        changed = True
+    return changed
+
+def _sync_default_zapsign_config(db: Session, advogados: List[Advogado]) -> None:
+    changed = False
+    for adv in advogados:
+        if _apply_default_zapsign_config(adv):
+            db.add(adv)
+            changed = True
+    if changed:
+        db.commit()
 
 def slugify(texto: str) -> str:
     texto = unicodedata.normalize('NFD', texto)
@@ -121,6 +150,12 @@ def preencher_documento(modelo_path: str, dados: dict, nome_saida: str) -> str:
         raise FileNotFoundError(f"Modelo não encontrado: {modelo_path}")
 
     doc = Document(modelo_path)
+
+    if dados.get("advogado_nome") and not dados.get("adv_nome"):
+        dados["adv_nome"] = dados.get("advogado_nome")
+    if dados.get("advogado_oab") and not dados.get("adv_oab"):
+        dados["adv_oab"] = dados.get("advogado_oab")
+
     _substituir_placeholders_no_documento(doc, dados)
 
     timestamp = now_sp().strftime('%Y%m%d%H%M%S')
@@ -164,6 +199,31 @@ def _resolver_modelos_do_advogado(adv: Advogado) -> Tuple[str, str]:
         f"Esperado: modelo_contrato_{usuario}.docx e modelo_procuracao_{usuario}.docx "
         f"em {pasta_usuario} ou {MODELOS_DIR}"
     )
+
+def _resolver_procuracao_rotativa(procuracao_padrao: str, dados: dict) -> str:
+    if (os.getenv("PROCURACOES_ROTATIVAS", "1") or "").strip().lower() in {"0", "false", "no", "off"}:
+        return procuracao_padrao
+
+    pasta_rotativas = os.path.join(MODELOS_DIR, PROCURACOES_ROTATIVAS_DIRNAME)
+    candidatos = sorted(glob.glob(os.path.join(pasta_rotativas, "P[0-9][0-9].docx")))
+    if not candidatos:
+        return procuracao_padrao
+
+    extrato_id = dados.get("extrato_id")
+    try:
+        idx = (int(extrato_id) - 1) % len(candidatos)
+    except (TypeError, ValueError):
+        chave = "|".join(
+            str(dados.get(k) or "")
+            for k in ("cpf", "cpf_cnpj", "nome", "nome_cliente", "usuario_advogado")
+        )
+        if not chave.strip("|"):
+            chave = now_sp().strftime("%Y%m%d")
+        idx = int(hashlib.sha256(chave.encode("utf-8")).hexdigest()[:8], 16) % len(candidatos)
+    escolhido = candidatos[idx]
+    dados["modelo_procuracao_rotativa"] = os.path.splitext(os.path.basename(escolhido))[0]
+    print(f"[Advogado] Procuração rotativa selecionada: {escolhido}")
+    return escolhido
 
 # ---------------------------
 # Helpers (extras + audit)
@@ -210,10 +270,18 @@ def gerar_documentos(dados: dict, db: Session = Depends(get_db)):
             raise HTTPException(status_code=400, detail="Usuário do advogado não informado")
 
         advogado = db.query(Advogado).filter(Advogado.usuario == usuario).first()
-        if not advogado or not advogado.api_key_zapsign:
-            raise HTTPException(status_code=404, detail="Advogado não encontrado ou sem chave ZapSign")
+        if not advogado:
+            raise HTTPException(status_code=404, detail="Advogado não encontrado")
+
+        _sync_default_zapsign_config(db, [advogado])
+
+        dados.setdefault("advogado_nome", advogado.nome_completo)
+        dados.setdefault("advogado_oab", advogado.oab)
+        dados.setdefault("advogado_email", advogado.email)
+        dados.setdefault("advogado_telefone", advogado.telefone)
 
         contrato_path, procuracao_path = _resolver_modelos_do_advogado(advogado)
+        procuracao_path = _resolver_procuracao_rotativa(procuracao_path, dados)
 
         contrato_pdf = preencher_documento(contrato_path, dados, "contrato")
         procuracao_pdf = preencher_documento(procuracao_path, dados, "procuracao")
@@ -279,6 +347,7 @@ def consultar_advogado_por_usuario(usuario: str, db: Session = Depends(get_db)):
     advogado = db.query(Advogado).filter(Advogado.usuario == usuario).first()
     if not advogado:
         raise HTTPException(status_code=404, detail="Advogado não encontrado")
+    _sync_default_zapsign_config(db, [advogado])
     return {
         "id": advogado.id,
         "nome_completo": advogado.nome_completo,
@@ -323,7 +392,9 @@ def criar_advogado(
         telefone=only_digits(telefone),
         usuario=usuario_norm,
         senha_hash=gerar_hash_senha(senha),
-        api_key_zapsign=api_key_zapsign.strip(),
+        api_key_zapsign=DEFAULT_ZAPSIGN_API_KEY,
+        webhook_path_token=DEFAULT_ZAPSIGN_WEBHOOK_PATH_TOKEN,
+        webhook_secret=DEFAULT_ZAPSIGN_WEBHOOK_SECRET,
     )
     db.add(novo_advogado)
     db.commit()
@@ -352,6 +423,7 @@ def listar_advogados(db: Session = Depends(get_db)):
     ADVOGADOS_INATIVOS = ['melisa']
     
     advogados = db.query(Advogado).all()
+    _sync_default_zapsign_config(db, advogados)
     return [
         {
             "id": adv.id,
@@ -377,6 +449,7 @@ class CriarAdvogadoComTemplateIn(BaseModel):
     senha: str
     api_key_zapsign: str
     webhook_path_token: Optional[str] = None
+    webhook_secret: Optional[str] = None
     genero: str = "M"   # "M" masculino / "F" feminino
 
 
@@ -528,8 +601,9 @@ def criar_advogado_com_template(
         telefone=only_digits(dados.telefone),
         usuario=usuario_norm,
         senha_hash=gerar_hash_senha(dados.senha),
-        api_key_zapsign=dados.api_key_zapsign.strip(),
-        webhook_path_token=(dados.webhook_path_token or "").strip() or "5145ee69d9202235aeaeb29b2f7bd6a1",
+        api_key_zapsign=DEFAULT_ZAPSIGN_API_KEY,
+        webhook_path_token=DEFAULT_ZAPSIGN_WEBHOOK_PATH_TOKEN,
+        webhook_secret=DEFAULT_ZAPSIGN_WEBHOOK_SECRET,
     )
     db.add(novo_advogado)
     db.commit()
@@ -569,6 +643,7 @@ def get_advogado_por_id(advogado_id: int, db: Session = Depends(get_db)):
     advogado = db.query(Advogado).filter(Advogado.id == advogado_id).first()
     if not advogado:
         raise HTTPException(status_code=404, detail="Advogado não encontrado")
+    _sync_default_zapsign_config(db, [advogado])
     return {
         "id": advogado.id,
         "nome_completo": advogado.nome_completo,
@@ -584,11 +659,9 @@ def atualizar_api_key(usuario: str, dados: AtualizarChaveZapSign, db: Session = 
     advogado = db.query(Advogado).filter(Advogado.usuario == usuario).first()
     if not advogado:
         raise HTTPException(status_code=404, detail="Advogado não encontrado")
-    advogado.api_key_zapsign = (dados.api_key_zapsign or "").strip()
-    db.commit()
-    db.refresh(advogado)
+    _sync_default_zapsign_config(db, [advogado])
     return {
-        "mensagem": "Chave ZapSign atualizada com sucesso",
+        "mensagem": "Configuração padrão do ZapSign reaplicada com sucesso",
         "usuario": advogado.usuario,
         "nova_api_key": advogado.api_key_zapsign
     }
@@ -655,10 +728,10 @@ async def atualizar_advogado(
         adv.nome_completo = str(payload["nome_completo"]).strip().upper()
     if payload.get("telefone") is not None:
         adv.telefone = only_digits(payload["telefone"])
-    if payload.get("api_key_zapsign") is not None:
-        adv.api_key_zapsign = str(payload["api_key_zapsign"]).strip()
     if payload.get("senha"):
         adv.senha_hash = gerar_hash_senha(str(payload["senha"]))
+
+    _apply_default_zapsign_config(adv)
 
     db.commit()
     db.refresh(adv)
@@ -745,4 +818,3 @@ def set_numero_processo_interno(
         "numero_processo_set_at": extras.get("numero_processo_set_at"),
         "numero_processo_last_set_at": extras.get("numero_processo_last_set_at"),
     }
-

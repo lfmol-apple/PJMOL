@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getLoggedUser } from "@/app/lib/auth";
+import { filterByScope, getLoggedUser } from "@/app/lib/auth";
 import MLStatus from "@/components/ml/MLStatus";
 
 /** ===== Gate sem mudar a ordem dos hooks da página ===== */
@@ -45,93 +45,6 @@ type Extrato = {
 
 const API = process.env.NEXT_PUBLIC_API_BASE || 'http://127.0.0.1:8000';
 
-// ── Hierarquia definida por nomes ────────────────────────────────────────────
-const ADM_NAMES = [
-  "leonardo",
-  "henrique",
-  "henrique mol",
-  "henrique de freitas mol",
-  "henriquefmol@yahoo.com.br",
-  "marco antonio",
-  "marco antonio faria junior",
-  "marcoafariajunior@hotmail.com",
-];
-const GERENTE_NAMES = ["breno", "marcel"];
-
-function norm(s: any): string {
-  return String(s || "").normalize("NFD").replace(/\p{Diacritic}/gu, "").trim().toLowerCase();
-}
-function pickFromCookies(keys: string[]): string | null {
-  const cookie = typeof document !== "undefined" ? document.cookie || "" : "";
-  for (const k of keys) {
-    const m = cookie.match(new RegExp(`(?:^|; )${k}=([^;]+)`));
-    if (m) return decodeURIComponent(m[1]);
-  }
-  return null;
-}
-function getDisplayName(): string | null {
-  const stores = [typeof localStorage !== "undefined" ? localStorage : null,
-                  typeof sessionStorage !== "undefined" ? sessionStorage : null].filter(Boolean) as Storage[];
-  const nameKeys = ["nome","nomeUsuario","displayName","username","usuario","email","userName"];
-  for (const store of stores) {
-    for (const k of nameKeys) {
-      const v = store.getItem(k);
-      if (v && v.trim()) return v;
-    }
-    for (const k of ["user","usuario","currentUser","profile"]) {
-      const raw = store.getItem(k);
-      if (!raw) continue;
-      try {
-        const o = JSON.parse(raw);
-        for (const nk of [...nameKeys, "nome_completo","full_name"]) {
-          if (o && o[nk]) return String(o[nk]);
-        }
-      } catch {}
-    }
-  }
-  const cookieName = pickFromCookies([...nameKeys, "user"]);
-  if (cookieName) {
-    try {
-      const o = JSON.parse(cookieName);
-      for (const nk of [...nameKeys, "nome_completo","full_name"]) if (o && o[nk]) return String(o[nk]);
-    } catch {
-      return cookieName;
-    }
-  }
-  return null;
-}
-function getPerfil(): "admin" | "gerente" | "advogado" {
-  const name = norm(getDisplayName());
-  if (name) {
-    if (ADM_NAMES.includes(name)) return "admin";
-    if (GERENTE_NAMES.includes(name)) return "gerente";
-  }
-  // fallback simples (pode expandir se usar chaves de perfil)
-  return "gerente";
-}
-function currentGerenteIdentity(): { id?: any; nome?: string } | null {
-  const nome = getDisplayName();
-  if (!nome) return null;
-  const idMap: Record<string, any> = { breno: 6 }; // se souber IDs, mapeie aqui
-  return { id: idMap[norm(nome)], nome };
-}
-function extratoPertenceAoGerente(e: Extrato, ident: { id?: any; nome?: string } | null): boolean {
-  if (!ident) return false;
-  const { id, nome } = ident;
-  const cand = [
-    e.gerente_id, e.gerente_nome,
-    e.criado_por_id, e.criado_por_nome,
-    e.usuario_criador_nome, e.responsavel_nome,
-  ].map((x) => x ?? null);
-
-  if (id != null && cand.includes(id)) return true;
-  if (nome) {
-    const tgt = norm(nome);
-    for (const c of cand) if (c && norm(c) === tgt) return true;
-  }
-  return false;
-}
-
 // ── Página ──────────────────────────────────────────────────────────────────
 export default function ExtratosListPage() {
   const router = useRouter();
@@ -162,15 +75,13 @@ export default function ExtratosListPage() {
 
   useEffect(() => { fetchExtratos(); /* eslint-disable-next-line */ }, [usuarioId]);
 
-  const perfil = getPerfil();
-  const ident = currentGerenteIdentity();
+  const usuarioAtual = useMemo(() => getLoggedUser(), []);
+  const perfil = String(usuarioAtual?.perfil || "").toLowerCase() === "admin" ? "admin" : "gerente";
 
   const itens = useMemo(() => {
     // 1) escopo por perfil
     let base = [...extratos];
-    if (perfil === "gerente") {
-      base = base.filter((e) => extratoPertenceAoGerente(e, ident));
-    } // admin vê tudo
+    if (perfil !== "admin") base = filterByScope(base, perfil, usuarioAtual);
 
     // 2) filtro de busca/status
     const q = busca.trim().toLowerCase();
@@ -197,7 +108,7 @@ export default function ExtratosListPage() {
       const bb = new Date(a.updated_at || a.created_at || 0).getTime();
       return aa - bb;
     });
-  }, [extratos, busca, statusFiltro, perfil, ident]);
+  }, [extratos, busca, statusFiltro, perfil, usuarioAtual]);
 
   return (
     <AdminOnly>
